@@ -1,4 +1,4 @@
-package me.bubbles.bosspve.items.manager;
+package me.bubbles.bosspve.items.manager.bases.items;
 
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ShapedRecipe;

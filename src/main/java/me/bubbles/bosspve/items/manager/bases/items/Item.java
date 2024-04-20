@@ -1,8 +1,7 @@
-package me.bubbles.bosspve.items.manager;
+package me.bubbles.bosspve.items.manager.bases.items;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.flags.Flag;
-import me.bubbles.bosspve.util.UtilDatabase;
 import me.bubbles.bosspve.util.UtilUserData;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Bukkit;

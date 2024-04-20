@@ -1,8 +1,8 @@
-package me.bubbles.bosspve.items.manager.enchant.enchants;
+package me.bubbles.bosspve.items.enchants;
 
-import me.bubbles.bosspve.items.manager.Item;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.items.manager.ItemManager;
-import me.bubbles.bosspve.items.manager.enchant.Enchant;
+import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.ticker.Timer;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

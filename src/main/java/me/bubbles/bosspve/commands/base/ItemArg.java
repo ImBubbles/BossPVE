@@ -2,8 +2,8 @@ package me.bubbles.bosspve.commands.base;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
-import me.bubbles.bosspve.items.manager.Item;
-import me.bubbles.bosspve.items.manager.enchant.EnchantItem;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
+import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

@@ -1,8 +1,10 @@
-package me.bubbles.bosspve.items.manager.enchant;
+package me.bubbles.bosspve.items.manager;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.manager.enchant.enchants.*;
-import me.bubbles.bosspve.items.manager.ItemManager;
+import me.bubbles.bosspve.items.enchants.Speed;
+import me.bubbles.bosspve.items.enchants.Telepathy;
+import me.bubbles.bosspve.items.enchants.enchants.*;
+import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
 

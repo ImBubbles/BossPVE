@@ -1,7 +1,7 @@
 package me.bubbles.bosspve.util;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.manager.Item;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

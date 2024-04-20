@@ -1,7 +1,7 @@
 package me.bubbles.bosspve.util;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.manager.enchant.Enchant;
+import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.util.string.UtilString;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;

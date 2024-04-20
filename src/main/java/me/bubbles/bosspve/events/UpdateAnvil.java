@@ -2,8 +2,8 @@ package me.bubbles.bosspve.events;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
-import me.bubbles.bosspve.items.manager.Item;
-import me.bubbles.bosspve.items.manager.enchant.EnchantItem;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
+import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
 import me.bubbles.bosspve.util.UtilItemStack;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;

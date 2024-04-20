@@ -2,9 +2,9 @@ package me.bubbles.bosspve.util;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.flags.Flag;
-import me.bubbles.bosspve.items.manager.Item;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.items.manager.bases.armor.Armor;
-import me.bubbles.bosspve.items.manager.enchant.Enchant;
+import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.util.string.UtilString;
 import org.bukkit.ChatColor;

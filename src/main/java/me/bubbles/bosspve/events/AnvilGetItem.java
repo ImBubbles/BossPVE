@@ -2,7 +2,7 @@ package me.bubbles.bosspve.events;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
-import me.bubbles.bosspve.items.manager.Item;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;

@@ -3,7 +3,7 @@ package me.bubbles.bosspve.items.manager;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.armor.ogre.OgreSet;
 import me.bubbles.bosspve.items.manager.bases.armor.ArmorSet;
-import me.bubbles.bosspve.items.manager.enchant.EnchantManager;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.items.util.EnchantExtractor;
 import me.bubbles.bosspve.items.util.Extracted;
 import me.bubbles.bosspve.items.weapons.SkeletonSword;

@@ -1,7 +1,7 @@
 package me.bubbles.bosspve.items.weapons;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.manager.Item;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.util.UtilItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

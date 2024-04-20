@@ -1,7 +1,7 @@
 package me.bubbles.bosspve.items.manager.bases.armor;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.manager.Item;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
 import org.bukkit.Material;
 
 public abstract class Armor extends Item implements IArmor {
