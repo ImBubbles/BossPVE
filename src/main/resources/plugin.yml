@@ -1,0 +1,4 @@
+name: BossPVE
+version: '${project.version}'
+main: me.bubbles.bosspve.BossPVE
+api-version: '1.20'
