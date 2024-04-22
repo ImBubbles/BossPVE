@@ -1,14 +1,13 @@
 package me.bubbles.bosspve.util;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.flags.Flag;
-import me.bubbles.bosspve.items.manager.bases.items.Item;
-import me.bubbles.bosspve.items.manager.bases.armor.Armor;
+import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
-import me.bubbles.bosspve.stages.Stage;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.util.string.UtilString;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -41,24 +40,25 @@ public class UtilItemStack {
     }
 
     public List<String> getUpdatedLoreForPlayer(ItemStack itemStack, Player player) {
-        int dmg=(int) calculateDamage(1,player)-1;
-        int xp=(int) calculateXp(1,player);
-        int money=(int) calculateMoney(1,player);
+        int dmg=(int) UtilCalculator.getDamage(player);
+        int xp=(int) UtilCalculator.getXp(player, null);
+        int money=(int) UtilCalculator.getMoney(player, null);
         List<String> lore = new ArrayList<>();
         Item item = plugin.getItemManager().getItemFromStack(itemStack);
         UtilUserData uud = UtilUserData.getUtilUserData(player.getUniqueId());
         int enchantsAmt = itemStack.getEnchantments().size();
         boolean cont=true;
-        for(Enchantment enchantment : itemStack.getEnchantments().keySet()) {
-            if(enchantment instanceof Enchant) {
-                Enchant enchant = (Enchant) enchantment;
+        for(Enchantment bukkitEnchantment : itemStack.getEnchantments().keySet()) {
+            net.minecraft.world.item.enchantment.Enchantment nmsEnchant = CraftEnchantment.bukkitToMinecraft(bukkitEnchantment);
+            if(nmsEnchant instanceof Enchant) {
+                Enchant enchant = (Enchant) nmsEnchant;
                 if(!(uud.getLevel()>=enchant.getLevelRequirement())) {
                     lore.add(ChatColor.translateAlternateColorCodes('&',
-                            "&c" + enchantment.getName() + " " + itemStack.getItemMeta().getEnchantLevel(enchantment)
+                            "&c" + enchant.getName() + " " + itemStack.getItemMeta().getEnchantLevel(bukkitEnchantment)
                     ));
                 } else {
                     lore.add(ChatColor.translateAlternateColorCodes('&',
-                            "&9" + enchantment.getName() + " " + itemStack.getItemMeta().getEnchantLevel(enchantment)
+                            "&9" + enchant.getName() + " " + itemStack.getItemMeta().getEnchantLevel(bukkitEnchantment)
                     ));
                     if(enchantsAmt<=5) {
                         if(enchant.getDescription()!=null) {
@@ -70,7 +70,7 @@ public class UtilItemStack {
             }
             if(cont) {
                 lore.add(ChatColor.translateAlternateColorCodes('&',
-                        "&9" + enchantment.getName() + " " + itemStack.getItemMeta().getEnchantLevel(enchantment)
+                        "&9" + bukkitEnchantment.getName() + " " + itemStack.getItemMeta().getEnchantLevel(bukkitEnchantment)
                 ));
             }
         }
@@ -90,9 +90,8 @@ public class UtilItemStack {
                 );
             }
             if(item.getType().equals(Item.Type.ARMOR)) {
-                Armor armor = (Armor) item;
                 lore.add(
-                        UtilString.colorFillPlaceholders("%primary%Defence:%secondary% "+armor.getBaseProtection())
+                        UtilString.colorFillPlaceholders("%primary%Defence:%secondary% "+UtilCalculator.getProtection(player))
                 );
             }
         }
@@ -162,113 +161,6 @@ public class UtilItemStack {
         return receiver;
     }
 
-    public double calculateMoney(double init, Player player) {
-        double result=init;
-        Stage stage = plugin.getStageManager().getStage(player.getLocation());
-        if(stage!=null) {
-            if(stage.isAllowed(player)) {
-                result*=stage.getMoneyMultiplier();
-            }else{
-                return 0;
-            }
-        }
-        if(!itemStack.hasItemMeta()) {
-            return result;
-        }
-        Item item = plugin.getItemManager().getItemFromStack(itemStack);
-        if(item==null) {
-            if(itemStack.getItemMeta().hasEnchants()) {
-                for(Enchant enchant : getCustomEnchants()) {
-                    if(enchant.allowUsage(player)) {
-                        result*=enchant.getMoneyMultiplier(itemStack.getItemMeta().getEnchantLevel(enchant));
-                    }
-                }
-            }
-            return result;
-        }
-        if(!item.allowUsage(player)) {
-            return result;
-        }
-        if(item instanceof IWeapon) {
-            result+=((IWeapon) item).getBaseMoney();
-        }
-        if(itemStack.getItemMeta().hasEnchants()) {
-            for(Enchant enchant : getCustomEnchants()) {
-                if(enchant.allowUsage(player)) {
-                    result*=enchant.getMoneyMultiplier(itemStack.getItemMeta().getEnchantLevel(enchant));
-                }
-            }
-        }
-        return result;
-    }
-
-    public double calculateXp(double init, Player player) {
-        double result=init;
-        Stage stage = plugin.getStageManager().getStage(player.getLocation());
-        if(stage!=null) {
-            if(stage.isAllowed(player)) {
-                result*=stage.getXpMultiplier();
-            }else{
-                return 0;
-            }
-        }
-        if(!itemStack.hasItemMeta()) {
-            return result;
-        }
-        Item item = plugin.getItemManager().getItemFromStack(itemStack);
-        if(item==null) {
-            if(itemStack.getItemMeta().hasEnchants()) {
-                for(Enchant enchant : getCustomEnchants()) {
-                    if(enchant.allowUsage(player)) {
-                        result*=enchant.getXpMultiplier(itemStack.getItemMeta().getEnchantLevel(enchant));
-                    }
-                }
-            }
-            return result;
-        }
-        if(!item.allowUsage(player)) {
-            return result;
-        }
-        if(item instanceof IWeapon) {
-            result+=((IWeapon) item).getBaseXP();
-        }
-        if(itemStack.getItemMeta().hasEnchants()) {
-            for(Enchant enchant : getCustomEnchants()) {
-                if(enchant.allowUsage(player)) {
-                    result*=enchant.getXpMultiplier(itemStack.getItemMeta().getEnchantLevel(enchant));
-                }
-            }
-        }
-        return result;
-    }
-
-    public double calculateDamage(double init, Player player) {
-        double result=init;
-        if(!itemStack.hasItemMeta()) {
-            return init;
-        }
-        Item item = plugin.getItemManager().getItemFromStack(itemStack);
-        if(item==null&&getCustomEnchants().size()==0) {
-            return init;
-        }
-        if(item!=null) {
-            if(!item.allowUsage(player)) {
-                return result;
-            }
-            if(item instanceof IWeapon) {
-                result+=((IWeapon) item).getBaseDamage();
-            }
-        }
-        if(itemStack.getItemMeta().hasEnchants()) {
-            for(Enchant enchant : getCustomEnchants()) {
-                if(enchant.allowUsage(player)) {
-                    result*=enchant.getDamageMultiplier(itemStack.getItemMeta().getEnchantLevel(enchant));
-                }
-            }
-        }
-        return result;
-    }
-
     public HashSet<Enchant> getCustomEnchants() {
         // probably unsafe but idc
         if(!itemStack.hasItemMeta()) {
@@ -295,7 +187,7 @@ public class UtilItemStack {
             result.addAll(item.getFlags());
         }
         for(Enchant enchant : getCustomEnchants()) {
-            result.addAll(enchant.getFlags());
+            result.addAll(enchant.getFlags(UtilEnchant.getLevel(itemStack, enchant)));
         }
         return result;
     }

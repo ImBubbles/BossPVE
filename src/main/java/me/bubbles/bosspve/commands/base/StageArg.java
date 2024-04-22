@@ -3,6 +3,7 @@ package me.bubbles.bosspve.commands.base;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.stages.Stage;
+import me.bubbles.bosspve.util.UtilUserData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -56,7 +57,7 @@ public class StageArg extends Argument {
     }
 
     private String getAvailableStages() {
-        int playerLevel = utilSender.getUserData().getLevel();
+        int playerLevel = UtilUserData.getUtilUserData(utilSender.getPlayer().getUniqueId()).getLevel();
         List<Integer> allowedStages = new ArrayList<>();
         plugin.getStageManager().getStages().stream()
                 .filter(stage -> playerLevel>=stage.getLevelRequirement())

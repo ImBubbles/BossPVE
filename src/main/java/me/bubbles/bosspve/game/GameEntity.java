@@ -1,58 +1,38 @@
 package me.bubbles.bosspve.game;
 
-import me.bubbles.bosspve.util.UtilNumber;
+import me.bubbles.bosspve.entities.manager.IEntity;
+import me.bubbles.bosspve.game.manager.GameManager;
+import net.minecraft.world.entity.Entity;
 
-public abstract class GameEntity implements IGameEntity {
+public class GameEntity extends GameBase {
 
-    double maxHealth;
-    double health;
+    private Entity entity;
+    private IEntity iEntity;
+    private GameManager gameManager;
 
-    /*public GameEntity(double maxHealth, double health) {
-        this.maxHealth=maxHealth>0 ? maxHealth : 10;
-        this.health=health;
-    }
-
-    public GameEntity(double maxHealth) {
-        this.maxHealth=maxHealth>0 ? maxHealth : 10;
-        this.health=maxHealth;
-    }*/
-
-    @Override
-    public void setMaxHealth(double maxHealth) {
-        this.maxHealth = maxHealth;
+    public GameEntity(GameManager gameManager, IEntity iEntity, Entity entity) {
+        super(
+                iEntity.getUtilEntity().getMaxHealth()
+        );
+        this.gameManager=gameManager;
+        this.entity=entity;
     }
 
     @Override
-    public boolean setHealth(double health) {
-        if(!isAlive()) {
-            return true;
+    public boolean damage(double x) {
+        boolean a = super.damage(x);
+        if(!a) {
+            entity.kill();
         }
-        this.health = health;
-        return isAlive();
+        this.gameManager.delete(this);
+        return a;
     }
 
-    @Override
-    public double getMaxHealth() {
-        return maxHealth;
+    public Entity getEntity() {
+        return entity;
     }
-
-    @Override
-    public double getHealth() {
-        return health;
-    }
-
-    @Override
-    public boolean damage(int x) {
-        if(!isAlive()) {
-            return false;
-        }
-        health=UtilNumber.clampBorder(getMaxHealth(), 0, health-x);
-        return isAlive();
-    }
-
-    @Override
-    public boolean isAlive() {
-        return health>0;
+    public IEntity getiEntity() {
+        return iEntity;
     }
 
 }

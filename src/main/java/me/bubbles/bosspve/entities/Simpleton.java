@@ -2,6 +2,9 @@ package me.bubbles.bosspve.entities;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.manager.IEntity;
+import me.bubbles.bosspve.flags.EntityFlag;
+import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.util.UtilEntity;
 import me.bubbles.bosspve.util.UtilNumber;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -21,6 +24,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Simpleton extends Skeleton implements IEntity {
@@ -28,6 +32,7 @@ public class Simpleton extends Skeleton implements IEntity {
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&7&lSimpleton");
 
     private BossPVE plugin;
+    private UtilEntity utilEntity;
 
     public Simpleton(BossPVE plugin) {
         this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getSpawnLocation());
@@ -36,12 +41,13 @@ public class Simpleton extends Skeleton implements IEntity {
     public Simpleton(BossPVE plugin, Location location) {
         super(EntityType.SKELETON, ((CraftWorld) plugin.getMultiverseCore().getMVWorldManager().getMVWorld(location.getWorld()).getCBWorld()).getHandle());
         this.plugin=plugin;
+        this.utilEntity=new UtilEntity(this);
         expToDrop=0;
         setPos(location.getX(),location.getY(),location.getZ());
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(getDefaultHp());
-        setHealth(getDefaultHp());
+        getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
+        setHealth((float) utilEntity.getMaxHealth());
         goalSelector.addGoal(0, new RangedBowAttackGoal<>(
                 this, 1, 1, 5
         ));
@@ -74,6 +80,11 @@ public class Simpleton extends Skeleton implements IEntity {
     }
 
     @Override
+    public UtilEntity getUtilEntity() {
+        return utilEntity;
+    }
+
+    @Override
     public List<ItemStack> getDrops() {
         List<ItemStack> result=new ArrayList<>();
         if(UtilNumber.rollTheDice(1,100,2)) {
@@ -89,18 +100,12 @@ public class Simpleton extends Skeleton implements IEntity {
     }
 
     @Override
-    public double getMoney() {
-        return 0.5;
-    }
-
-    @Override
-    public int getXp() {
-        return 2;
-    }
-
-    @Override
-    public int getDefaultHp() {
-        return 5;
+    public HashSet<Flag> getFlags() {
+        HashSet<Flag> result = new HashSet<>();
+        result.add(new Flag<EntityFlag, Double>(EntityFlag.MAX_HEALTH, 5D, false));
+        result.add(new Flag<EntityFlag, Double>(EntityFlag.MONEY, 0.5D, false));
+        result.add(new Flag<EntityFlag, Double>(EntityFlag.XP, 2D, false));
+        return result;
     }
 
     @Override
@@ -111,11 +116,6 @@ public class Simpleton extends Skeleton implements IEntity {
     @Override
     public String getNBTIdentifier() {
         return "simpleton";
-    }
-
-    @Override
-    public int getDamage() {
-        return 2;
     }
 
 }

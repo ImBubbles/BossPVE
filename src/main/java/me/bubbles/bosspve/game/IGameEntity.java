@@ -6,8 +6,7 @@ public interface IGameEntity {
     void setMaxHealth(double maxHealth);
     boolean setHealth(double health);
     double getHealth();
-    boolean damage(int x);
+    boolean damage(double x);
     boolean isAlive();
-    void kill();
 
 }

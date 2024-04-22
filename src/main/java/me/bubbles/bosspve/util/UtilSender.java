@@ -51,7 +51,7 @@ public class UtilSender {
         if(!isPlayer()) {
             return null;
         }
-        return plugin.getGameManager().getGamePlayer(getPlayer().getUniqueId());
+        return plugin.getGameManager().getGamePlayer(getPlayer());
     }
 
 }

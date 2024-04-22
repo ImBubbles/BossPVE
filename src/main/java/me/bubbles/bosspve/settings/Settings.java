@@ -2,7 +2,8 @@ package me.bubbles.bosspve.settings;
 
 public enum Settings {
 
-    KILL_MESSAGES("Kill Messages", 0);
+    KILL_MESSAGES("Kill Messages", 1),
+    PROCC_MESSAGES("Activation Messages", 1);
 
     private String displayName;
     private int defaultValue;

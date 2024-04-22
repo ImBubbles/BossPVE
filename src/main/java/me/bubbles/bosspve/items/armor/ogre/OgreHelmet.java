@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.items.armor.ogre;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.util.UtilItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -9,6 +10,8 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import java.util.HashSet;
 
 public class OgreHelmet extends me.bubbles.bosspve.items.manager.bases.armor.Armor {
 
@@ -31,13 +34,11 @@ public class OgreHelmet extends me.bubbles.bosspve.items.manager.bases.armor.Arm
     }
 
     @Override
-    public int getBaseProtection() {
-        return 2;
-    }
-
-    @Override
-    public double getDamageMultiplier() {
-        return 1;
+    public HashSet<Flag> getFlags() {
+        HashSet<Flag> result = new HashSet<>();
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 2D, false));
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 1D, false));
+        return result;
     }
 
     @Override

@@ -1,9 +1,11 @@
 package me.bubbles.bosspve.items.manager.bases.enchants;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.util.UtilItemStack;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -24,7 +26,7 @@ public class EnchantItem extends Item {
         super(plugin, material, nbtIdentifier.toLowerCase()+"Ench");
         this.enchant=enchant;
         ItemStack itemStack = nmsAsItemStack();
-        itemStack.addUnsafeEnchantment(enchant,1);
+        itemStack.addUnsafeEnchantment(CraftEnchantment.minecraftToBukkit(enchant),1);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setLore(new UtilItemStack(plugin,itemStack).getUpdatedLore());
         itemStack.setItemMeta(itemMeta);
@@ -120,11 +122,16 @@ public class EnchantItem extends Item {
         }
     }
 
+    @Override
+    public HashSet<Flag> getFlags() {
+        return null;
+    }
+
     public ItemStack getAtLevel(int level) {
         ItemStack result = ItemStack.deserialize(nmsAsItemStack().serialize());
         ItemMeta itemMeta = result.getItemMeta();
-        itemMeta.removeEnchant(enchant);
-        itemMeta.addEnchant(enchant, level, true);
+        itemMeta.removeEnchant(CraftEnchantment.minecraftToBukkit(enchant));
+        itemMeta.addEnchant(CraftEnchantment.minecraftToBukkit(enchant), level, true);
         result.setItemMeta(itemMeta);
         itemMeta.setLore(new UtilItemStack(plugin,result).getUpdatedLore());
         result.setItemMeta(itemMeta);

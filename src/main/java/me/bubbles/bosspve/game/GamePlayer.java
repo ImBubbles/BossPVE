@@ -1,30 +1,44 @@
 package me.bubbles.bosspve.game;
 
+import me.bubbles.bosspve.util.UtilCalculator;
 import org.bukkit.entity.Player;
 import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
-public class GamePlayer extends GameEntity {
+public class GamePlayer extends GameBase {
 
-    private UUID uuid;
+    private Player player;
 
-    public GamePlayer(UUID uuid) {
-        this.uuid=uuid;
+    public GamePlayer(Player player) {
+        super(UtilCalculator.getMaxHealth(player));
+        this.player=player;
     }
 
-    @Override
-    public void kill() {
-        getPlayer().setHealth(0);
-        setHealth(0);
+    public void updateHealthBar() {
+        if(player.getHealth()==0) {
+            return;
+        }
+        int percent = (int) ((health/maxHealth)+0.5D);
+        player.setHealth(percent);
     }
 
     public UUID getUuid() {
-        return uuid;
+        return player.getUniqueId();
     }
 
-    private Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
+    public Player getBukkitPlayer() {
+        return player;
     }
 
+    @Override
+    public boolean damage(double x) {
+        boolean a = super.damage(x);
+        if(!a) {
+            player.setHealth(0);
+            setHealth(maxHealth);
+        }
+        updateHealthBar();
+        return a;
+    }
 }

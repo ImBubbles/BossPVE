@@ -1,9 +1,11 @@
 package me.bubbles.bosspve.game.manager;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.game.GameEnemy;
 import me.bubbles.bosspve.game.GameEntity;
+import me.bubbles.bosspve.game.GameBase;
 import me.bubbles.bosspve.game.GamePlayer;
+import net.minecraft.world.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.UUID;
@@ -11,35 +13,73 @@ import java.util.UUID;
 public class GameManager {
 
     private HashSet<GamePlayer> gamePlayers;
-    private HashSet<GameEnemy> gameEnemies;
+    private HashSet<GameEntity> gameEntities;
     private BossPVE plugin;
 
     public GameManager(BossPVE plugin) {
         this.plugin=plugin;
         gamePlayers=new HashSet<>();
-        gameEnemies=new HashSet<>();
+        gameEntities=new HashSet<>();
     }
 
-    public GamePlayer getGamePlayer(UUID uuid) {
+    public GamePlayer getGamePlayer(Player player) {
         GamePlayer result = null;
         for(GamePlayer gamePlayer : gamePlayers) {
-            if(gamePlayer.getUuid().equals(uuid)) {
+            if(gamePlayer.getBukkitPlayer().equals(player)) {
                 result=gamePlayer;
                 break;
             }
         }
         if(result==null) {
-            GamePlayer gamePlayer = new GamePlayer(uuid);
-            gamePlayers.add(gamePlayer);
+            GamePlayer gamePlayer = new GamePlayer(player);
+            register(gamePlayer);
             result=gamePlayer;
         }
         return result;
     }
 
-    public HashSet<GameEntity> getAllEntities() {
-        HashSet<GameEntity> result = new HashSet<>();
+    public GameEntity getGameEntity(Entity entity) {
+        GameEntity result = null;
+        for(GameEntity gameEntity : gameEntities) {
+            if(gameEntity.getEntity().equals(entity)) {
+                result=gameEntity;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public GameEntity getGameEntity(UUID uuid) {
+        GameEntity result = null;
+        for(GameEntity gameEntity : gameEntities) {
+            if(gameEntity.getEntity().getUUID().equals(uuid)) {
+                result=gameEntity;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public void register(GamePlayer gamePlayer) {
+        gamePlayers.add(gamePlayer);
+    }
+
+    public void register(GameEntity gameEntity) {
+        gameEntities.add(gameEntity);
+    }
+
+    public void delete(GameEntity gameEntity) {
+        gameEntities.remove(gameEntity);
+    }
+
+    public void delete(GamePlayer gamePlayer) {
+        gamePlayers.remove(gamePlayer);
+    }
+
+    public HashSet<GameBase> getAllEntities() {
+        HashSet<GameBase> result = new HashSet<>();
         result.addAll(gamePlayers);
-        result.addAll(gameEnemies);
+        result.addAll(gameEntities);
         return result;
     }
 
@@ -47,8 +87,8 @@ public class GameManager {
         return gamePlayers;
     }
 
-    public HashSet<GameEnemy> getGameEnemies() {
-        return gameEnemies;
+    public HashSet<GameEntity> getGameEntities() {
+        return gameEntities;
     }
 
 }

@@ -3,8 +3,8 @@ package me.bubbles.bosspve.items.manager;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.enchants.Speed;
 import me.bubbles.bosspve.items.enchants.Telepathy;
-import me.bubbles.bosspve.items.enchants.enchants.*;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
 
@@ -49,6 +49,11 @@ public class EnchantManager {
 
     public Enchant asCustomEnchant(Enchantment enchantment) {
         Optional<Enchant> result = enchants.stream().filter(enchant -> enchant.getKey().equals(enchantment.getKey())).findFirst();
+        return result.orElse(null);
+    }
+
+    public Enchant fromNamespacedKey(NamespacedKey key) {
+        Optional<Enchant> result = enchants.stream().filter(enchant -> enchant.getKey().equals(key)).findFirst();
         return result.orElse(null);
     }
 

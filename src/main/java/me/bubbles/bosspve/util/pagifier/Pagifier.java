@@ -1,6 +1,6 @@
 package me.bubbles.bosspve.util.pagifier;
 
-import me.bubbles.online.util.pagifier.pager.Pager;
+import me.bubbles.bosspve.util.pagifier.pager.Pager;
 
 public class Pagifier<T> {
     private T[][] pagified;

@@ -28,9 +28,8 @@ public class XpArg extends Argument {
                 return;
             }
         }
-        UtilUserData uud;
+        UtilUserData uud = UtilUserData.getUtilUserData(utilSender.getPlayer().getUniqueId());
         if(args.length==relativeIndex) { // no args
-            uud = plugin.getMySQL().getData(utilSender.getPlayer().getUniqueId());
             utilSender.sendMessage("%prefix% %primary%Your xp is %secondary%"+uud.getXp()+"%primary%.");
             return;
         }
@@ -43,7 +42,6 @@ public class XpArg extends Argument {
             utilSender.sendMessage("%prefix% %primary%Could not find player %secondary%"+args[relativeIndex]+"%primary%.");
             return;
         }
-        uud = plugin.getMySQL().getData(player.getUniqueId());
         utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s %primary%xp is %secondary%"+uud.getXp()+"%primary%.");
     }
 

@@ -1,4 +1,4 @@
-package me.bubbles.bosspve.util;
+package me.bubbles.bosspve.util.messages;
 
 public enum MessageType {
 

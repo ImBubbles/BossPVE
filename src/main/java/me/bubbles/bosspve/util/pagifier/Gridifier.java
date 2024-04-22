@@ -1,7 +1,7 @@
 package me.bubbles.bosspve.util.pagifier;
 
-import me.bubbles.online.util.pagifier.pager.Amount;
-import me.bubbles.online.util.pagifier.pager.generic.Generic3DArray;
+import me.bubbles.bosspve.util.pagifier.pager.Amount;
+import me.bubbles.bosspve.util.pagifier.pager.generic.Generic3DArray;
 
 public class Gridifier<T> {
 

@@ -1,15 +1,18 @@
 package me.bubbles.bosspve.items.armor.ogre;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.flags.ItemFlag;
 import me.bubbles.bosspve.items.manager.bases.armor.Armor;
 import me.bubbles.bosspve.util.UtilItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+
+import java.util.HashSet;
 
 public class OgrePants extends Armor {
 
@@ -22,9 +25,9 @@ public class OgrePants extends Armor {
         ));
         itemMeta.setLore(new UtilItemStack(plugin, itemStack).getUpdatedLore());
         itemMeta.setUnbreakable(true);
-        itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
+        itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_UNBREAKABLE);
+        itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);
+        itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_DYE);
         LeatherArmorMeta laMeta = (LeatherArmorMeta) itemMeta;
         laMeta.setColor(Color.LIME);
         itemStack.setItemMeta(itemMeta);
@@ -32,18 +35,16 @@ public class OgrePants extends Armor {
     }
 
     @Override
-    public int getBaseProtection() {
-        return 2;
-    }
-
-    @Override
-    public double getDamageMultiplier() {
-        return 1;
-    }
-
-    @Override
     public String getDescription() {
         return "Pants from an Ogre";
+    }
+
+    @Override
+    public HashSet<Flag> getFlags() {
+        HashSet<Flag> result = new HashSet<>();
+        result.add(new Flag<ItemFlag, Double>(ItemFlag.PROT_ADD, 2D, false));
+        result.add(new Flag<ItemFlag, Double>(ItemFlag.DAMAGE_ADD, 1D, false));
+        return result;
     }
 
 }

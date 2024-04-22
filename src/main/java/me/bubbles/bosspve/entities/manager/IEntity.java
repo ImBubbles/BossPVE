@@ -1,7 +1,9 @@
 package me.bubbles.bosspve.entities.manager;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.util.UtilCustomEvents;
+import me.bubbles.bosspve.util.UtilEntity;
 import net.minecraft.world.entity.Entity;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,11 +13,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashSet;
 import java.util.List;
 
 public interface IEntity {
 
     Entity spawn(Location location);
+    UtilEntity getUtilEntity();
     default void onEvent(BossPVE plugin, Event event) {
         if(event instanceof EntityDeathEvent) {
             UtilCustomEvents uce = new UtilCustomEvents(plugin,event);
@@ -27,10 +31,7 @@ public interface IEntity {
         }
     }
     List<ItemStack> getDrops();
-    double getMoney();
-    int getXp();
-    int getDefaultHp();
-    int getDamage();
+    HashSet<Flag> getFlags();
     String getNBTIdentifier();
     String getShowName();
     default String getUncoloredName() {

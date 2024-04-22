@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.items.weapons;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.util.UtilItemStack;
 import org.bukkit.ChatColor;
@@ -9,7 +10,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class SkeletonSword extends Item implements IWeapon {
+import java.util.HashSet;
+
+public class SkeletonSword extends Item {
 
     public SkeletonSword(BossPVE plugin) {
         super(plugin, Material.IRON_SWORD, "skeletonSword");
@@ -27,18 +30,8 @@ public class SkeletonSword extends Item implements IWeapon {
     }
 
     @Override
-    public int getBaseXP() {
-        return 0;
-    }
-
-    @Override
-    public double getBaseMoney() {
-        return 0;
-    }
-
-    @Override
-    public double getBaseDamage() {
-        return 10;
+    public HashSet<Flag> getFlags() {
+        return null;
     }
 
     @Override

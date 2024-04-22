@@ -1,9 +1,10 @@
 package me.bubbles.bosspve.util;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.flags.Flag;
-import me.bubbles.bosspve.items.flags.Flags;
-import me.bubbles.bosspve.items.manager.bases.items.Item;
+import me.bubbles.bosspve.entities.manager.IEntity;
+import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.flags.ItemFlag;
+import me.bubbles.bosspve.stages.Stage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,33 +19,71 @@ public class UtilCalculator {
     }
 
     public static double getMaxHealth(Player player) {
-        int additive=0;
-        int multiplier=1;
-        ArrayList<Flag> flags = getActiveFlags(player);
-        for(Flag flag : flags) {
-            if(flag.getName().equals(Flags.HEALTH_ADD)) {
-                additive=additive+((Flag<Integer>) flag).getValue();
-            }
-            if(flag.getName().equals(Flags.HEALTH_MULT)) {
-                multiplier=multiplier*((Flag<Integer>) flag).getValue();
+        int base = 10;
+        int additive=getFlagSum(player, ItemFlag.HEALTH_ADD);
+        double multiplier=getFlagSum(player, ItemFlag.HEALTH_MULT);
+        return (base+additive)*multiplier;
+    }
+
+    public static double getDamage(Player player) {
+        int base = 2;
+        int additive=getFlagSum(player, ItemFlag.DAMAGE_ADD);
+        double multiplier=getFlagSum(player, ItemFlag.DAMAGE_MULT);
+        return (base+additive)*multiplier;
+    }
+
+    public static double getProtection(Player player) {
+        int additive=getFlagSum(player, ItemFlag.PROT_ADD);
+        double multiplier=getFlagSum(player, ItemFlag.PROT_MULT);
+        return additive*multiplier;
+    }
+
+    public static double getMoney(Player player, IEntity iEntity) {
+        double additive=getFlagSum(player, ItemFlag.MONEY_ADD);
+        if(iEntity!=null) {
+            additive+=iEntity.getUtilEntity().getMoney();
+        }
+        double multiplier=getFlagSum(player, ItemFlag.MONEY_MULT);
+        Stage stage = plugin.getStageManager().getStage(player.getLocation());
+        if(stage!=null) {
+            if(stage.isAllowed(player)) {
+                multiplier*=stage.getMoneyMultiplier();
+            } else {
+                return 0D;
             }
         }
         return additive*multiplier;
     }
 
-    public static double getDamage(Player player) {
-        int additive=0;
-        int multiplier=1;
-        ArrayList<Flag> flags = getActiveFlags(player);
-        for(Flag flag : flags) {
-            if(flag.getName().equals(Flags.DAMAGE_ADD)) {
-                additive=additive+((Flag<Integer>) flag).getValue();
-            }
-            if(flag.getName().equals(Flags.DAMAGE_MULT)) {
-                multiplier=multiplier*((Flag<Integer>) flag).getValue();
+    public static double getXp(Player player, IEntity iEntity) {
+        int additive=getFlagSum(player, ItemFlag.XP_ADD);
+        if(iEntity!=null) {
+            additive+=iEntity.getUtilEntity().getXp();
+        }
+        int multiplier=getFlagSum(player, ItemFlag.XP_MULT);
+        Stage stage = plugin.getStageManager().getStage(player.getLocation());
+        if(stage!=null) {
+            if(stage.isAllowed(player)) {
+                multiplier*=stage.getXpMultiplier();
+            } else {
+                return 0D;
             }
         }
         return additive*multiplier;
+    }
+
+    public static int getFlagSum(Player player, ItemFlag flag) {
+        int result = 0;
+        ArrayList<Flag> flags = getActiveFlags(player);
+        for(Flag active : flags) {
+            if(!(active.getValue() instanceof ItemFlag)) {
+                continue;
+            }
+            if(active.getValue().equals(flag)) {
+                result+=((Flag<ItemFlag, Double>) active).getValue();
+            }
+        }
+        return result;
     }
 
     public static ArrayList<Flag> getActiveFlags(Player player) {
@@ -81,7 +120,7 @@ public class UtilCalculator {
         // ARMOR CONTENTS
 
         for(ItemStack itemStack : player.getInventory().getArmorContents()) {
-            Item armorPiece = plugin.getItemManager().getItemFromStack(itemStack);
+            UtilItemStack armorPiece = new UtilItemStack(plugin, itemStack);
             for(Flag flag : armorPiece.getFlags()) {
                 if(!flag.isPassive()) {
                     flags.add(flag);

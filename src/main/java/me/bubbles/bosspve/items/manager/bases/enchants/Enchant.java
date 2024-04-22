@@ -1,28 +1,25 @@
 package me.bubbles.bosspve.items.manager.bases.enchants;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.flags.Flag;
-import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.items.manager.ItemManager;
+import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.ticker.PlayerTimerManager;
 import me.bubbles.bosspve.ticker.Timer;
+import me.bubbles.bosspve.util.UtilEnchant;
 import me.bubbles.bosspve.util.UtilUserData;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.enchantment.Enchantment;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
+import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 
-public class Enchant extends Enchantment {
+public abstract class Enchant extends Enchantment implements IEnchant {
 
     public BossPVE plugin;
     private PlayerTimerManager timerManager;
@@ -32,14 +29,13 @@ public class Enchant extends Enchantment {
     private EnchantItem enchantItem;
     private Material material;
     public HashSet<Item.Type> allowedTypes;
-    private HashSet<Flag> additiveFlags;
 
-    public Enchant(ItemManager itemManager, String name, Material material, int maxLevel) {
-        this(itemManager,name,material,maxLevel,0);
+    public Enchant(ItemManager itemManager, Rarity rarity, String name, Material material, int maxLevel) {
+        this(itemManager,rarity, name,material,maxLevel,0);
     }
 
-    public Enchant(ItemManager itemManager, String name, Material material, int maxLevel, int coolDown) {
-        super(NamespacedKey.minecraft(name.toLowerCase()));
+    public Enchant(ItemManager itemManager, Rarity rarity, String name, Material material, int maxLevel, int coolDown) {
+        super(rarity, null, EquipmentSlot.values());
         this.name=name;
         this.plugin=itemManager.plugin;
         this.coolDown=coolDown;
@@ -50,28 +46,17 @@ public class Enchant extends Enchantment {
         register(itemManager);
     }
 
+    @Override
+    public int getMaxLevel() {
+        return this.maxLevel;
+    }
+
     public void register(ItemManager itemManager) {
         enchantItem=new EnchantItem(plugin, material, this, name);
         itemManager.registerItem(enchantItem);
-        if(Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(this)) {
-            return;
-        }
-        try {
-            Field f = Enchantment.class.getDeclaredField("acceptingNew");
-            f.setAccessible(true);
-            f.set(null, true);
-            Enchantment.registerEnchantment(this);
-        } catch(NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected void addFlags(Flag... flags) {
-        this.additiveFlags.addAll(Arrays.asList(flags));
-    }
-
-    public HashSet<Flag> getFlags() {
-        return this.additiveFlags;
+        UtilEnchant.freezeRegistry();
+        UtilEnchant.registerEnchantment(this);
+        UtilEnchant.unfreezeRegistry();
     }
 
     public void onEvent(Event event) {
@@ -91,7 +76,7 @@ public class Enchant extends Enchantment {
             if(!mainHand.getItemMeta().hasEnchants()) {
                 continue;
             }
-            if(!mainHand.getItemMeta().hasEnchant(this)) {
+            if(!mainHand.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(this))) {
                 continue;
             }
             result.put(player,mainHand);
@@ -112,7 +97,7 @@ public class Enchant extends Enchantment {
             if(!mainHand.getItemMeta().hasEnchants()) {
                 continue;
             }
-            if(!mainHand.getItemMeta().hasEnchant(this)) {
+            if(!mainHand.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(this))) {
                 continue;
             }
             result.put(player,mainHand);
@@ -137,7 +122,7 @@ public class Enchant extends Enchantment {
         if(!itemStack.getItemMeta().hasEnchants()) {
             return false;
         }
-        return itemStack.getItemMeta().hasEnchant(this);
+        return itemStack.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(this));
     }
 
     public boolean coolDowns() {
@@ -191,52 +176,20 @@ public class Enchant extends Enchantment {
         return null;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return maxLevel;
-    }
-
-    @Override
-    public int getStartLevel() {
-        return 1;
-    }
-
-    @Override
-    public EnchantmentTarget getItemTarget() {
-        return null;
-    }
-
-    @Override
-    public boolean isTreasure() {
-        return false;
-    }
-
-    @Override
-    public boolean isCursed() {
-        return false;
-    }
-
-    @Override
-    public boolean conflictsWith(Enchantment enchantment) {
-        return false;
-    }
-
-    @Override
-    public boolean canEnchantItem(ItemStack itemStack) {
-        return false;
-    }
-
     public boolean allowUsage(Player player) {
         if(getLevelRequirement()<=0) {
             return true;
         }
         UtilUserData uud = UtilUserData.getUtilUserData(player.getUniqueId());
         return uud.getLevel()>=getLevelRequirement();
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getKey() {
+        return this.name.toLowerCase().replace(" ","");
     }
 
 }

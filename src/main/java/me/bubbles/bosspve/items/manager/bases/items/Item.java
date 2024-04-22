@@ -1,7 +1,6 @@
 package me.bubbles.bosspve.items.manager.bases.items;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.flags.Flag;
 import me.bubbles.bosspve.util.UtilUserData;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Bukkit;
@@ -20,11 +19,9 @@ public abstract class Item implements IItem {
     public BossPVE plugin;
     private String nbtIdentifier;
     private net.minecraft.world.item.ItemStack nmsStack;
-    private HashSet<Flag> flags;
 
     public Item(BossPVE plugin, Material material, String nbtIdentifier) {
         this.plugin=plugin;
-        flags=new HashSet<>();
         ItemStack itemStack=new ItemStack(material);
         itemStack.setAmount(1);
         this.nbtIdentifier=nbtIdentifier;
@@ -45,13 +42,6 @@ public abstract class Item implements IItem {
         nbtTagCompound.putString("uuid",uuid.toString());
         uuidStack.setTag(nbtTagCompound);
         return CraftItemStack.asBukkitCopy(uuidStack);
-    }
-
-    public void addFlags(Flag... flags) {
-        this.flags.addAll(Arrays.asList(flags));
-    }
-    public HashSet<Flag> getFlags() {
-        return this.flags;
     }
 
     public net.minecraft.world.item.ItemStack getNMSStack() {

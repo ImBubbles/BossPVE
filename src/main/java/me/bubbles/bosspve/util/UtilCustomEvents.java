@@ -1,19 +1,22 @@
 package me.bubbles.bosspve.util;
 
-import com.google.common.util.concurrent.AtomicDouble;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.manager.IEntity;
-import me.bubbles.bosspve.items.manager.bases.items.Item;
-import me.bubbles.bosspve.items.manager.bases.armor.IArmor;
+import me.bubbles.bosspve.game.GameEntity;
+import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
+import me.bubbles.bosspve.util.messages.UtilPreparedMessage;
+import net.minecraft.world.entity.Entity;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
 import java.util.List;
 
 public class UtilCustomEvents {
@@ -64,9 +67,14 @@ public class UtilCustomEvents {
                 }
             }
         }
-        int xp=(int) uis.calculateXp(entity.getXp(),player);
-        double money=uis.calculateMoney(entity.getMoney(),player);
-        new UtilUser(plugin,player).giveXpAndMoney(xp,money,entity);
+        GameEntity gameEntity = plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId());
+        plugin.getGameManager().delete(gameEntity);
+        int xp=(int) UtilCalculator.getXp(player, entity);
+        double money=UtilCalculator.getMoney(player, entity);
+        UtilUserData uud = UtilUserData.getUtilUserData(player.getUniqueId());
+        uud.setXp(uud.getXp()+xp);
+        plugin.getEconomy().depositPlayer(player,money);
+        UtilPreparedMessage.kill(player, entity, xp, (int) (money+0.5D));
     }
 
     public void customEntityDamageByEntityEvent(IEntity entity) { // mob v player
@@ -81,13 +89,19 @@ public class UtilCustomEvents {
         if(!entity.hasSameTagAs(e.getDamager())) {
             return;
         }
-        double result = entity.getDamage();
+        double result = entity.getUtilEntity().damage;;
         Player player = ((Player) e.getEntity()).getPlayer();
         if(player==null) {
             return;
         }
-        result=getResultFromArmor(result,player);
-        e.setDamage(result);
+        result=UtilNumber.clampBorder(result, 0, result-UtilCalculator.getProtection(player));
+        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+        if(gamePlayer.damage(result)) {
+            e.setDamage(0);
+            return;
+        } else {
+            player.setHealth(0);
+        }
     }
 
     public void customEntityDamageByEntityEvent() { // player v entity
@@ -109,46 +123,19 @@ public class UtilCustomEvents {
         if(usedItem.getType().equals(Material.AIR)) {
             return;
         }
-        UtilItemStack uis = new UtilItemStack(plugin,usedItem);
-        double result = uis.calculateDamage(1,((Player) e.getDamager()).getPlayer())-1;
+        double result = UtilCalculator.getDamage(player);
         if(e.getEntity() instanceof Player) {
-            result=getResultFromArmor(result,((Player) e.getEntity()));
+            result=UtilNumber.clampBorder(result, 0, result-UtilCalculator.getProtection((Player) e.getEntity()));
+            Player player2 = ((Player) e.getEntity());
+            GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player2);
+            if(gamePlayer.damage(result)) {
+                e.setDamage(0);
+            } else {
+                player2.setHealth(0);
+            }
+        } else {
+            plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId()).damage(result);
         }
-        e.setDamage(result);
-    }
-
-    private double getResultFromArmor(double init, Player player) {
-        double result=init;
-        for(ItemStack armor : player.getInventory().getArmorContents()) {
-            if(armor==null) {
-                continue;
-            }
-            Item armorItem = plugin.getItemManager().getItemFromStack(armor);
-            if(armorItem!=null) {
-                if(armorItem.getType().equals(Item.Type.ARMOR)) {
-                    IArmor iArmor = (IArmor) armorItem;
-                    result-=iArmor.getBaseProtection();
-                    result*=iArmor.getDamageMultiplier();
-                }
-            }
-            if(!armor.hasItemMeta()) {
-                continue;
-            }
-            if(!armor.getItemMeta().hasEnchants()) {
-                continue;
-            }
-            UtilItemStack uis = new UtilItemStack(plugin,armor);
-            AtomicDouble atomicDouble = new AtomicDouble(1);
-            HashSet<Enchant> customEnchants=uis.getCustomEnchants();
-            customEnchants.forEach(enchant -> atomicDouble.set(atomicDouble.get()*enchant.getDamageMultiplier(armor.getItemMeta().getEnchantLevel(enchant))));
-            result*=atomicDouble.get();
-            AtomicDouble atomicProt = new AtomicDouble(0);
-            customEnchants.forEach(enchant -> {
-                atomicProt.set(atomicProt.get()+enchant.getDamageProtection(armor.getItemMeta().getEnchantLevel(enchant)));
-            });
-            result-=atomicProt.get();
-        }
-        return result;
     }
 
 }

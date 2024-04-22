@@ -2,12 +2,8 @@ package me.bubbles.bosspve.events;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
-import me.bubbles.bosspve.mysql.MySQL;
 import me.bubbles.bosspve.util.UtilUserData;
-import org.bukkit.NamespacedKey;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 public class Join extends Event {
 

@@ -1,6 +1,6 @@
 package me.bubbles.bosspve.util.pagifier.pager;
 
-import me.bubbles.online.util.pagifier.pager.generic.Generic2DArray;
+import me.bubbles.bosspve.util.pagifier.pager.generic.Generic2DArray;
 
 public class Amount<T> implements Pager<T> {
 

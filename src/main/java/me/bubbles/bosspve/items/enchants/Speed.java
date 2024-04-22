@@ -1,10 +1,11 @@
 package me.bubbles.bosspve.items.enchants;
 
+import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.items.manager.ItemManager;
-import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.ticker.Timer;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -18,7 +19,7 @@ public class Speed extends Enchant {
     private Timer timer;
 
     public Speed(ItemManager itemManager) {
-        super(itemManager, "Speed", Material.FEATHER, 30);
+        super(itemManager, Rarity.UNCOMMON, "Speed", Material.FEATHER, 30);
         getEnchantItem().setDisplayName("&fSpeed");
         timer=new Timer(plugin,20);
         plugin.getTimerManager().addTimer(timer);
@@ -39,7 +40,7 @@ public class Speed extends Enchant {
             if(!allowUsage(player)) {
                 return;
             }
-            PotionEffect speed = new PotionEffect(PotionEffectType.SPEED,40,itemStack.getItemMeta().getEnchantLevel(this)-1);
+            PotionEffect speed = new PotionEffect(PotionEffectType.SPEED,40,itemStack.getItemMeta().getEnchantLevel(CraftEnchantment.minecraftToBukkit(this))-1);
             player.addPotionEffect(speed);
         });
         timer.restart();

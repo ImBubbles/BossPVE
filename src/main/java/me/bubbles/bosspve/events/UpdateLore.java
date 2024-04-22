@@ -5,7 +5,7 @@ import me.bubbles.bosspve.events.manager.Event;
 import me.bubbles.bosspve.util.UtilItemStack;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
