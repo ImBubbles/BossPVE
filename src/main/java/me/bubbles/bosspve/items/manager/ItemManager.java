@@ -26,7 +26,6 @@ public class ItemManager {
         this.plugin = plugin;
         items=new HashSet<>();
         armorSets=new HashSet<>();
-        enchantManager=new EnchantManager(this);
         registerItem(
                 new SkeletonSword(plugin),
                 new EnchantExtractor(plugin),
@@ -36,6 +35,10 @@ public class ItemManager {
         registerArmorSet(
                 new OgreSet(plugin)
         );
+    }
+
+    public void initEnchants() {
+        enchantManager=new EnchantManager(this);
     }
 
     public EnchantManager getEnchantManager() {

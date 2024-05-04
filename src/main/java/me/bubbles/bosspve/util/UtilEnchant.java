@@ -2,17 +2,17 @@ package me.bubbles.bosspve.util;
 
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.enchantment.Enchantment;
+import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
 import org.bukkit.inventory.ItemStack;
 
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.util.IdentityHashMap;
-
 import java.lang.reflect.Field;
+import java.util.IdentityHashMap;
 
 public class UtilEnchant {
 
@@ -34,44 +34,32 @@ public class UtilEnchant {
     }
 
     public static void unfreezeRegistry() {
-        setFieldValue(BuiltInRegistries.ENCHANTMENT, "l", false);
-        setFieldValue(BuiltInRegistries.ENCHANTMENT, "m", new IdentityHashMap<>());
+        //Class<?> clazz = ((Object) BuiltInRegistries.ENCHANTMENT).getClass();
+        /*MappedRegistry<Enchantment> mappedRegistry = (MappedRegistry<Enchantment>) BuiltInRegistries.ENCHANTMENT;
+        try {
+            Field frozen = mappedRegistry.getClass().getField("frozen");
+            frozen.setAccessible(true);
+            frozen.set(BuiltInRegistries.ENCHANTMENT, false);
+            Field unregisteredIntrusiveHolders = mappedRegistry.getClass().getField("unregisteredIntrusiveHolders");
+            unregisteredIntrusiveHolders.setAccessible(true);
+            unregisteredIntrusiveHolders.set(BuiltInRegistries.ENCHANTMENT, new IdentityHashMap<>());
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }*/
+        //Reflex.setFieldValue(BuiltInRegistries.ENCHANTMENT, "frozen", false);
+        //Reflex.setFieldValue(BuiltInRegistries.ENCHANTMENT, "unregisteredIntrusiveHolders", new IdentityHashMap<>());
+        Reflex.setFieldValue(BuiltInRegistries.ENCHANTMENT, "l", false);
+        Reflex.setFieldValue(BuiltInRegistries.ENCHANTMENT, "m", new IdentityHashMap<>());
     }
 
     public static void freezeRegistry() {
         BuiltInRegistries.ENCHANTMENT.freeze();
     }
 
-    public static void registerEnchantment(Enchant enchant) {
-        Registry.register(BuiltInRegistries.ENCHANTMENT, enchant.getName(), enchant);
-    }
-
-    private static Field getField(@NotNull Class<?> clazz, @NotNull String fieldName) {
-        try {
-            return clazz.getDeclaredField(fieldName);
-        }
-        catch (NoSuchFieldException e) {
-            Class<?> superClass = clazz.getSuperclass();
-            return superClass == null ? null : getField(superClass, fieldName);
-        }
-    }
-
-    private static boolean setFieldValue(@NotNull Object of, @NotNull String fieldName, @Nullable Object value) {
-        try {
-            boolean isStatic = of instanceof Class;
-            Class<?> clazz = isStatic ? (Class<?>) of : of.getClass();
-
-            Field field = getField(clazz, fieldName);
-            if (field == null) return false;
-
-            field.setAccessible(true);
-            field.set(isStatic ? null : of, value);
-            return true;
-        }
-        catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public static void registerEnchant(Enchant enchant) {
+        NamespacedKey key = enchant.getNamespacedKey();
+        ResourceLocation nmsKey = new ResourceLocation(key.getNamespace(), key.getKey());
+        Registry.register(BuiltInRegistries.ENCHANTMENT, nmsKey, enchant);
     }
 
 }

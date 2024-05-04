@@ -73,7 +73,7 @@ public class Command implements CommandExecutor, TabCompleter {
     public void setPermission(String permission) {
         String node = plugin.getName().toLowerCase() + "." + permission;
         this.permission=node;
-        this.no_perms=plugin.getConfigManager().getConfig("messages.yml").getFileConfiguration().getString("noPerms").replace("%node%",node);
+        this.no_perms=plugin.getConfigManager().getConfig("config.yml").getFileConfiguration().getString("placeholders.no_perms").replace("%node%",node);
     }
 
     public String getArgsMessage() {

@@ -4,6 +4,7 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.enchants.Speed;
 import me.bubbles.bosspve.items.enchants.Telepathy;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
+import me.bubbles.bosspve.util.UtilEnchant;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
@@ -20,9 +21,10 @@ public class EnchantManager {
     public EnchantManager(ItemManager itemManager) {
         this.enchants=new HashSet<>();
         this.plugin=itemManager.plugin;
+        UtilEnchant.unfreezeRegistry();
         registerEnchants(
-                new Telepathy(itemManager),
-                new Speed(itemManager)
+                new Speed(plugin),
+                new Telepathy(plugin)
                 /*new Throw(itemManager),
                 new Resistance(itemManager),
                 new KeyFinder(itemManager),
@@ -31,11 +33,20 @@ public class EnchantManager {
                 new Banker(itemManager),
                 new Damager(itemManager)*/
         );
+        UtilEnchant.freezeRegistry();
+        registerEnchantItems();
     }
 
     private void registerEnchants(Enchant... enchants) {
         Arrays.stream(enchants).forEach(enchant -> {
             this.enchants.add(enchant);
+            this.plugin.getItemManager().registerItem(enchant.getEnchantItem());
+        });
+    }
+
+    private void registerEnchantItems() {
+        enchants.forEach(enchant -> {
+            this.plugin.getItemManager().registerItem(enchant.getEnchantItem());
         });
     }
 

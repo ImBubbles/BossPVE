@@ -1,8 +1,8 @@
 package me.bubbles.bosspve.items.enchants;
 
+import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
-import me.bubbles.bosspve.items.manager.ItemManager;
 import me.bubbles.bosspve.ticker.Timer;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
@@ -18,8 +18,8 @@ public class Speed extends Enchant {
 
     private Timer timer;
 
-    public Speed(ItemManager itemManager) {
-        super(itemManager, Rarity.UNCOMMON, "Speed", Material.FEATHER, 30);
+    public Speed(BossPVE plugin) {
+        super(plugin, Rarity.UNCOMMON, "Speed", Material.FEATHER, 30);
         getEnchantItem().setDisplayName("&fSpeed");
         timer=new Timer(plugin,20);
         plugin.getTimerManager().addTimer(timer);

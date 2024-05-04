@@ -1,7 +1,6 @@
 package me.bubbles.bosspve.items.manager.bases.enchants;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.manager.ItemManager;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.ticker.PlayerTimerManager;
 import me.bubbles.bosspve.ticker.Timer;
@@ -11,6 +10,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -29,21 +29,23 @@ public abstract class Enchant extends Enchantment implements IEnchant {
     private EnchantItem enchantItem;
     private Material material;
     public HashSet<Item.Type> allowedTypes;
+    private NamespacedKey namespacedKey;
 
-    public Enchant(ItemManager itemManager, Rarity rarity, String name, Material material, int maxLevel) {
-        this(itemManager,rarity, name,material,maxLevel,0);
+    public Enchant(BossPVE plugin, Rarity rarity, String name, Material material, int maxLevel) {
+        this(plugin, rarity, name, material, maxLevel,0);
     }
 
-    public Enchant(ItemManager itemManager, Rarity rarity, String name, Material material, int maxLevel, int coolDown) {
+    public Enchant(BossPVE plugin, Rarity rarity, String name, Material material, int maxLevel, int coolDown) {
         super(rarity, null, EquipmentSlot.values());
         this.name=name;
-        this.plugin=itemManager.plugin;
+        this.plugin=plugin;
         this.coolDown=coolDown;
         timerManager=new PlayerTimerManager(plugin);
         this.maxLevel=maxLevel;
         this.material=material;
         this.allowedTypes=new HashSet<>();
-        register(itemManager);
+        this.namespacedKey=new NamespacedKey(plugin, name.toLowerCase().replace(" ",""));
+        register();
     }
 
     @Override
@@ -51,12 +53,8 @@ public abstract class Enchant extends Enchantment implements IEnchant {
         return this.maxLevel;
     }
 
-    public void register(ItemManager itemManager) {
-        enchantItem=new EnchantItem(plugin, material, this, name);
-        itemManager.registerItem(enchantItem);
-        UtilEnchant.freezeRegistry();
-        UtilEnchant.registerEnchantment(this);
-        UtilEnchant.unfreezeRegistry();
+    public void register() {
+        UtilEnchant.registerEnchant(this);
     }
 
     public void onEvent(Event event) {
@@ -165,7 +163,10 @@ public abstract class Enchant extends Enchantment implements IEnchant {
     }
 
     public EnchantItem getEnchantItem() {
-        return enchantItem;
+        return enchantItem==null ?
+                enchantItem=new EnchantItem(plugin, material, this, name)
+                :
+                enchantItem;
     }
 
     public int getLevelRequirement() {
@@ -190,6 +191,10 @@ public abstract class Enchant extends Enchantment implements IEnchant {
 
     public String getKey() {
         return this.name.toLowerCase().replace(" ","");
+    }
+
+    public NamespacedKey getNamespacedKey() {
+        return this.namespacedKey;
     }
 
 }

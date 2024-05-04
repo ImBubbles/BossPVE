@@ -11,10 +11,7 @@ import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.stages.StageManager;
 import me.bubbles.bosspve.ticker.Ticker;
 import me.bubbles.bosspve.ticker.TimerManager;
-import me.bubbles.bosspve.util.PAPI;
-import me.bubbles.bosspve.util.UpdateXP;
-import me.bubbles.bosspve.util.UtilCalculator;
-import me.bubbles.bosspve.util.UtilDatabase;
+import me.bubbles.bosspve.util.*;
 import me.bubbles.bosspve.util.string.UtilString;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -52,7 +49,6 @@ public final class BossPVE extends JavaPlugin {
         saveDefaultConfig();
         configManager.addConfig(
                 "config.yml",
-                "messages.yml",
                 "stages.yml"
         );
 
@@ -60,6 +56,7 @@ public final class BossPVE extends JavaPlugin {
         new UtilDatabase(this);
         new UtilString(this);
         new UtilCalculator(this);
+
 
         // MANAGERS
         // THIS ORDER IS VERY IMPORTANT, SWAPPING THINGS AROUND WILL CAUSE VALUES TO BE RETURNED AS NULL
@@ -78,10 +75,12 @@ public final class BossPVE extends JavaPlugin {
 
         timerManager=new TimerManager();
         itemManager=new ItemManager(this);
+        itemManager.initEnchants();
         entityManager=new EntityManager(this);
         gameManager=new GameManager(this);
         eventManager=new EventManager(this);
-        initStageManager();
+        // Moved to ServerLoadEvent VVVV
+        // initStageManager();
         commandManager=new CommandManager(this);
 
         // Ticker

@@ -67,8 +67,23 @@ public class Stage extends Timer {
         this.entityList=new HashSet<>();
         this.spawnedEntities=new HashSet<>();
         this.spawn=UtilLocation.toLocation(plugin,section.getString("spawn"));
+        if(spawn==null) {
+            valid=false;
+            plugin.getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+ "could not generate spawn point");
+            return;
+        }
         this.pos1=UtilLocation.toLocation(plugin,section.getString("pos1"));
+        if(pos1==null) {
+            valid=false;
+            plugin.getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+ "could not generate spawn pos1");
+            return;
+        }
         this.pos2=UtilLocation.toLocation(plugin,section.getString("pos2"));
+        if(pos2==null) {
+            valid=false;
+            plugin.getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+ "could not generate spawn pos2");
+            return;
+        }
         this.xpMultiplier=section.getDouble("xpMultiplier");
         this.moneyMultiplier=section.getDouble("moneyMultiplier");
         this.maxEntities=section.getInt("maxEntities");
