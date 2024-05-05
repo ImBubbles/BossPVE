@@ -28,7 +28,7 @@ public class XpArg extends Argument {
                 return;
             }
         }
-        UtilUserData uud = UtilUserData.getUtilUserData(utilSender.getPlayer().getUniqueId());
+        UtilUserData uud = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache();
         if(args.length==relativeIndex) { // no args
             utilSender.sendMessage("%prefix% %primary%Your xp is %secondary%"+uud.getXp()+"%primary%.");
             return;

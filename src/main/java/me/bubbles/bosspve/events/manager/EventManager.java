@@ -24,9 +24,9 @@ public class EventManager {
                 new UpdateLore(plugin),
                 new PreventSpawning(plugin),
                 new MaxFood(plugin),
-                new Respawn(plugin),
+                //new Respawn(plugin),
                 new AnvilNameChange(plugin),
-                new AntiDeathRespawn(plugin),
+                //new AntiDeathRespawn(plugin),
                 new ServerLoadEvent(plugin)
         );
     }

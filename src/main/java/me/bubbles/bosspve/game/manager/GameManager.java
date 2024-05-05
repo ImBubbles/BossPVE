@@ -5,6 +5,7 @@ import me.bubbles.bosspve.game.GameEntity;
 import me.bubbles.bosspve.game.GameBase;
 import me.bubbles.bosspve.game.GamePlayer;
 import net.minecraft.world.entity.Entity;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -36,6 +37,10 @@ public class GameManager {
             result=gamePlayer;
         }
         return result;
+    }
+
+    public GamePlayer getGamePlayer(UUID uuid) {
+        return getGamePlayer(Bukkit.getPlayer(uuid));
     }
 
     public GameEntity getGameEntity(Entity entity) {

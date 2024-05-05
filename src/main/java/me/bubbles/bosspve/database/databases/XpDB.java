@@ -19,7 +19,7 @@ public class XpDB extends PlayerIntegerRelation {
         ArrayList<UUID> result = new ArrayList<>();
         try {
             Connection connection = getConnection();
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+tableName+" ORDER BY value DESC");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM "+tableName+" ORDER BY val DESC");
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()) {
                 result.add(UUID.fromString(resultSet.getString("uuid")));

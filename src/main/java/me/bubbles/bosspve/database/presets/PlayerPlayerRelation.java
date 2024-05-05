@@ -13,9 +13,9 @@ public abstract class PlayerPlayerRelation extends Database {
     public PlayerPlayerRelation(String address, int port, String database, String username, String password, String tableName) {
         super(address, port, database, username, password, tableName,
                 "CREATE TABLE IF NOT EXISTS " + tableName + " (" +
-                        "id INT AUTO_INCREMENT," +
-                        "user CHAR(36)," +
-                        "related CHAR(36)," +
+                        "id INT AUTO_INCREMENT, " +
+                        "user CHAR(36), " +
+                        "related CHAR(36), " +
                         "PRIMARY KEY (id)" +
                         ")"
         );

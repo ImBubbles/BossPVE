@@ -3,3 +3,29 @@ version: '${project.version}'
 main: me.bubbles.bosspve.BossPVE
 api-version: '1.20'
 load: STARTUP
+commands:
+  bosspve:
+    usage: /<command>
+    description: Base command
+    aliases: [bpve]
+  stage:
+    usage: /<command>
+    description: Go to a stage
+    aliases: [st]
+  stages:
+    usage: /<command>
+    description: Get a list of the stages
+    aliases: [ sts ]
+  level:
+    usage: /<command>
+    description: Check the level of yourself or others
+  xp:
+    usage: /<command>
+    description: Check the xp amount of yourself or others
+  balance:
+    usage: /<command>
+    description: Check the balance of yourself or others
+    aliases: [bal]
+  spawn:
+    usage: /<command>
+    description: Teleport to spawn

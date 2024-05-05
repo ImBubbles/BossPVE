@@ -25,6 +25,6 @@ public interface IItem {
     default void onEvent(Event event) {}
     default void onTick() {}
 
-    HashSet<Flag> getFlags();
+    default HashSet<Flag> getFlags() {return new HashSet<>();};
 
 }

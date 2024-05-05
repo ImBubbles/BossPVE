@@ -14,13 +14,15 @@ public class Ticker {
     }
 
     private void tick() {
+        if(enabled) {
+            plugin.onTick();
+            scheduleNextTick();
+        }
+    }
+
+    private void scheduleNextTick() {
         BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-        scheduler.scheduleSyncDelayedTask(plugin, () -> {
-            if(enabled) {
-                plugin.onTick();
-                tick();
-            }
-        }, 1);
+        scheduler.scheduleSyncDelayedTask(plugin, this::tick, 1);
     }
 
     public Ticker toggle() {

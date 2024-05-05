@@ -5,6 +5,7 @@ import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.game.GameEntity;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
+import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.util.messages.UtilPreparedMessage;
 import net.minecraft.world.entity.Entity;
 import org.bukkit.Bukkit;
@@ -71,10 +72,10 @@ public class UtilCustomEvents {
         plugin.getGameManager().delete(gameEntity);
         int xp=(int) UtilCalculator.getXp(player, entity);
         double money=UtilCalculator.getMoney(player, entity);
-        UtilUserData uud = UtilUserData.getUtilUserData(player.getUniqueId());
+        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         uud.setXp(uud.getXp()+xp);
         plugin.getEconomy().depositPlayer(player,money);
-        UtilPreparedMessage.kill(player, entity, xp, (int) (money+0.5D));
+        UtilPreparedMessage.kill(plugin.getGameManager().getGamePlayer(player), entity, xp, money);
     }
 
     public void customEntityDamageByEntityEvent(IEntity entity) { // mob v player
@@ -85,7 +86,9 @@ public class UtilCustomEvents {
         if(!(e.getEntity() instanceof Player)) {
             return;
         }
-
+        if(e.getDamager() instanceof Player) {
+            return;
+        }
         if(!entity.hasSameTagAs(e.getDamager())) {
             return;
         }
@@ -96,11 +99,23 @@ public class UtilCustomEvents {
         }
         result=UtilNumber.clampBorder(result, 0, result-UtilCalculator.getProtection(player));
         GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+        e.setDamage(0);
+        System.out.println("damage set 0");
+        System.out.println("result: " + result);
         if(gamePlayer.damage(result)) {
-            e.setDamage(0);
-            return;
+            System.out.println("true");
+            Stage stage = plugin.getStageManager().getStage(player.getLocation());
+            if(stage==null) {
+                System.out.println("null stage");
+                player.setHealth(0);
+            }
+            if(stage.isAllowed(player)) {
+                System.out.println("allowed");
+                player.teleport(stage.getSpawn());
+            }
         } else {
-            player.setHealth(0);
+
+            System.out.println("false");
         }
     }
 
@@ -134,7 +149,11 @@ public class UtilCustomEvents {
                 player2.setHealth(0);
             }
         } else {
-            plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId()).damage(result);
+            GameEntity gameEntity = plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId());
+            if(gameEntity==null) {
+                return;
+            }
+            gameEntity.damage(result);
         }
     }
 

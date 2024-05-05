@@ -57,7 +57,7 @@ public class StageArg extends Argument {
     }
 
     private String getAvailableStages() {
-        int playerLevel = UtilUserData.getUtilUserData(utilSender.getPlayer().getUniqueId()).getLevel();
+        int playerLevel = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache().getLevel();
         List<Integer> allowedStages = new ArrayList<>();
         plugin.getStageManager().getStages().stream()
                 .filter(stage -> playerLevel>=stage.getLevelRequirement())

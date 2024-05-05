@@ -45,7 +45,7 @@ public class UtilItemStack {
         int money=(int) UtilCalculator.getMoney(player, null);
         List<String> lore = new ArrayList<>();
         Item item = plugin.getItemManager().getItemFromStack(itemStack);
-        UtilUserData uud = UtilUserData.getUtilUserData(player.getUniqueId());
+        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         int enchantsAmt = itemStack.getEnchantments().size();
         boolean cont=true;
         for(Enchantment bukkitEnchantment : itemStack.getEnchantments().keySet()) {
@@ -180,8 +180,8 @@ public class UtilItemStack {
         return result;
     }
 
-    public ArrayList<Flag> getFlags() {
-        ArrayList<Flag> result = new ArrayList<>();
+    public HashSet<Flag> getFlags() {
+        HashSet<Flag> result = new HashSet<>();
         Item item = plugin.getItemManager().getItemFromStack(itemStack);
         if(item!=null) {
             result.addAll(item.getFlags());

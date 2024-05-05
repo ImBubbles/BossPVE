@@ -12,8 +12,8 @@ public abstract class PlayerIntegerRelation extends Database {
     public PlayerIntegerRelation(String address, int port, String database, String username, String password, String tableName) {
         super(address, port, database, username, password, tableName,
                 "CREATE TABLE IF NOT EXISTS " + tableName + " (" +
-                        "uuid CHAR(36)," +
-                        "value INT," +
+                        "uuid CHAR(36), " +
+                        "val INT, " +
                         "PRIMARY KEY (uuid)" +
                         ")"
         );
@@ -27,7 +27,7 @@ public abstract class PlayerIntegerRelation extends Database {
             statement.setString(1, player.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                result=rs.getInt("value");
+                result=rs.getInt("val");
             }
             rs.close();
             statement.close();
@@ -41,7 +41,7 @@ public abstract class PlayerIntegerRelation extends Database {
         removeRelation(player);
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + " " +
-                    "(uuid, value) VALUES (?, ?)");
+                    "(uuid, val) VALUES (?, ?)");
 
             statement.setString(1, player.toString());
             statement.setInt(2, value);

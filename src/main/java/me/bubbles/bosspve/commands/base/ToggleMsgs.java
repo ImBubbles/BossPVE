@@ -3,10 +3,14 @@ package me.bubbles.bosspve.commands.base;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.database.databases.SettingsDB;
+import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.settings.Settings;
 import me.bubbles.bosspve.util.UtilDatabase;
+import me.bubbles.bosspve.util.UtilUserData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.HashMap;
 
 public class ToggleMsgs extends Argument {
 
@@ -23,9 +27,13 @@ public class ToggleMsgs extends Argument {
         }
         Player player = utilSender.getPlayer();
         SettingsDB db = UtilDatabase.SettingsDB();
-        boolean result = db.getValue(player.getUniqueId(), Settings.KILL_MESSAGES)==1;
+        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player.getUniqueId());
+        UtilUserData uud = gamePlayer.getCache();
+        HashMap<String, Integer> settings = uud.getSettings();
+        boolean result = settings.get(Settings.KILL_MESSAGES.toString())==1;
         int newValue = !result ? 1 : 0;
         db.setRelation(player.getUniqueId(), Settings.KILL_MESSAGES.toString(), newValue);
+        gamePlayer.updateCache(UtilUserData.getUtilUserData(player.getUniqueId()));
         utilSender.sendMessage("%prefix% %primary%Mob kill messages have been set to %secondary%"+!result+"%primary%.");
     }
 

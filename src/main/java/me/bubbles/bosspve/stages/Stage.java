@@ -7,6 +7,8 @@ import me.bubbles.bosspve.util.UtilDatabase;
 import me.bubbles.bosspve.util.UtilLocation;
 import me.bubbles.bosspve.util.UtilUserData;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.item.ItemEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -222,7 +224,7 @@ public class Stage extends Timer {
     }
 
     public boolean isAllowed(Player player) {
-        UtilUserData uud = UtilUserData.getUtilUserData(player.getUniqueId());
+        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         return uud.getLevel()>=getLevelRequirement();
     }
 

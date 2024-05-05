@@ -5,6 +5,6 @@ import me.bubbles.bosspve.flags.Flag;
 import java.util.HashSet;
 
 public interface IEnchant {
-    default HashSet<Flag> getFlags(int level) {return null;}
+    default HashSet<Flag> getFlags(int level) {return new HashSet<>();}
 
 }

@@ -36,9 +36,9 @@ public class GiveXpArg extends Argument {
             utilSender.sendMessage(getArgsMessage());
             return;
         }
-        UtilUserData uud = UtilUserData.getUtilUserData(player.getUniqueId());
+        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         uud.setXp(uud.getXp()+xp);
-        UtilUserData.save(uud);
+        UtilUserData.save(plugin, uud);
         utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s%primary% xp is now %secondary%"+uud.getXp()+"%primary%.");
     }
 

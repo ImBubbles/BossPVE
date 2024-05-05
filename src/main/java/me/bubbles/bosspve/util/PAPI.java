@@ -39,7 +39,7 @@ public class PAPI extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, String params) {
-        UtilUserData uud = UtilUserData.getUtilUserData(player.getUniqueId());
+        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         if(params.equalsIgnoreCase("xp")){
             return String.valueOf(uud.getXp());
         }

@@ -97,7 +97,7 @@ public abstract class Item implements IItem {
         if(getLevelRequirement()<=0) {
             return true;
         }
-        UtilUserData uud = UtilUserData.getUtilUserData(player.getUniqueId());
+        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         return uud.getLevel()>=getLevelRequirement();
     }
 

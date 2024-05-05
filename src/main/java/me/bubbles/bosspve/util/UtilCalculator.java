@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class UtilCalculator {
 
@@ -58,7 +59,7 @@ public class UtilCalculator {
     public static double getXp(Player player, IEntity iEntity) {
         int additive=getFlagSum(player, ItemFlag.XP_ADD);
         if(iEntity!=null) {
-            additive+=iEntity.getUtilEntity().getXp();
+            additive+=(int) iEntity.getUtilEntity().getXp();
         }
         int multiplier=getFlagSum(player, ItemFlag.XP_MULT);
         Stage stage = plugin.getStageManager().getStage(player.getLocation());
@@ -74,7 +75,7 @@ public class UtilCalculator {
 
     public static int getFlagSum(Player player, ItemFlag flag) {
         int result = 0;
-        ArrayList<Flag> flags = getActiveFlags(player);
+        HashSet<Flag> flags = getActiveFlags(player);
         for(Flag active : flags) {
             if(!(active.getValue() instanceof ItemFlag)) {
                 continue;
@@ -86,12 +87,15 @@ public class UtilCalculator {
         return result;
     }
 
-    public static ArrayList<Flag> getActiveFlags(Player player) {
-        ArrayList<Flag> flags = new ArrayList<>();
+    public static HashSet<Flag> getActiveFlags(Player player) {
+        HashSet<Flag> flags = new HashSet<>();
 
         // ADD ALL PASSIVE
 
         for(ItemStack itemStack : player.getInventory()) {
+            if(itemStack==null) {
+                continue;
+            }
             UtilItemStack uis = new UtilItemStack(plugin, itemStack);
             for(Flag flag : uis.getFlags()) {
                 if(flag.isPassive()) {
@@ -101,25 +105,31 @@ public class UtilCalculator {
         }
 
         // IN HANDS
-
-        UtilItemStack mainHand = new UtilItemStack(plugin, player.getInventory().getItemInMainHand());
-        UtilItemStack offHand = new UtilItemStack(plugin, player.getInventory().getItemInOffHand());
-
-        for(Flag flag : mainHand.getFlags()) {
-            if(!flag.isPassive()) {
-                flags.add(flag);
+        ItemStack mainHandStack = player.getInventory().getItemInMainHand();
+        if(mainHandStack!=null) {
+            UtilItemStack mainHand = new UtilItemStack(plugin, player.getInventory().getItemInMainHand());
+            for(Flag flag : mainHand.getFlags()) {
+                if(!flag.isPassive()) {
+                    flags.add(flag);
+                }
             }
         }
-
-        for(Flag flag : offHand.getFlags()) {
-            if(!flag.isPassive()) {
-                flags.add(flag);
+        ItemStack offHandStack = player.getInventory().getItemInOffHand();
+        if(offHandStack!=null) {
+            UtilItemStack offHand = new UtilItemStack(plugin, player.getInventory().getItemInOffHand());
+            for(Flag flag : offHand.getFlags()) {
+                if(!flag.isPassive()) {
+                    flags.add(flag);
+                }
             }
         }
 
         // ARMOR CONTENTS
 
         for(ItemStack itemStack : player.getInventory().getArmorContents()) {
+            if(itemStack==null) {
+                continue;
+            }
             UtilItemStack armorPiece = new UtilItemStack(plugin, itemStack);
             for(Flag flag : armorPiece.getFlags()) {
                 if(!flag.isPassive()) {

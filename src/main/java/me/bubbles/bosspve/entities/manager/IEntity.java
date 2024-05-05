@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.entities.manager;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.util.UtilCustomEvents;
 import me.bubbles.bosspve.util.UtilEntity;

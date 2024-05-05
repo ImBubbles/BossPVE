@@ -12,8 +12,8 @@ public abstract class PlayerBooleanRelation extends Database {
     public PlayerBooleanRelation(String address, int port, String database, String username, String password, String tableName) {
         super(address, port, database, username, password, tableName,
                 "CREATE TABLE IF NOT EXISTS " + tableName + " (" +
-                        "uuid CHAR(36)," +
-                        "value TINYINT," +
+                        "uuid CHAR(36), " +
+                        "val TINYINT, " +
                         "PRIMARY KEY (uuid)" +
                         ")"
         );
@@ -27,8 +27,8 @@ public abstract class PlayerBooleanRelation extends Database {
             statement.setString(1, player.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                int boolVal = rs.getInt("value");
-                if(rs.getInt("value")==1) {
+                int boolVal = rs.getInt("val");
+                if(rs.getInt("val")==1) {
                     result=true;
                 }
             }
@@ -44,7 +44,7 @@ public abstract class PlayerBooleanRelation extends Database {
         removeRelation(player);
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + " " +
-                    "(uuid, value) VALUES (?, ?)");
+                    "(uuid, val) VALUES (?, ?)");
 
             statement.setString(1, player.toString());
             int boolVal = value==false ? 0 : 1;

@@ -25,13 +25,6 @@ public class EnchantManager {
         registerEnchants(
                 new Speed(plugin),
                 new Telepathy(plugin)
-                /*new Throw(itemManager),
-                new Resistance(itemManager),
-                new KeyFinder(itemManager),
-                new Grinder(itemManager),
-                new Nuker(itemManager),
-                new Banker(itemManager),
-                new Damager(itemManager)*/
         );
         UtilEnchant.freezeRegistry();
         registerEnchantItems();
@@ -40,7 +33,7 @@ public class EnchantManager {
     private void registerEnchants(Enchant... enchants) {
         Arrays.stream(enchants).forEach(enchant -> {
             this.enchants.add(enchant);
-            this.plugin.getItemManager().registerItem(enchant.getEnchantItem());
+            //this.plugin.getItemManager().registerItem(enchant.getEnchantItem());
         });
     }
 

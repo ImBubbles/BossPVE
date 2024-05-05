@@ -57,7 +57,6 @@ public final class BossPVE extends JavaPlugin {
         new UtilString(this);
         new UtilCalculator(this);
 
-
         // MANAGERS
         // THIS ORDER IS VERY IMPORTANT, SWAPPING THINGS AROUND WILL CAUSE VALUES TO BE RETURNED AS NULL
         if(!setupEconomy()) {
@@ -84,20 +83,26 @@ public final class BossPVE extends JavaPlugin {
         commandManager=new CommandManager(this);
 
         // Ticker
-        ticker=new Ticker(this).setEnabled(true);
+        ticker=new Ticker(this);
+        ticker.setEnabled(true);
 
         // XP Bar
-        timerManager.addTimer(new UpdateXP(this));
+        //timerManager.addTimer(new UpdateXP(this));
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        if(stageManager!=null) {
+            stageManager.getStages().forEach(stage -> stage.setEnabled(false));
+            stageManager.getStages().forEach(Stage::killAll);
+        }
     }
 
     // ON TICK
     public void onTick() {
         timerManager.onTick();
+        itemManager.onTick();
     }
 
     // RELOAD CFG
@@ -176,6 +181,9 @@ public final class BossPVE extends JavaPlugin {
     }
 
     public StageManager getStageManager() {
+        if(stageManager==null) {
+            initStageManager();
+        }
         return stageManager;
     }
 

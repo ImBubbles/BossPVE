@@ -16,9 +16,8 @@ public class Join extends Event {
         PlayerJoinEvent e = (PlayerJoinEvent) event;
         UtilUserData uud = UtilUserData.getUtilUserData(e.getPlayer().getUniqueId());
         if(uud.getXp()==-1) {
-            UtilUserData.save(new UtilUserData(e.getPlayer().getUniqueId(),0));
+            UtilUserData.save(plugin, new UtilUserData(e.getPlayer().getUniqueId(),0));
         }
-
     }
 
 }
