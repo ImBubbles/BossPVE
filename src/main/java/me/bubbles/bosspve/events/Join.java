@@ -1,9 +1,14 @@
 package me.bubbles.bosspve.events;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.database.databases.SettingsDB;
 import me.bubbles.bosspve.events.manager.Event;
+import me.bubbles.bosspve.settings.Settings;
+import me.bubbles.bosspve.util.UtilDatabase;
 import me.bubbles.bosspve.util.UtilUserData;
 import org.bukkit.event.player.PlayerJoinEvent;
+
+import java.util.UUID;
 
 public class Join extends Event {
 
@@ -16,7 +21,11 @@ public class Join extends Event {
         PlayerJoinEvent e = (PlayerJoinEvent) event;
         UtilUserData uud = UtilUserData.getUtilUserData(e.getPlayer().getUniqueId());
         if(uud.getXp()==-1) {
-            UtilUserData.save(plugin, new UtilUserData(e.getPlayer().getUniqueId(),0));
+            UUID uuid = e.getPlayer().getUniqueId();
+            /*SettingsDB settingsDB = UtilDatabase.SettingsDB();
+            settingsDB.getValue(uuid, Settings.KILL_MESSAGES);
+            settingsDB.getValue(uuid, Settings.PROCC_MESSAGES);*/
+            UtilUserData.save(plugin, new UtilUserData(uuid,0));
         }
     }
 

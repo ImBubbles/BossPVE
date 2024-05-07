@@ -16,6 +16,9 @@ commands:
     usage: /<command>
     description: Get a list of the stages
     aliases: [ sts ]
+  settings:
+    usage: /<command>
+    description: Adjust your settings
   level:
     usage: /<command>
     description: Check the level of yourself or others

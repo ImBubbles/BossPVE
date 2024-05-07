@@ -22,20 +22,20 @@ public class UtilCalculator {
     public static double getMaxHealth(Player player) {
         int base = 10;
         int additive=getFlagSum(player, ItemFlag.HEALTH_ADD);
-        double multiplier=getFlagSum(player, ItemFlag.HEALTH_MULT);
+        double multiplier=getFlagProduct(player, ItemFlag.HEALTH_MULT, 1);
         return (base+additive)*multiplier;
     }
 
     public static double getDamage(Player player) {
-        int base = 2;
+        int base = 3;
         int additive=getFlagSum(player, ItemFlag.DAMAGE_ADD);
-        double multiplier=getFlagSum(player, ItemFlag.DAMAGE_MULT);
+        double multiplier=getFlagProduct(player, ItemFlag.DAMAGE_MULT);
         return (base+additive)*multiplier;
     }
 
     public static double getProtection(Player player) {
         int additive=getFlagSum(player, ItemFlag.PROT_ADD);
-        double multiplier=getFlagSum(player, ItemFlag.PROT_MULT);
+        double multiplier=getFlagProduct(player, ItemFlag.PROT_MULT, 1);
         return additive*multiplier;
     }
 
@@ -44,7 +44,7 @@ public class UtilCalculator {
         if(iEntity!=null) {
             additive+=iEntity.getUtilEntity().getMoney();
         }
-        double multiplier=getFlagSum(player, ItemFlag.MONEY_MULT);
+        double multiplier=getFlagProduct(player, ItemFlag.MONEY_MULT, 1);
         Stage stage = plugin.getStageManager().getStage(player.getLocation());
         if(stage!=null) {
             if(stage.isAllowed(player)) {
@@ -61,7 +61,7 @@ public class UtilCalculator {
         if(iEntity!=null) {
             additive+=(int) iEntity.getUtilEntity().getXp();
         }
-        int multiplier=getFlagSum(player, ItemFlag.XP_MULT);
+        int multiplier=getFlagProduct(player, ItemFlag.XP_MULT, 1);
         Stage stage = plugin.getStageManager().getStage(player.getLocation());
         if(stage!=null) {
             if(stage.isAllowed(player)) {
@@ -74,21 +74,67 @@ public class UtilCalculator {
     }
 
     public static int getFlagSum(Player player, ItemFlag flag) {
-        int result = 0;
-        HashSet<Flag> flags = getActiveFlags(player);
-        for(Flag active : flags) {
-            if(!(active.getValue() instanceof ItemFlag)) {
-                continue;
-            }
-            if(active.getValue().equals(flag)) {
-                result+=((Flag<ItemFlag, Double>) active).getValue();
+        return getFlagSum(player, flag, 0);
+    }
+
+    public static int getFlagSum(Player player, ItemFlag flag, int orElse) {
+        int result = orElse;
+        HashSet<Flag<ItemFlag, Double>> flags = getActiveFlags(player);
+        for(Flag<ItemFlag, Double> active : flags) {
+            if(active.getFlag().equals(flag)) {
+                result+=active.getValue();
             }
         }
         return result;
     }
 
-    public static HashSet<Flag> getActiveFlags(Player player) {
-        HashSet<Flag> flags = new HashSet<>();
+    public static double getFlagSum(UtilItemStack uis, ItemFlag itemFlag) {
+        return getFlagSum(uis, itemFlag, 0);
+    }
+
+    public static double getFlagSum(UtilItemStack uis, ItemFlag itemFlag, int orElse) {
+        double result = orElse;
+        HashSet<Flag<ItemFlag, Double>> flags = uis.getFlags();
+        for(Flag<ItemFlag, Double> flag : flags) {
+            if(flag.getFlag().equals(itemFlag)) {
+                result+=(flag).getValue();
+            }
+        }
+        return result;
+    }
+
+    public static int getFlagProduct(Player player, ItemFlag flag) {
+        return getFlagProduct(player, flag, 1);
+    }
+
+    public static int getFlagProduct(Player player, ItemFlag flag, int orElse) {
+        int result = orElse;
+        HashSet<Flag<ItemFlag, Double>> flags = getActiveFlags(player);
+        for(Flag<ItemFlag, Double> active : flags) {
+            if(active.getFlag().equals(flag)) {
+                result*=active.getValue();
+            }
+        }
+        return result;
+    }
+
+    public static double getFlagProduct(UtilItemStack uis, ItemFlag itemFlag) {
+        return getFlagProduct(uis, itemFlag, 1);
+    }
+
+    public static double getFlagProduct(UtilItemStack uis, ItemFlag itemFlag, int orElse) {
+        double result = orElse;
+        HashSet<Flag<ItemFlag, Double>> flags = uis.getFlags();
+        for(Flag<ItemFlag, Double> flag : flags) {
+            if(flag.getFlag().equals(itemFlag)) {
+                result*=(flag).getValue();
+            }
+        }
+        return result;
+    }
+
+    public static HashSet<Flag<ItemFlag, Double>> getActiveFlags(Player player) {
+        HashSet<Flag<ItemFlag, Double>> flags = new HashSet<>();
 
         // ADD ALL PASSIVE
 
@@ -97,7 +143,7 @@ public class UtilCalculator {
                 continue;
             }
             UtilItemStack uis = new UtilItemStack(plugin, itemStack);
-            for(Flag flag : uis.getFlags()) {
+            for(Flag<ItemFlag, Double> flag : uis.getFlags()) {
                 if(flag.isPassive()) {
                     flags.add(flag);
                 }
@@ -108,7 +154,7 @@ public class UtilCalculator {
         ItemStack mainHandStack = player.getInventory().getItemInMainHand();
         if(mainHandStack!=null) {
             UtilItemStack mainHand = new UtilItemStack(plugin, player.getInventory().getItemInMainHand());
-            for(Flag flag : mainHand.getFlags()) {
+            for(Flag<ItemFlag, Double> flag : mainHand.getFlags()) {
                 if(!flag.isPassive()) {
                     flags.add(flag);
                 }
@@ -117,7 +163,7 @@ public class UtilCalculator {
         ItemStack offHandStack = player.getInventory().getItemInOffHand();
         if(offHandStack!=null) {
             UtilItemStack offHand = new UtilItemStack(plugin, player.getInventory().getItemInOffHand());
-            for(Flag flag : offHand.getFlags()) {
+            for(Flag<ItemFlag, Double> flag : offHand.getFlags()) {
                 if(!flag.isPassive()) {
                     flags.add(flag);
                 }
@@ -131,7 +177,7 @@ public class UtilCalculator {
                 continue;
             }
             UtilItemStack armorPiece = new UtilItemStack(plugin, itemStack);
-            for(Flag flag : armorPiece.getFlags()) {
+            for(Flag<ItemFlag, Double> flag : armorPiece.getFlags()) {
                 if(!flag.isPassive()) {
                     flags.add(flag);
                 }

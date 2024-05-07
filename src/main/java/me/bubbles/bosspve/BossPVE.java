@@ -15,6 +15,7 @@ import me.bubbles.bosspve.util.*;
 import me.bubbles.bosspve.util.string.UtilString;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -87,15 +88,24 @@ public final class BossPVE extends JavaPlugin {
         ticker.setEnabled(true);
 
         // XP Bar
-        //timerManager.addTimer(new UpdateXP(this));
+        timerManager.addTimer(new UpdateXP(this));
+        timerManager.addTimer(new JustInCase(this));
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        saveUserData();
         if(stageManager!=null) {
             stageManager.getStages().forEach(stage -> stage.setEnabled(false));
             stageManager.getStages().forEach(Stage::killAll);
+        }
+    }
+
+    public void saveUserData() {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            UtilUserData uud = getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+            UtilUserData.save(this, uud);
         }
     }
 
@@ -181,10 +191,11 @@ public final class BossPVE extends JavaPlugin {
     }
 
     public StageManager getStageManager() {
-        if(stageManager==null) {
-            initStageManager();
-        }
         return stageManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
     }
 
     public MultiverseCore getMultiverseCore() {

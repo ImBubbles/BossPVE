@@ -16,23 +16,6 @@ import java.util.IdentityHashMap;
 
 public class UtilEnchant {
 
-    public static int getLevel(ItemStack itemStack, Enchant enchant) {
-        if(itemStack==null) {
-            return -1;
-        }
-        if(!itemStack.hasItemMeta()) {
-            return -1;
-        }
-        if(!itemStack.getEnchantments().containsKey(enchant)) {
-            return -1;
-        }
-        return itemStack.getItemMeta().getEnchantLevel(CraftEnchantment.minecraftToBukkit(enchant));
-    }
-
-    public static int getLevel(Item item, Enchant enchant) {
-        return getLevel(item.nmsAsItemStack(), enchant);
-    }
-
     public static void unfreezeRegistry() {
         //Class<?> clazz = ((Object) BuiltInRegistries.ENCHANTMENT).getClass();
         /*MappedRegistry<Enchantment> mappedRegistry = (MappedRegistry<Enchantment>) BuiltInRegistries.ENCHANTMENT;

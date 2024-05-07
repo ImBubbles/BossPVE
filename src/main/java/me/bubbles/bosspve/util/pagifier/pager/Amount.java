@@ -19,7 +19,7 @@ public class Amount<T> implements Pager<T> {
 
         Generic2DArray<T> result = new Generic2DArray<>(type, rows, columns);
         int index = 0;
-        for(int i = 0; i<rows; i++) {
+        for(int i = 0; i<rows-1; i++) {
             for(int j = 0; j<columns; j++) {
                 result.set(i, j, objects[index]);
                 index++;

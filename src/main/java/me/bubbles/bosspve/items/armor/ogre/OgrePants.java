@@ -40,8 +40,8 @@ public class OgrePants extends Armor {
     }
 
     @Override
-    public HashSet<Flag> getFlags() {
-        HashSet<Flag> result = new HashSet<>();
+    public HashSet<Flag<ItemFlag, Double>> getFlags() {
+        HashSet<Flag<ItemFlag, Double>> result = new HashSet<>();
         result.add(new Flag<ItemFlag, Double>(ItemFlag.PROT_ADD, 2D, false));
         result.add(new Flag<ItemFlag, Double>(ItemFlag.DAMAGE_ADD, 1D, false));
         return result;

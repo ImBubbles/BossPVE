@@ -1,6 +1,8 @@
 package me.bubbles.bosspve.items.manager;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.items.enchants.Damager;
+import me.bubbles.bosspve.items.enchants.Resistance;
 import me.bubbles.bosspve.items.enchants.Speed;
 import me.bubbles.bosspve.items.enchants.Telepathy;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
@@ -24,7 +26,9 @@ public class EnchantManager {
         UtilEnchant.unfreezeRegistry();
         registerEnchants(
                 new Speed(plugin),
-                new Telepathy(plugin)
+                new Telepathy(plugin),
+                new Resistance(plugin),
+                new Damager(plugin)
         );
         UtilEnchant.freezeRegistry();
         registerEnchantItems();
@@ -52,12 +56,16 @@ public class EnchantManager {
     }
 
     public Enchant asCustomEnchant(Enchantment enchantment) {
-        Optional<Enchant> result = enchants.stream().filter(enchant -> enchant.getKey().equals(enchantment.getKey())).findFirst();
+        return fromNamespacedKey(enchantment.getKey());
+    }
+
+    public Enchant getEnchant(String name) {
+        Optional<Enchant> result = enchants.stream().filter(enchant -> enchant.getName().equalsIgnoreCase(name)).findFirst();
         return result.orElse(null);
     }
 
     public Enchant fromNamespacedKey(NamespacedKey key) {
-        Optional<Enchant> result = enchants.stream().filter(enchant -> enchant.getKey().equals(key)).findFirst();
+        Optional<Enchant> result = enchants.stream().filter(enchant -> enchant.getNamespacedKey().equals(key)).findFirst();
         return result.orElse(null);
     }
 

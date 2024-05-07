@@ -21,7 +21,9 @@ public class EntityManager {
         this.plugin=plugin;
         this.entities=new HashSet<>();
         registerEntities(
-                () -> new Simpleton(plugin)
+                () -> new Simpleton(plugin),
+                () -> new Ogre(plugin),
+                () -> new Hellbringer(plugin)
         );
     }
 

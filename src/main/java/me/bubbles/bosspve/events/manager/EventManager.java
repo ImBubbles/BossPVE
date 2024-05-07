@@ -3,6 +3,7 @@ package me.bubbles.bosspve.events.manager;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.*;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -27,15 +28,30 @@ public class EventManager {
                 //new Respawn(plugin),
                 new AnvilNameChange(plugin),
                 //new AntiDeathRespawn(plugin),
-                new ServerLoadEvent(plugin)
+                new WorldLoad(plugin),
+                new UpdateHealthBar(plugin),
+                new Respawn(plugin),
+                new ServerLoad(plugin)
         );
     }
 
+    public void addEvent(Event... events) {
+        Collections.addAll(this.events, events);
+    }
+
+    public void removeEvent(Event... events) {
+        for(Event event : events) {
+            this.events.remove(event);
+        }
+    }
+
     public void onEvent(org.bukkit.event.Event event) {
-        plugin.getEntityManager().onEvent(event);
+        if(plugin.getStageManager()!=null) {
+            plugin.getEntityManager().onEvent(event);
+        }
         plugin.getItemManager().onEvent(event);
         events.stream()
-                .filter(eventObj -> eventObj.getEvent().equals(event.getClass()))
+                .filter(eventObj -> eventObj.getEvents().contains(event.getClass()))
                 .collect(Collectors.toList())
                 .forEach(eventObj -> eventObj.onEvent(event));
     }

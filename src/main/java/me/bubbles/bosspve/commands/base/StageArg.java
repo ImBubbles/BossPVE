@@ -2,6 +2,7 @@ package me.bubbles.bosspve.commands.base;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
+import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.util.UtilUserData;
 import org.bukkit.command.CommandSender;
@@ -54,6 +55,7 @@ public class StageArg extends Argument {
         }
         utilSender.sendMessage("%prefix% %primary%Teleporting to stage %secondary%"+stage.getLevelRequirement()+"%primary%.");
         utilSender.getPlayer().teleport(stage.getSpawn());
+        plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).healPercent(1);
     }
 
     private String getAvailableStages() {

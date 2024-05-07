@@ -2,10 +2,13 @@ package me.bubbles.bosspve.events;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.event.server.ServerLoadEvent;
 
-public class ServerLoadEvent extends Event {
+public class ServerLoad extends Event {
 
-    public ServerLoadEvent(BossPVE plugin) {
+    public ServerLoad(BossPVE plugin) {
         super(plugin, ServerLoadEvent.class);
     }
 

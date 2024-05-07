@@ -24,9 +24,9 @@ public abstract class GameBase implements IGameEntity {
 
     @Override
     public boolean setHealth(double health) {
-        if(!isAlive()) {
+        /*if(!isAlive()) {
             return true;
-        }
+        }*/
         this.health = health;
         return isAlive();
     }

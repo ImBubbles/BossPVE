@@ -22,7 +22,7 @@ public class UtilNumber {
 
     public static double clampLoop(double max, double min, double now) {
         if(Math.max(max,now)>max) {
-            return min+(now-max);
+            return min+((now-1)-max);
         }
         if(Math.min(min,now)<min) {
             return max-(Math.abs(min+now));

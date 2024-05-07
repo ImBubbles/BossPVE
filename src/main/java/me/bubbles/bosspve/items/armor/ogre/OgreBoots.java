@@ -35,8 +35,8 @@ public class OgreBoots extends Armor {
     }
 
     @Override
-    public HashSet<Flag> getFlags() {
-        HashSet<Flag> result = new HashSet<>();
+    public HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> getFlags() {
+        HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> result = new HashSet<>();
         result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 2D, false));
         result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 1D, false));
         return result;

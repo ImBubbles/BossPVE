@@ -1,30 +1,32 @@
 package me.bubbles.bosspve.util.messages;
 
+import me.bubbles.bosspve.database.databases.SettingsDB;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.settings.Settings;
-import me.bubbles.bosspve.util.UtilDatabase;
 import me.bubbles.bosspve.util.UtilUserData;
 import me.bubbles.bosspve.util.string.UtilString;
-import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.UUID;
+public class PreparedMessages {
 
-public class UtilPreparedMessage {
-
-    public static void sendMessage(GamePlayer gamePlayer,
+    private static void sendMessage(GamePlayer gamePlayer,
             MessageType type,
             String string) {
-        HashMap<String, Integer> settings = gamePlayer.getCache().getSettings();
+        UtilUserData uud = gamePlayer.getCache();
         if(type.equals(MessageType.KILL_MESSAGE)) {
-            if(settings.get(Settings.KILL_MESSAGES.toString())==0) {
+            if(SettingsDB.getValue(uud, Settings.KILL_MESSAGES)==0) {
                 return;
             }
         }
         if(type.equals(MessageType.ENCHANT_PROC)) {
-            if(settings.get(Settings.PROCC_MESSAGES.toString())==0) {
+            if(SettingsDB.getValue(uud, Settings.PROCC_MESSAGES)==0) {
+                return;
+            }
+        }
+        if(type.equals(MessageType.ITEM_DROP)) {
+            if(SettingsDB.getValue(uud, Settings.ITEMDROP_MESSAGES)==0) {
                 return;
             }
         }
@@ -33,6 +35,18 @@ public class UtilPreparedMessage {
 
     public static void onProc(GamePlayer gamePlayer, Enchant enchant) {
         sendMessage(gamePlayer, MessageType.ENCHANT_PROC, "%prefix% %secondary%"+enchant.getName()+" %primary%has activated!");
+    }
+
+    public static void itemDrop(GamePlayer gamePlayer, IEntity entity, ItemStack itemStack) {
+        String name="an item.";
+        if(itemStack!=null) {
+            if(itemStack.hasItemMeta()) {
+               if(itemStack.getItemMeta().hasDisplayName()) {
+                   name = itemStack.getItemMeta().getDisplayName();
+               }
+            }
+        }
+        sendMessage(gamePlayer, MessageType.ITEM_DROP, "%prefix% %primary%A %secondary%"+entity.getUncoloredName()+"%primary% you killed dropped "+name+"%primary%.");
     }
 
     public static void kill(GamePlayer gamePlayer, IEntity entity, int xp, double money) {

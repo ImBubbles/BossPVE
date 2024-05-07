@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public class UtilUserData {
 
-    private BossPVE plugin;
     private UUID uuid;
     private int xp;
     private HashMap<String, Integer> settings;

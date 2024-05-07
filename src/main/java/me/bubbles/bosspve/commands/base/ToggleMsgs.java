@@ -29,11 +29,10 @@ public class ToggleMsgs extends Argument {
         SettingsDB db = UtilDatabase.SettingsDB();
         GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player.getUniqueId());
         UtilUserData uud = gamePlayer.getCache();
-        HashMap<String, Integer> settings = uud.getSettings();
-        boolean result = settings.get(Settings.KILL_MESSAGES.toString())==1;
+        boolean result = SettingsDB.getValue(uud, Settings.KILL_MESSAGES)==1;
         int newValue = !result ? 1 : 0;
         db.setRelation(player.getUniqueId(), Settings.KILL_MESSAGES.toString(), newValue);
-        gamePlayer.updateCache(UtilUserData.getUtilUserData(player.getUniqueId()));
+        gamePlayer.updateCache();
         utilSender.sendMessage("%prefix% %primary%Mob kill messages have been set to %secondary%"+!result+"%primary%.");
     }
 

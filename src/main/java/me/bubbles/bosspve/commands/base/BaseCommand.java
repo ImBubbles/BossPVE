@@ -20,7 +20,8 @@ public class BaseCommand extends Command {
                 new AddSpawnArg(plugin, index),
                 new ReloadArg(plugin, index),
                 new ToggleMsgs(plugin, index),
-                new StagesArg(plugin, index)
+                new StagesArg(plugin, index),
+                new SettingsArg(plugin, index)
         );
     }
 

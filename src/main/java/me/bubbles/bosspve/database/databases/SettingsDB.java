@@ -1,8 +1,13 @@
 package me.bubbles.bosspve.database.databases;
 
+import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.database.presets.PlayerStringIntegerRelation;
+import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.settings.Settings;
+import me.bubbles.bosspve.util.UtilDatabase;
+import me.bubbles.bosspve.util.UtilUserData;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class SettingsDB extends PlayerStringIntegerRelation {
@@ -18,6 +23,14 @@ public class SettingsDB extends PlayerStringIntegerRelation {
             setRelation(uuid, setting.toString(), setting.getDefaultValue());
         }
         return getEntry(uuid, setting.toString());
+    }
+
+    public static int getValue(UtilUserData uud, Settings setting) {
+        HashMap<String, Integer> settings = uud.getSettings();
+        if(!settings.containsKey(setting.toString())) {
+            return UtilDatabase.SettingsDB().getValue(uud.getUUID(), setting);
+        }
+        return settings.get(setting.toString());
     }
 
 }

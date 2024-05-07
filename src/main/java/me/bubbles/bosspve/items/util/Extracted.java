@@ -114,11 +114,6 @@ public class Extracted extends Item {
     }
 
     @Override
-    public HashSet<Flag> getFlags() {
-        return null;
-    }
-
-    @Override
     public Type getType() {
         return Type.ENCHANT;
     }

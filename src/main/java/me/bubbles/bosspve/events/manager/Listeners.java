@@ -5,8 +5,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.server.ServerLoadEvent;
+import org.bukkit.event.world.WorldLoadEvent;
 
 public class Listeners implements Listener {
 
@@ -33,6 +37,11 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
+        eventManager.onEvent(e);
+    }
+
+    @EventHandler
+    public void onInventory(InventoryCloseEvent e) {
         eventManager.onEvent(e);
     }
 
@@ -83,6 +92,21 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent e) {
+        eventManager.onEvent(e);
+    }
+
+    @EventHandler
+    public void onEntityRegainHealth(EntityRegainHealthEvent e) {
+        eventManager.onEvent(e);
+    }
+
+    @EventHandler
+    public void onServerLoad(ServerLoadEvent e) {
+        eventManager.onEvent(e);
+    }
+
+    @EventHandler
+    public void onWorldLoad(WorldLoadEvent e) {
         eventManager.onEvent(e);
     }
 

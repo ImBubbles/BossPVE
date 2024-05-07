@@ -2,7 +2,9 @@ package me.bubbles.bosspve.util;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.flags.ItemFlag;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
+import me.bubbles.bosspve.items.manager.bases.items.IItem;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.util.string.UtilString;
 import org.bukkit.ChatColor;
@@ -40,9 +42,6 @@ public class UtilItemStack {
     }
 
     public List<String> getUpdatedLoreForPlayer(ItemStack itemStack, Player player) {
-        int dmg=(int) UtilCalculator.getDamage(player);
-        int xp=(int) UtilCalculator.getXp(player, null);
-        int money=(int) UtilCalculator.getMoney(player, null);
         List<String> lore = new ArrayList<>();
         Item item = plugin.getItemManager().getItemFromStack(itemStack);
         UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
@@ -78,22 +77,59 @@ public class UtilItemStack {
             if((!item.getDescription().equals(""))&&item.getDescription()!=null) {
                 lore.add(UtilString.colorFillPlaceholders("&8"+item.getDescription()));
             }
-            if(item.getType().equals(Item.Type.WEAPON)) {
-                lore.add(
-                        UtilString.colorFillPlaceholders("%primary%Damage:%secondary% "+dmg)
-                );
-                lore.add(
-                        UtilString.colorFillPlaceholders("%primary%XP:%secondary% "+xp)
-                );
-                lore.add(
-                        UtilString.colorFillPlaceholders("%primary%Money:%secondary% $"+money)
-                );
+            String damage = "%primary%Damage:%secondary%";
+            double dmgAdd = UtilCalculator.getFlagSum(this, ItemFlag.DAMAGE_ADD);
+            if(dmgAdd!=0) {
+                damage+=" +"+dmgAdd;
             }
-            if(item.getType().equals(Item.Type.ARMOR)) {
-                lore.add(
-                        UtilString.colorFillPlaceholders("%primary%Defence:%secondary% "+UtilCalculator.getProtection(player))
-                );
+            double dmgMult = UtilCalculator.getFlagProduct(this, ItemFlag.DAMAGE_MULT);
+            if(dmgMult!=1) {
+                damage+=(dmgMult>1 ? " +" : " -");
+                damage+="(%"+Math.abs((int) ((dmgMult*100)-100))+")";
             }
+            if(dmgAdd!=0||dmgMult!=1) {
+                lore.add(UtilString.colorFillPlaceholders(damage));
+            }
+            String xp = "%primary%XP:%secondary%";
+            double xpAdd = UtilCalculator.getFlagSum(this, ItemFlag.XP_ADD);
+            if(xpAdd!=0) {
+                xp+=" +"+xpAdd;
+            }
+            double xpMult = UtilCalculator.getFlagProduct(this, ItemFlag.XP_MULT);
+            if(xpMult!=1) {
+                xp+=(xpMult>1 ? " +" : " -");
+                xp+="(%"+Math.abs((int) ((xpMult*100)-100))+")";
+            }
+            if(xpAdd!=0||xpMult!=1) {
+                lore.add(UtilString.colorFillPlaceholders(xp));
+            }
+            String money = "%primary%Money:%secondary%";
+            double moneyAdd = UtilCalculator.getFlagSum(this, ItemFlag.MONEY_ADD);
+            if(moneyAdd!=0) {
+                money+=" +"+moneyAdd;
+            }
+            double moneyMult = UtilCalculator.getFlagProduct(this, ItemFlag.MONEY_MULT);
+            if(moneyMult!=1) {
+                money+=(moneyMult>1 ? " +" : " -");
+                money+="(%"+Math.abs((int) ((moneyMult*100)-100))+")";
+            }
+            if(xpAdd!=0||xpMult!=1) {
+                lore.add(UtilString.colorFillPlaceholders(money));
+            }
+            String defence = "%primary%Defence:%secondary%";
+            double protAdd = UtilCalculator.getFlagSum(this, ItemFlag.PROT_ADD);
+            if(protAdd!=0) {
+                defence+=" +"+protAdd;
+            }
+            double protMult = UtilCalculator.getFlagProduct(this, ItemFlag.PROT_MULT);
+            if(protMult!=1) {
+                defence+=(protMult>1 ? " +" : " -");
+                defence+="(%"+Math.abs((int) ((protAdd*100)-100))+")";
+            }
+            if(protAdd!=0||protMult!=1) {
+                lore.add(UtilString.colorFillPlaceholders(defence));
+            }
+
         }
         return lore;
     }
@@ -180,16 +216,26 @@ public class UtilItemStack {
         return result;
     }
 
-    public HashSet<Flag> getFlags() {
-        HashSet<Flag> result = new HashSet<>();
+    public HashSet<Flag<ItemFlag, Double>> getFlags() {
+        HashSet<Flag<ItemFlag, Double>> result = new HashSet<>();
         Item item = plugin.getItemManager().getItemFromStack(itemStack);
         if(item!=null) {
             result.addAll(item.getFlags());
         }
         for(Enchant enchant : getCustomEnchants()) {
-            result.addAll(enchant.getFlags(UtilEnchant.getLevel(itemStack, enchant)));
+            result.addAll(enchant.getFlags(getEnchantLevel(enchant)));
         }
         return result;
+    }
+
+    public int getEnchantLevel(Enchant enchant) {
+        if(!itemStack.hasItemMeta()) {
+            return -1;
+        }
+        /*if(!(getCustomEnchants().contains(enchant))) {
+            return -1;
+        }*/
+        return itemStack.getItemMeta().getEnchantLevel(CraftEnchantment.minecraftToBukkit(enchant));
     }
 
 }

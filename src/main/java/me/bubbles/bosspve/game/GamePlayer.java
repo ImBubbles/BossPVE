@@ -1,9 +1,11 @@
 package me.bubbles.bosspve.game;
 
 import me.bubbles.bosspve.util.UtilCalculator;
+import me.bubbles.bosspve.util.UtilNumber;
+import me.bubbles.bosspve.util.UtilTextComponent;
 import me.bubbles.bosspve.util.UtilUserData;
+import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.entity.Player;
-import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
@@ -15,15 +17,18 @@ public class GamePlayer extends GameBase {
     public GamePlayer(Player player) {
         super(UtilCalculator.getMaxHealth(player));
         this.player=player;
-        updateCache(UtilUserData.getUtilUserData(player.getUniqueId()));
+        updateCache();
     }
 
     public void updateHealthBar() {
         if(player.getHealth()==0) {
             return;
         }
-        int percent = (int) ((health/maxHealth)+0.5D);
-        player.setHealth(percent);
+        double percent = health/maxHealth;
+        if((int) 20*percent<0.5) {
+            return;
+        }
+        player.setHealth(20*percent);
     }
 
     @Override
@@ -35,6 +40,10 @@ public class GamePlayer extends GameBase {
 
     public void updateCache(UtilUserData uud) {
         this.cache=uud;
+    }
+
+    public void updateCache() {
+        this.cache = UtilUserData.getUtilUserData(player.getUniqueId());
     }
 
     public UtilUserData getCache() {
@@ -52,10 +61,26 @@ public class GamePlayer extends GameBase {
     @Override
     public boolean damage(double x) {
         boolean a = super.damage(x);
-        if(!a) {
-            setHealth(maxHealth);
+        if(health-x>0) {
+            updateHealthBar();
         }
-        updateHealthBar();
         return a;
     }
+
+    public boolean heal(double x) {
+        boolean a = isAlive();
+        if(!a) {
+            return false;
+        }
+        health=UtilNumber.clampBorder(maxHealth, 0, health+x);
+        updateHealthBar();
+        return true;
+    }
+
+    public boolean healPercent(double x) {
+        double result = UtilNumber.clampBorder(1, 0.1, x);
+        result = maxHealth*result;
+        return heal(result);
+    }
+
 }

@@ -8,6 +8,7 @@ public class Flag<T extends Enum<T>, F> {
     public Flag(Enum<T> flag, F value, boolean passive) {
         this.flag=flag;
         this.passive=passive;
+        this.value=value;
     }
 
     public Enum<T> getFlag() {

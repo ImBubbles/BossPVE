@@ -32,7 +32,7 @@ public interface IEntity {
         }
     }
     List<ItemStack> getDrops();
-    HashSet<Flag> getFlags();
+    HashSet<Flag<EntityFlag, Double>> getFlags();
     String getNBTIdentifier();
     String getShowName();
     default String getUncoloredName() {

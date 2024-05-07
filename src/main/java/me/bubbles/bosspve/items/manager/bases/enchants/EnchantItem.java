@@ -122,11 +122,6 @@ public class EnchantItem extends Item {
         }
     }
 
-    @Override
-    public HashSet<Flag> getFlags() {
-        return null;
-    }
-
     public ItemStack getAtLevel(int level) {
         ItemStack result = ItemStack.deserialize(nmsAsItemStack().serialize());
         ItemMeta itemMeta = result.getItemMeta();

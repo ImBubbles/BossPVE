@@ -8,22 +8,22 @@ import java.util.HashMap;
 
 public class UtilEntity {
 
-    double xp;
-    double damage;
-    double money;
-    double maxHealth;
+    private double xp;
+    private double damage;
+    private double money;
+    private double maxHealth;
 
     public UtilEntity(IEntity iEntity) {
         HashMap<EntityFlag, Double> numFlags = new HashMap<>();
-        for(Flag flag : iEntity.getFlags()) {
-            if(flag.getValue() instanceof Double) {
-                numFlags.put((EntityFlag) flag.getFlag(), (double) flag.getValue());
+        for(Flag<EntityFlag, Double> flag : iEntity.getFlags()) {
+            if(flag.getValue() != null) {
+                numFlags.put((EntityFlag) flag.getFlag(), flag.getValue());
             }
         }
         this.xp=numFlags.getOrDefault(EntityFlag.XP, 1D);
         this.money=numFlags.getOrDefault(EntityFlag.MONEY, 1D);
         this.maxHealth=numFlags.getOrDefault(EntityFlag.MAX_HEALTH, 10D);
-        this.damage=numFlags.getOrDefault(EntityFlag.DAMAGE, 10D);
+        this.damage=numFlags.getOrDefault(EntityFlag.DAMAGE, 1D);
     }
 
     public double getMaxHealth() {

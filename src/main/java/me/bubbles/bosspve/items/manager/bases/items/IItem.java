@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.items.manager.bases.items;
 
 import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.flags.ItemFlag;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ShapedRecipe;
 
@@ -25,6 +26,6 @@ public interface IItem {
     default void onEvent(Event event) {}
     default void onTick() {}
 
-    default HashSet<Flag> getFlags() {return new HashSet<>();};
+    default HashSet<Flag<ItemFlag, Double>> getFlags() {return new HashSet<>();};
 
 }
