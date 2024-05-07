@@ -111,7 +111,7 @@ public class Ogre extends ZombieVillager implements IEntity {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
         result.add(new Flag<>(EntityFlag.MAX_HEALTH, 7D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 2D, false));
-        result.add(new Flag<>(EntityFlag.XP, 3D, false));
+        result.add(new Flag<>(EntityFlag.XP, 2D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 3D, false));
         return result;
     }

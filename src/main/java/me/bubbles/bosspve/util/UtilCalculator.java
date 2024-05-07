@@ -21,20 +21,20 @@ public class UtilCalculator {
 
     public static double getMaxHealth(Player player) {
         int base = 10;
-        int additive=getFlagSum(player, ItemFlag.HEALTH_ADD);
+        double additive=getFlagSum(player, ItemFlag.HEALTH_ADD);
         double multiplier=getFlagProduct(player, ItemFlag.HEALTH_MULT, 1);
         return (base+additive)*multiplier;
     }
 
     public static double getDamage(Player player) {
         int base = 3;
-        int additive=getFlagSum(player, ItemFlag.DAMAGE_ADD);
+        double additive=getFlagSum(player, ItemFlag.DAMAGE_ADD);
         double multiplier=getFlagProduct(player, ItemFlag.DAMAGE_MULT);
         return (base+additive)*multiplier;
     }
 
     public static double getProtection(Player player) {
-        int additive=getFlagSum(player, ItemFlag.PROT_ADD);
+        double additive=getFlagSum(player, ItemFlag.PROT_ADD);
         double multiplier=getFlagProduct(player, ItemFlag.PROT_MULT, 1);
         return additive*multiplier;
     }
@@ -57,11 +57,11 @@ public class UtilCalculator {
     }
 
     public static double getXp(Player player, IEntity iEntity) {
-        int additive=getFlagSum(player, ItemFlag.XP_ADD);
+        double additive=getFlagSum(player, ItemFlag.XP_ADD);
         if(iEntity!=null) {
-            additive+=(int) iEntity.getUtilEntity().getXp();
+            additive+=iEntity.getUtilEntity().getXp();
         }
-        int multiplier=getFlagProduct(player, ItemFlag.XP_MULT, 1);
+        double multiplier=getFlagProduct(player, ItemFlag.XP_MULT, 1);
         Stage stage = plugin.getStageManager().getStage(player.getLocation());
         if(stage!=null) {
             if(stage.isAllowed(player)) {
@@ -70,15 +70,15 @@ public class UtilCalculator {
                 return 0D;
             }
         }
-        return additive*multiplier;
+        return (int) ((additive*multiplier)+0.5D);
     }
 
-    public static int getFlagSum(Player player, ItemFlag flag) {
+    public static double getFlagSum(Player player, ItemFlag flag) {
         return getFlagSum(player, flag, 0);
     }
 
-    public static int getFlagSum(Player player, ItemFlag flag, int orElse) {
-        int result = orElse;
+    public static double getFlagSum(Player player, ItemFlag flag, double orElse) {
+        double result = orElse;
         HashSet<Flag<ItemFlag, Double>> flags = getActiveFlags(player);
         for(Flag<ItemFlag, Double> active : flags) {
             if(active.getFlag().equals(flag)) {
@@ -92,7 +92,7 @@ public class UtilCalculator {
         return getFlagSum(uis, itemFlag, 0);
     }
 
-    public static double getFlagSum(UtilItemStack uis, ItemFlag itemFlag, int orElse) {
+    public static double getFlagSum(UtilItemStack uis, ItemFlag itemFlag, double orElse) {
         double result = orElse;
         HashSet<Flag<ItemFlag, Double>> flags = uis.getFlags();
         for(Flag<ItemFlag, Double> flag : flags) {
@@ -103,12 +103,12 @@ public class UtilCalculator {
         return result;
     }
 
-    public static int getFlagProduct(Player player, ItemFlag flag) {
+    public static double getFlagProduct(Player player, ItemFlag flag) {
         return getFlagProduct(player, flag, 1);
     }
 
-    public static int getFlagProduct(Player player, ItemFlag flag, int orElse) {
-        int result = orElse;
+    public static double getFlagProduct(Player player, ItemFlag flag, double orElse) {
+        double result = orElse;
         HashSet<Flag<ItemFlag, Double>> flags = getActiveFlags(player);
         for(Flag<ItemFlag, Double> active : flags) {
             if(active.getFlag().equals(flag)) {
@@ -122,7 +122,7 @@ public class UtilCalculator {
         return getFlagProduct(uis, itemFlag, 1);
     }
 
-    public static double getFlagProduct(UtilItemStack uis, ItemFlag itemFlag, int orElse) {
+    public static double getFlagProduct(UtilItemStack uis, ItemFlag itemFlag, double orElse) {
         double result = orElse;
         HashSet<Flag<ItemFlag, Double>> flags = uis.getFlags();
         for(Flag<ItemFlag, Double> flag : flags) {

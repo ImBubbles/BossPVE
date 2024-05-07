@@ -109,7 +109,7 @@ public class Simpleton extends Skeleton implements IEntity {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
         result.add(new Flag<>(EntityFlag.MAX_HEALTH, 2D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 0.5D, false));
-        result.add(new Flag<>(EntityFlag.XP, 2D, false));
+        result.add(new Flag<>(EntityFlag.XP, 1D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 1D, false));
         return result;
     }
