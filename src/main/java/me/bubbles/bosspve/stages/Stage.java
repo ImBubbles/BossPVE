@@ -198,6 +198,10 @@ public class Stage extends Timer {
         return moneyMultiplier;
     }
 
+    public int getMaxEntities() {
+        return maxEntities;
+    }
+
     public boolean isInside(Location location) {
 
         if(!(location.getWorld().equals(pos1.getWorld())||location.getWorld().equals(pos2.getWorld()))) {

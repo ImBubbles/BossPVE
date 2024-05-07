@@ -3,8 +3,10 @@ package me.bubbles.bosspve.commands.base;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.events.presets.GuiClickCommand;
+import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.util.UtilNumber;
 import me.bubbles.bosspve.util.pagifier.Gridifier;
+import me.bubbles.bosspve.util.string.UtilString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -69,9 +71,18 @@ public class StagesArg extends Argument {
             int stageNum = stages[(18*pageNum+f)];
             ItemStack stageButton = new ItemStack(level>=stageNum? Material.WHITE_STAINED_GLASS : Material.RED_STAINED_GLASS);
             ItemMeta itemMeta = stageButton.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                    "&fStage " + stageNum
+            itemMeta.setDisplayName(UtilString.colorFillPlaceholders(
+                    "%secondary%&lStage " + stageNum
             ));
+            List<String> lore = new ArrayList<>();
+            Stage stage = plugin.getStageManager().getStage(stageNum);
+            lore.add(UtilString.colorFillPlaceholders(
+                    "%primary%Money Multiplier: %secondary%"+stage.getMoneyMultiplier())+"x");
+            lore.add(UtilString.colorFillPlaceholders(
+                    "%primary%XP Multiplier: %secondary%"+stage.getXpMultiplier())+"x");
+            lore.add(UtilString.colorFillPlaceholders(
+                    "%primary%Monster Limit: %secondary%"+stage.getMaxEntities()));
+            itemMeta.setLore(lore);
             stageButton.setItemMeta(itemMeta);
             page.setItem(f, stageButton);
 
