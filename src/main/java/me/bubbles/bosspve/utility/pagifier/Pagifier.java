@@ -1,0 +1,24 @@
+package me.bubbles.bosspve.utility.pagifier;
+
+import me.bubbles.bosspve.utility.pagifier.pager.Pager;
+
+public class Pagifier<T> {
+    private T[][] pagified;
+
+    public Pagifier(T[] list, Pager<T> pagerType) {
+        this.pagified=pagerType.pagify(list);
+    }
+
+    public T[][] getPages() {
+        return pagified;
+    }
+
+    public T[] getPage(int i) {
+        return pagified[i];
+    }
+
+    public int getTotalPages() {
+        return pagified.length;
+    }
+
+}

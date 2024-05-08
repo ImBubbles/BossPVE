@@ -3,7 +3,7 @@ package me.bubbles.bosspve.events;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
 import me.bubbles.bosspve.game.GamePlayer;
-import me.bubbles.bosspve.util.UtilUserData;
+import me.bubbles.bosspve.utility.UtilUserData;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class Leave extends Event {

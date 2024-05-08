@@ -1,7 +1,7 @@
 package me.bubbles.bosspve.commands.manager;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.util.UtilSender;
+import me.bubbles.bosspve.utility.UtilSender;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

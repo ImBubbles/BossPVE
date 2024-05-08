@@ -2,7 +2,7 @@ package me.bubbles.bosspve.commands.other;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Command;
-import me.bubbles.bosspve.util.UtilLocation;
+import me.bubbles.bosspve.utility.UtilLocation;
 import org.bukkit.command.CommandSender;
 
 public class Spawn extends Command {

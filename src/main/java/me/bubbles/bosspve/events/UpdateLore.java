@@ -2,7 +2,7 @@ package me.bubbles.bosspve.events;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
-import me.bubbles.bosspve.util.UtilItemStack;
+import me.bubbles.bosspve.utility.UtilItemStack;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;

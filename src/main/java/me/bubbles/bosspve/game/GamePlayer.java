@@ -1,10 +1,8 @@
 package me.bubbles.bosspve.game;
 
-import me.bubbles.bosspve.util.UtilCalculator;
-import me.bubbles.bosspve.util.UtilNumber;
-import me.bubbles.bosspve.util.UtilTextComponent;
-import me.bubbles.bosspve.util.UtilUserData;
-import net.md_5.bungee.api.ChatMessageType;
+import me.bubbles.bosspve.utility.UtilCalculator;
+import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.UtilUserData;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;

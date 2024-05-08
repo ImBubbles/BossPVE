@@ -4,48 +4,68 @@ import org.bukkit.Material;
 
 public enum Settings {
 
-    KILL_MESSAGES("Kill Messages", 1, 1, 0),
-    PROCC_MESSAGES("Activation Messages", 1, 1 ,0, Material.ENCHANTED_BOOK),
-    ITEMDROP_MESSAGES("Item Drop Messages", 1, 1, 0);
+    KILL_MESSAGES(new BooleanSetting("Kill Messages", true) {
+        @Override
+        public Material getMaterial(Boolean option) {
+            return option ? Material.IRON_SWORD : Material.WOODEN_SWORD;
+        }
+    }),
+    PROCC_MESSAGES(new BooleanSetting("PROCC_MESSAGES", "Activation Messages", true) {
+        @Override
+        public Material getMaterial(Boolean option) {
+            return option ? Material.ENCHANTED_BOOK : Material.BOOK;
+        }
+    }),
+    ITEMDROP_MESSAGES(new BooleanSetting("ITEMDROP_MESSAGES", "Item Drop Messages", true) {
+        @Override
+        public Material getMaterial(Boolean option) {
+            return option ? Material.STICK : Material.BARRIER;
+        }
+    });
 
-    private String displayName;
-    private int defaultValue;
-    private int a;
-    private int b;
-    private Material m;
+    private Setting setting;
 
-    Settings(String s, int i, int a, int b) {
-        this.displayName=s;
-        this.defaultValue=i;
-        this.a=a;
-        this.b=b;
-        this.m=Material.WHITE_STAINED_GLASS;
-    }
-
-    Settings(String s, int i, int a, int b, Material m) {
-        this.displayName=s;
-        this.defaultValue=i;
-        this.a=a;
-        this.b=b;
-        this.m=m;
+    Settings(Setting setting) {
+        this.setting=setting;
     }
 
     public String getDisplayName() {
-        return displayName;
+        return setting.getDisplayName();
     }
 
-    public int getDefaultValue() {
-        return defaultValue;
+    public Object getDefault() {
+        return setting.getDefault();
     }
 
-    public int getMax() {
-        return Math.max(a, b);
+    public Object getNext(Object object) {
+        return setting.getNext(object);
     }
-    public int getMin() {
-        return Math.min(a, b);
+
+    public int getIndex(Object obj) {
+        if(!obj.getClass().equals(setting.getDefault().getClass())) {
+            return -1;
+        }
+        return setting.getIndex(obj);
     }
-    public Material getMaterial() {
-        return m;
+
+    public Object getOption(int index) {
+        return setting.getOption(index);
+    }
+
+    public String valueToString(Object obj) {
+        if(!obj.getClass().equals(setting.getDefault().getClass())) {
+            return "INVALID CHECK";
+        }
+        return setting.valueToString(obj);
+    }
+
+    public Material getMaterial(Object object) {
+        return setting.getMaterial(object);
+    }
+
+    @Override
+    public String toString() {
+        return setting.getKey();
     }
 
 }

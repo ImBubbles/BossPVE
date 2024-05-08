@@ -1,6 +1,6 @@
 package me.bubbles.bosspve.game;
 
-import me.bubbles.bosspve.util.UtilNumber;
+import me.bubbles.bosspve.utility.UtilNumber;
 
 public abstract class GameBase implements IGameEntity {
 

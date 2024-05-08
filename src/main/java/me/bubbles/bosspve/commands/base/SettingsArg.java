@@ -7,10 +7,10 @@ import me.bubbles.bosspve.events.presets.GuiClickCommand;
 import me.bubbles.bosspve.events.presets.GuiClickRunnable;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.settings.Settings;
-import me.bubbles.bosspve.util.UtilDatabase;
-import me.bubbles.bosspve.util.UtilNumber;
-import me.bubbles.bosspve.util.UtilUserData;
-import me.bubbles.bosspve.util.pagifier.Gridifier;
+import me.bubbles.bosspve.utility.UtilDatabase;
+import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.UtilUserData;
+import me.bubbles.bosspve.utility.pagifier.Gridifier;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -21,8 +21,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class SettingsArg extends Argument {
 
@@ -76,24 +74,19 @@ public class SettingsArg extends Argument {
             }
 
             Settings setting = Settings.values()[(18*pageNum+f)];
-            boolean isBool = setting.getMax()==1&&setting.getMin()==0;
-            ItemStack settingButton;
-            int value = SettingsDB.getValue(uud, setting);
-            if(isBool) {
-                settingButton = new ItemStack(value==1 ? Material.LIME_STAINED_GLASS : Material.RED_STAINED_GLASS);
-            } else {
-                settingButton = new ItemStack(setting.getMaterial());
-            }
+            int index = SettingsDB.getValue(uud, setting);
+            ItemStack settingButton = new ItemStack(setting.getMaterial(setting.getOption(index)));
             ItemMeta itemMeta = settingButton.getItemMeta();
-            if(isBool) {
-                itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                        "&f" + setting.getDisplayName() + ": " + (value==1)
-                ));
+            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                    "&f" + setting.getDisplayName() + ": " + setting.valueToString(setting.getOption(index)))
+            );
+            /*if(isBool) {
+
             } else {
                 itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                         "&f" + setting.getDisplayName() + ": " + value
                 ));
-            }
+            }*/
             settingButton.setItemMeta(itemMeta);
             page.setItem(f, settingButton);
 
@@ -101,10 +94,10 @@ public class SettingsArg extends Argument {
         }
 
         for(Settings setting : listed) {
-            int value = SettingsDB.getValue(uud, setting);
-            int newValue = (int) UtilNumber.clampLoop(setting.getMax(), setting.getMin(), value+1);
+            int index = SettingsDB.getValue(uud, setting);
+            Object next = setting.getNext(setting.getOption(index));
             Runnable runnable = () -> {
-                UtilDatabase.SettingsDB().setRelation(gamePlayer.getUuid(), setting.toString(), newValue);
+                UtilDatabase.SettingsDB().setRelation(gamePlayer.getUuid(), setting.toString(), setting.getIndex(next));
                 gamePlayer.updateCache();
                 Player player = utilSender.getPlayer();
                 player.closeInventory();

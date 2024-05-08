@@ -1,11 +1,8 @@
 package me.bubbles.bosspve.events;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.database.databases.SettingsDB;
 import me.bubbles.bosspve.events.manager.Event;
-import me.bubbles.bosspve.settings.Settings;
-import me.bubbles.bosspve.util.UtilDatabase;
-import me.bubbles.bosspve.util.UtilUserData;
+import me.bubbles.bosspve.utility.UtilUserData;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.UUID;

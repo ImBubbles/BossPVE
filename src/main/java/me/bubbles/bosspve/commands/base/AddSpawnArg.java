@@ -4,7 +4,7 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.stages.Stage;
-import me.bubbles.bosspve.util.UtilLocation;
+import me.bubbles.bosspve.utility.UtilLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;

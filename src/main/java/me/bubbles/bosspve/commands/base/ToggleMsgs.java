@@ -5,12 +5,10 @@ import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.database.databases.SettingsDB;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.settings.Settings;
-import me.bubbles.bosspve.util.UtilDatabase;
-import me.bubbles.bosspve.util.UtilUserData;
+import me.bubbles.bosspve.utility.UtilDatabase;
+import me.bubbles.bosspve.utility.UtilUserData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.HashMap;
 
 public class ToggleMsgs extends Argument {
 

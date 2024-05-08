@@ -2,7 +2,7 @@ package me.bubbles.bosspve.events;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
-import me.bubbles.bosspve.util.UtilCustomEvents;
+import me.bubbles.bosspve.utility.UtilCustomEvents;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class PlayerDmgOther extends Event {

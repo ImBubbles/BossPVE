@@ -1,7 +1,7 @@
 package me.bubbles.bosspve.database.databases;
 
 import me.bubbles.bosspve.database.presets.PlayerIntegerRelation;
-import me.bubbles.bosspve.util.UtilNumber;
+import me.bubbles.bosspve.utility.UtilNumber;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

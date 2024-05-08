@@ -4,7 +4,7 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.flags.ItemFlag;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
-import me.bubbles.bosspve.util.UtilItemStack;
+import me.bubbles.bosspve.utility.UtilItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

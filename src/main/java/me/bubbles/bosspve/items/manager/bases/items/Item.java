@@ -1,7 +1,7 @@
 package me.bubbles.bosspve.items.manager.bases.items;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.util.UtilUserData;
+import me.bubbles.bosspve.utility.UtilUserData;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

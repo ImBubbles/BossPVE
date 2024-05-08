@@ -1,9 +1,8 @@
 package me.bubbles.bosspve.items.util;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
-import me.bubbles.bosspve.util.UtilItemStack;
+import me.bubbles.bosspve.utility.UtilItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,8 +16,6 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.HashSet;
 
 public class Extracted extends Item {
 

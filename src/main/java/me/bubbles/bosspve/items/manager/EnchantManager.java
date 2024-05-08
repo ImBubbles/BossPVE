@@ -6,7 +6,7 @@ import me.bubbles.bosspve.items.enchants.Resistance;
 import me.bubbles.bosspve.items.enchants.Speed;
 import me.bubbles.bosspve.items.enchants.Telepathy;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
-import me.bubbles.bosspve.util.UtilEnchant;
+import me.bubbles.bosspve.utility.UtilEnchant;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
