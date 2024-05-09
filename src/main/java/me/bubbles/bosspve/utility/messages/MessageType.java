@@ -5,6 +5,7 @@ public enum MessageType {
     KILL_MESSAGE,
     ENCHANT_PROC,
     ITEM_DROP,
+    BALANCE_GAIN,
     OTHER
 
 }

@@ -1,10 +1,7 @@
 package me.bubbles.bosspve.items.manager;
 
 import me.bubbles.bosspve.BossPVE;
-import me.bubbles.bosspve.items.enchants.Damager;
-import me.bubbles.bosspve.items.enchants.Resistance;
-import me.bubbles.bosspve.items.enchants.Speed;
-import me.bubbles.bosspve.items.enchants.Telepathy;
+import me.bubbles.bosspve.items.enchants.*;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.utility.UtilEnchant;
 import org.bukkit.NamespacedKey;
@@ -28,7 +25,9 @@ public class EnchantManager {
                 new Speed(plugin),
                 new Telepathy(plugin),
                 new Resistance(plugin),
-                new Damager(plugin)
+                new Damager(plugin),
+                new KeyFinder(plugin),
+                new Banker(plugin)
         );
         UtilEnchant.freezeRegistry();
         registerEnchantItems();

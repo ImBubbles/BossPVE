@@ -5,6 +5,16 @@ import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.flags.ItemFlag;
 import me.bubbles.bosspve.stages.Stage;
+import me.bubbles.bosspve.utility.nms.FixedDamageSource;
+import net.minecraft.core.Holder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.Vec3;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_20_R3.damage.CraftDamageType;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R3.util.CraftLocation;
+import org.bukkit.damage.DamageType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,10 +36,11 @@ public class UtilCalculator {
     }
 
     public static double getDamage(Player player) {
-        int base = 3;
+        int base = 2;
         double additive=getFlagSum(player, ItemFlag.DAMAGE_ADD);
         double multiplier=getFlagProduct(player, ItemFlag.DAMAGE_MULT);
-        return (base+additive)*multiplier;
+        double result = additive*multiplier;
+        return result==0 ? base : result;
     }
 
     public static double getProtection(Player player) {
@@ -185,6 +196,24 @@ public class UtilCalculator {
 
         return flags;
 
+    }
+
+    public static FixedDamageSource damageSourceFromBukkit(DamageType damageType, Entity causingEntity, Entity directEntity, Location damageLocation) {
+        Holder<net.minecraft.world.damagesource.DamageType> holderDamageType = CraftDamageType.bukkitToMinecraftHolder(damageType);
+        net.minecraft.world.entity.Entity nmsCausingEntity = null;
+        CraftEntity craftCausingEntity;
+        if (causingEntity instanceof CraftEntity && (craftCausingEntity = (CraftEntity)causingEntity) == (CraftEntity)causingEntity) {
+            nmsCausingEntity = craftCausingEntity.getHandle();
+        }
+
+        net.minecraft.world.entity.Entity nmsDirectEntity = null;
+        CraftEntity craftDirectEntity;
+        if (directEntity instanceof CraftEntity && (craftDirectEntity = (CraftEntity)directEntity) == (CraftEntity)directEntity) {
+            nmsDirectEntity = craftDirectEntity.getHandle();
+        }
+
+        Vec3 vec3D = damageLocation == null ? null : CraftLocation.toVec3D(damageLocation);
+        return new FixedDamageSource(holderDamageType, nmsDirectEntity, nmsCausingEntity, vec3D);
     }
 
 }

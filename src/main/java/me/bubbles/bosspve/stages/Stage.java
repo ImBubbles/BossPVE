@@ -98,6 +98,10 @@ public class Stage extends Timer {
         restart();
     }
 
+    public void onKill(Entity entity) {
+        spawnedEntities.remove(entity);
+    }
+
     public void killAll() {
         Iterator<Entity> iterator = spawnedEntities.iterator();
         while(iterator.hasNext()) {

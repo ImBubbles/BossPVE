@@ -2,6 +2,7 @@ package me.bubbles.bosspve.utility;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.database.databases.XpDB;
+import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.ticker.Timer;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -18,9 +19,9 @@ public class UpdateXP extends Timer {
 
     @Override
     public void onComplete() {
-        XpDB xpDB = UtilDatabase.getXpDB();
         for(Player player : Bukkit.getOnlinePlayers()) {
-            int xp = xpDB.getValue(player.getUniqueId());
+            GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+            int xp = gamePlayer.getCache().getXp();
             int level = UtilNumber.xpToLevel(xp);
             if(player.getLevel()<level) {
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);

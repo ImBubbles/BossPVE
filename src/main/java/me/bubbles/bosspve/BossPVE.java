@@ -15,6 +15,7 @@ import me.bubbles.bosspve.utility.*;
 import me.bubbles.bosspve.utility.string.UtilString;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -97,8 +98,15 @@ public final class BossPVE extends JavaPlugin {
         // Plugin shutdown logic
         saveUserData();
         if(stageManager!=null) {
-            stageManager.getStages().forEach(stage -> stage.setEnabled(false));
-            stageManager.getStages().forEach(Stage::killAll);
+            stageManager.getStages().forEach(stage -> {
+                stage.setEnabled(false);
+                stage.killAll();
+                World world = stage.getSpawn().getWorld();
+                if(world!=null) {
+                    world.save();
+                }
+            });
+            //stageManager.getStages().forEach(Stage::killAll);
         }
     }
 

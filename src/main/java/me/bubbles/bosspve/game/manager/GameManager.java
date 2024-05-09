@@ -32,7 +32,7 @@ public class GameManager {
             }
         }
         if(result==null) {
-            GamePlayer gamePlayer = new GamePlayer(player);
+            GamePlayer gamePlayer = new GamePlayer(plugin, player);
             register(gamePlayer);
             result=gamePlayer;
         }

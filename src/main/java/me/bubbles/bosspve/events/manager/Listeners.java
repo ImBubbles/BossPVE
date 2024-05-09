@@ -60,10 +60,11 @@ public class Listeners implements Listener {
         eventManager.onEvent(e);
     }
 
-    @EventHandler
+/*    @EventHandler
     public void onEntityDamageEntity(EntityDamageByEntityEvent e) {
+        System.out.println("entity damage by entity event");
         eventManager.onEvent(e);
-    }
+    }*/
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent e) {

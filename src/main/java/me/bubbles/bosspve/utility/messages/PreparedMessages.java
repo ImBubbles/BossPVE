@@ -88,15 +88,15 @@ public class PreparedMessages {
         }
         if(xp>0&&money>0) {
             if(levelUp) {
-                sendMessage(gamePlayer, MessageType.KILL_MESSAGE, "%prefix% %primary%You gained %secondary%$"+money+
+                sendMessage(gamePlayer, MessageType.BALANCE_GAIN, "%prefix% %primary%You gained %secondary%$"+money+
                         " %primary%and leveled up from %secondary%"+level+"%primary% to %secondary%"+uud.getLevel()+"%primary%.");
             } else {
-                sendMessage(gamePlayer, MessageType.KILL_MESSAGE, "%prefix% %primary%You gained %secondary%$"+money+"%primary% and %secondary%"+xp+"%primary% XP.");
+                sendMessage(gamePlayer, MessageType.BALANCE_GAIN, "%prefix% %primary%You gained %secondary%$"+money+"%primary% and %secondary%"+xp+"%primary% XP.");
             }
         } else if (xp>0) {
-            sendMessage(gamePlayer, MessageType.KILL_MESSAGE, "%prefix% %primary%You gained %secondary%"+xp+"%primary% XP.");
+            sendMessage(gamePlayer, MessageType.BALANCE_GAIN, "%prefix% %primary%You gained %secondary%"+xp+"%primary% XP.");
         } else if (money>0) {
-            sendMessage(gamePlayer, MessageType.KILL_MESSAGE, "%prefix% %primary%You gained %secondary%$"+money+"%primary%.");
+            sendMessage(gamePlayer, MessageType.BALANCE_GAIN, "%prefix% %primary%You gained %secondary%$"+money+"%primary%.");
         }
     }
 

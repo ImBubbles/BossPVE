@@ -23,7 +23,9 @@ public class EntityManager {
         registerEntities(
                 () -> new Simpleton(plugin),
                 () -> new Ogre(plugin),
-                () -> new Hellbringer(plugin)
+                () -> new Hellbringer(plugin),
+                () -> new Ferrum(plugin),
+                () -> new Goblin(plugin)
         );
     }
 

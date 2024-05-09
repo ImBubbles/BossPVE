@@ -1,8 +1,11 @@
 package me.bubbles.bosspve.game;
 
+import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.utility.UtilCalculator;
 import me.bubbles.bosspve.utility.UtilNumber;
 import me.bubbles.bosspve.utility.UtilUserData;
+import me.bubbles.bosspve.utility.messages.PreparedMessages;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -10,11 +13,13 @@ import java.util.UUID;
 public class GamePlayer extends GameBase {
 
     private Player player;
+    private BossPVE plugin;
     private UtilUserData cache;
 
-    public GamePlayer(Player player) {
+    public GamePlayer(BossPVE plugin, Player player) {
         super(UtilCalculator.getMaxHealth(player));
         this.player=player;
+        this.plugin=plugin;
         updateCache();
     }
 
@@ -79,6 +84,23 @@ public class GamePlayer extends GameBase {
         double result = UtilNumber.clampBorder(1, 0.1, x);
         result = maxHealth*result;
         return heal(result);
+    }
+
+    public void give(double xp, double money, IEntity cause, boolean message) {
+        if(xp!=0) {
+            UtilUserData uud = cache;
+            uud.setXp((int) (uud.getXp()+xp));
+        }
+        if(money!=0) {
+            plugin.getEconomy().depositPlayer(player,money);
+        }
+        if(message) {
+            if(cause!=null) {
+                PreparedMessages.kill(plugin.getGameManager().getGamePlayer(player), cause, (int) xp, money);
+            } else {
+                PreparedMessages.give(plugin.getGameManager().getGamePlayer(player), (int) xp, money);
+            }
+        }
     }
 
 }

@@ -37,7 +37,7 @@ public class SkeletonSword extends Item {
     @Override
     public HashSet<Flag<ItemFlag, Double>> getFlags() {
         HashSet<Flag<ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(ItemFlag.DAMAGE_ADD, 2D, false));
+        result.add(new Flag<>(ItemFlag.DAMAGE_ADD, 5D, false));
         result.add(new Flag<>(ItemFlag.MONEY_ADD, 1D, false));
         result.add(new Flag<>(ItemFlag.XP_ADD, 1D, false));
         return result;
