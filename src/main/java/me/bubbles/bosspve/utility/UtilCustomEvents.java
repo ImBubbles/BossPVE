@@ -8,6 +8,7 @@ import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.utility.messages.PreparedMessages;
 import me.bubbles.bosspve.utility.nms.FixedDamageSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,9 +18,9 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.craftbukkit.v1_20_R3.damage.CraftDamageSource;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.damage.DamageType;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -47,6 +48,17 @@ public class UtilCustomEvents {
             return;
         }
         EntityDeathEvent e = (EntityDeathEvent) event;
+        if(!entity.hasSameTagAs(e.getEntity())) {
+            return;
+        }
+        GameEntity gameEntity = plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId());
+        if(gameEntity!=null) {
+            plugin.getGameManager().delete(gameEntity);
+        }
+        Stage stage = plugin.getStageManager().getStage(e.getEntity().getLocation());
+        if(stage!=null) {
+            stage.onKill(((CraftEntity) e.getEntity()).getHandle());
+        }
         if(e.getEntity().getKiller()==null) {
             e.getDrops().clear();
             return;
@@ -55,14 +67,7 @@ public class UtilCustomEvents {
             e.getDrops().clear();
             return;
         }
-        if(!entity.hasSameTagAs(e.getEntity())) {
-            return;
-        }
         Player player = e.getEntity().getKiller();
-        Stage stage = plugin.getStageManager().getStage(e.getEntity().getLocation());
-        if(stage!=null) {
-            stage.onKill(((CraftEntity) e.getEntity()).getHandle());
-        }
         e.getDrops().clear();
         e.setDroppedExp(0);
         ItemStack itemStack = player.getInventory().getItemInMainHand();
@@ -108,8 +113,8 @@ public class UtilCustomEvents {
                 }
             }
         }
-        GameEntity gameEntity = plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId());
-        plugin.getGameManager().delete(gameEntity);
+        /*GameEntity gameEntity = plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId());
+        plugin.getGameManager().delete(gameEntity);*/
         int xp=(int) UtilCalculator.getXp(player, entity);
         double money=UtilCalculator.getMoney(player, entity);
         gamePlayer.give(xp, money, entity, true);
@@ -193,6 +198,9 @@ public class UtilCustomEvents {
             }
             e.setDamage(0);
             LivingEntity livingEntity = ((LivingEntity) e.getEntity());
+            net.minecraft.world.entity.LivingEntity nmsEntity = ((CraftLivingEntity) livingEntity).getHandle();
+            nmsEntity.setLastHurtByPlayer(((CraftPlayer) player).getHandle());
+            //livingEntity.setLastDamageCause(e);
             livingEntity.setHealth(UtilNumber.clampBorder(livingEntity.getHealth(), 0, (livingEntity.getHealth())-result));
             //FixedDamageSource damageSource = UtilCalculator.damageSourceFromBukkit(DamageType.PLAYER_ATTACK, player, e.getEntity(), player.getLocation());
             //((CraftEntity) e.getEntity()).getHandle().hurt(damageSource, (float) 0);

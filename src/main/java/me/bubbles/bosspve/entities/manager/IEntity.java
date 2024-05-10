@@ -6,6 +6,7 @@ import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.utility.UtilCustomEvents;
 import me.bubbles.bosspve.utility.UtilEntity;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
@@ -20,6 +21,7 @@ import java.util.List;
 public interface IEntity {
 
     Entity spawn(Location location);
+    Entity clone(Level level);
     UtilEntity getUtilEntity();
     default void onEvent(BossPVE plugin, Event event) {
         if(event instanceof EntityDeathEvent) {

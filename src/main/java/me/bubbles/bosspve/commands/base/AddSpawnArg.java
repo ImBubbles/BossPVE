@@ -8,6 +8,7 @@ import me.bubbles.bosspve.utility.UtilLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class AddSpawnArg extends Argument {

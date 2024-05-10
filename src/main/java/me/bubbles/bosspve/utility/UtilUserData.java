@@ -35,6 +35,10 @@ public class UtilUserData {
         return settings;
     }
 
+    public void addSetting(String string, int integer) {
+        settings.put(string, integer);
+    }
+
     public int getLevel() {
         return UtilNumber.xpToLevel(xp);
     }

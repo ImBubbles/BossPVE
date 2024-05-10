@@ -14,6 +14,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -30,23 +31,24 @@ import java.util.List;
 public class Simpleton extends Skeleton implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&7&lSimpleton");
-
     private BossPVE plugin;
     private UtilEntity utilEntity;
 
     public Simpleton(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getSpawnLocation());
+        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Simpleton(BossPVE plugin, Location location) {
-        super(EntityType.SKELETON, ((CraftWorld) plugin.getMultiverseCore().getMVWorldManager().getMVWorld(location.getWorld()).getCBWorld()).getHandle());
+    public Simpleton(BossPVE plugin, Level level, Location location) {
+        super(EntityType.SKELETON, level);
         this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
-        setPos(location.getX(),location.getY(),location.getZ());
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
         setHealth((float) utilEntity.getMaxHealth());
+        if(location!=null) {
+            setPos(location.getX(),location.getY(),location.getZ());
+        }
         goalSelector.addGoal(0, new RangedBowAttackGoal<>(
                 this, 1, 1, 5
         ));
@@ -64,13 +66,17 @@ public class Simpleton extends Skeleton implements IEntity {
         ));
         setItemInHand(InteractionHand.MAIN_HAND,plugin.getItemManager().getItemByName("SkeletonSword").getNMSStack());
         setItemSlot(EquipmentSlot.HEAD, CraftItemStack.asNMSCopy(new ItemStack(Material.LEATHER_HELMET)));
-        getAttribute(Attributes.ARMOR).setBaseValue(0D);
+        //getAttribute(Attributes.ARMOR).setBaseValue(0D);
         if(getDrops()!=null) {
             drops.clear();
             drops.addAll(getDrops());
         }
-        expToDrop=0;
         addTag(getNBTIdentifier());
+    }
+
+    @Override
+    public Entity clone(Level level) {
+        return new Simpleton(plugin, level, null);
     }
 
     @Override
@@ -80,7 +86,7 @@ public class Simpleton extends Skeleton implements IEntity {
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Simpleton(plugin,location);
+        Entity entity = new Simpleton(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
@@ -96,10 +102,10 @@ public class Simpleton extends Skeleton implements IEntity {
         if(UtilNumber.rollTheDice(1,100,2)) {
             result.add(plugin.getItemManager().getItemByName("telepathyEnch").nmsAsItemStack());
         }
-        if(UtilNumber.rollTheDice(1,200,2)) {
+        if(UtilNumber.rollTheDice(1,200,1)) {
             result.add(plugin.getItemManager().getItemByName("speedEnch").nmsAsItemStack());
         }
-        if(UtilNumber.rollTheDice(1,150,1)) {
+        if(UtilNumber.rollTheDice(1,100,2)) {
             result.add(plugin.getItemManager().getItemByName("skeletonSword").nmsAsItemStack());
         }
         return result;

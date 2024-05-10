@@ -2,15 +2,25 @@ package me.bubbles.bosspve.commands.base;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
+import me.bubbles.bosspve.database.databases.SettingsDB;
 import me.bubbles.bosspve.events.presets.GuiClickCommand;
+import me.bubbles.bosspve.events.presets.GuiClickIndex;
+import me.bubbles.bosspve.events.presets.GuiClickRunnable;
+import me.bubbles.bosspve.game.GamePlayer;
+import me.bubbles.bosspve.settings.Settings;
 import me.bubbles.bosspve.stages.Stage;
+import me.bubbles.bosspve.stages.StageManager;
+import me.bubbles.bosspve.utility.UtilDatabase;
 import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.UtilUserData;
+import me.bubbles.bosspve.utility.guis.command.ClickGUI;
 import me.bubbles.bosspve.utility.pagifier.Gridifier;
 import me.bubbles.bosspve.utility.string.UtilString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -33,10 +43,6 @@ public class StagesArg extends Argument {
         if(!permissionCheck()) {
             return;
         }
-        Integer[] stages = getAllStages();
-        Gridifier<Integer> grid = new Gridifier<Integer>(Integer.class, stages, 2, 9);
-
-        int level = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache().getLevel();
 
         int page;
 
@@ -50,108 +56,100 @@ public class StagesArg extends Argument {
             page = 0;
         }
 
-        page = (int) UtilNumber.clampBorder(grid.getTotalPages()-1, 0, page);
-
-        utilSender.getPlayer().openInventory(generateGUI(grid, stages, level, page));
+        utilSender.getPlayer().openInventory(generateGUI(page));
 
     }
 
-    private Inventory generateGUI(Gridifier<Integer> gridifier, Integer[] stages, int level, int pageNum) {
+    private Inventory generateGUI(int pageNum) {
 
-        Inventory page = Bukkit.createInventory(null, 27, "Stages ("+(pageNum+1)+"/"+gridifier.getTotalPages()+")");
-        ArrayList<Integer> listed = new ArrayList<>();
-        for(int f=0; f<17; f++) {
+        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId());
+        UtilUserData uud = gamePlayer.getCache();
 
-            // STAGE BUTTON
-
-            if(stages.length<((18*pageNum+f)+1)) {
-                break;
+        ClickGUI<Stage> gui = new ClickGUI<Stage>(plugin, utilSender.getPlayer(), Stage.class, getAllStages(), pageNum, false) {
+            @Override
+            public ItemStack getItemStack(Stage object) {
+                int stageNum = object.getLevelRequirement();
+                ItemStack stageButton = new ItemStack(uud.getLevel()>=stageNum? Material.WHITE_STAINED_GLASS : Material.RED_STAINED_GLASS);
+                ItemMeta itemMeta = stageButton.getItemMeta();
+                itemMeta.setDisplayName(UtilString.colorFillPlaceholders(
+                        "%secondary%&lStage " + stageNum
+                ));
+                List<String> lore = new ArrayList<>();
+                Stage stage = plugin.getStageManager().getStage(stageNum);
+                lore.add(UtilString.colorFillPlaceholders(
+                        "%primary%Money Multiplier: %secondary%"+stage.getMoneyMultiplier())+"x");
+                lore.add(UtilString.colorFillPlaceholders(
+                        "%primary%XP Multiplier: %secondary%"+stage.getXpMultiplier())+"x");
+                lore.add(UtilString.colorFillPlaceholders(
+                        "%primary%Monster Limit: %secondary%"+stage.getMaxEntities()));
+                itemMeta.setLore(lore);
+                stageButton.setItemMeta(itemMeta);
+                return stageButton;
             }
 
-            int stageNum = stages[(18*pageNum+f)];
-            ItemStack stageButton = new ItemStack(level>=stageNum? Material.WHITE_STAINED_GLASS : Material.RED_STAINED_GLASS);
-            ItemMeta itemMeta = stageButton.getItemMeta();
-            itemMeta.setDisplayName(UtilString.colorFillPlaceholders(
-                    "%secondary%&lStage " + stageNum
-            ));
-            List<String> lore = new ArrayList<>();
-            Stage stage = plugin.getStageManager().getStage(stageNum);
-            lore.add(UtilString.colorFillPlaceholders(
-                    "%primary%Money Multiplier: %secondary%"+stage.getMoneyMultiplier())+"x");
-            lore.add(UtilString.colorFillPlaceholders(
-                    "%primary%XP Multiplier: %secondary%"+stage.getXpMultiplier())+"x");
-            lore.add(UtilString.colorFillPlaceholders(
-                    "%primary%Monster Limit: %secondary%"+stage.getMaxEntities()));
-            itemMeta.setLore(lore);
-            stageButton.setItemMeta(itemMeta);
-            page.setItem(f, stageButton);
+            @Override
+            public GuiClickIndex getGuiClick(Stage object, int index) {
+                int stageNum = object.getLevelRequirement();
+                return new GuiClickCommand(plugin, inventory, index, "stage "+stageNum, utilSender.getPlayer());
+            }
 
-            listed.add(stageNum);
-        }
+            @Override
+            public ItemStack getBackItemStack() {
+                ItemStack backButton = new ItemStack(Material.ARROW);
+                ItemMeta itemMeta = backButton.getItemMeta();
+                itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                        "&fPage " + (page-1)
+                ));
+                backButton.setItemMeta(itemMeta);
+                return backButton;
+            }
 
-        for(int stageNum : listed) {
-            plugin.getEventManager().addEvent(new GuiClickCommand(plugin, page, listed.indexOf(stageNum), "stage "+stageNum, utilSender.getPlayer()));
-        }
+            @Override
+            public ItemStack getForwardItemStack() {
+                ItemStack nextButton = new ItemStack(Material.FEATHER);
+                ItemMeta itemMeta = nextButton.getItemMeta();
+                itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                        "&fPage " + (page+1)
+                ));
+                nextButton.setItemMeta(itemMeta);
+                return nextButton;
+            }
 
-        // BACK & NEXT BUTTON
+            @Override
+            public GuiClickIndex getBackCommand(int index) {
+                return new GuiClickCommand(plugin, inventory, index, "stages "+(page-1), utilSender.getPlayer());
+            }
 
-        if(pageNum>0) {
-            ItemStack backButton = new ItemStack(Material.ARROW);
-            ItemMeta itemMeta = backButton.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                    "&fPage " + (pageNum-1)
-            ));
-            backButton.setItemMeta(itemMeta);
-            page.setItem(18, backButton);
-            plugin.getEventManager().addEvent(new GuiClickCommand(plugin, page, 18, "stages "+(pageNum-1), utilSender.getPlayer()));
-        }
+            @Override
+            public GuiClickIndex getForwardCommand(int index) {
+                return new GuiClickCommand(plugin, inventory, index, "stages "+(page+1), utilSender.getPlayer());
+            }
 
-        if(pageNum<gridifier.getTotalPages()-1) {
-            ItemStack nextButton = new ItemStack(Material.FEATHER);
-            ItemMeta itemMeta = nextButton.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                    "&fPage " + (pageNum+1)
-            ));
-            nextButton.setItemMeta(itemMeta);
-            page.setItem(26, nextButton);
-            plugin.getEventManager().addEvent(new GuiClickCommand(plugin, page, 26, "stages "+(pageNum+1), utilSender.getPlayer()));
-        }
+            @Override
+            public ItemStack getBottomItemStack() {
+                return new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+            }
 
-        return page;
-
+            @Override
+            public ItemStack getBackground() {
+                return new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+            }
+        };
+        return gui.build();
     }
 
-    private Integer[] getAllStages() {
+    private Stage[] getAllStages() {
+        StageManager stageManager = plugin.getStageManager();
         List<Integer> stages = new ArrayList<>();
-        plugin.getStageManager().getStages().forEach(stage -> {
+        stageManager.getStages().forEach(stage -> {
             stages.add(stage.getLevelRequirement());
         });
         Collections.sort(stages);
-        Integer[] result = new Integer[stages.size()];
+        Stage[] result = new Stage[stages.size()];
         for(int i=0; i<stages.size(); i++) {
-            result[i]=stages.get(i);
+            result[i]=stageManager.getStage(stages.get(i));
         }
         return result;
     }
-
-
-/*    private String getAvailableStages() {
-        List<Integer> allowedStages = new ArrayList<>();
-        plugin.getStageManager().getStages().stream()
-                .forEach(stage -> allowedStages.add(stage.getLevelRequirement())
-                );
-        Collections.sort(allowedStages);
-        StringBuilder stringBuilder = new StringBuilder();
-        boolean first=true;
-        for(Integer stage : allowedStages) {
-            if(!first) {
-                stringBuilder.append("%primary%, ");
-            } else {
-                first=false;
-            }
-            stringBuilder.append("%secondary%").append(stage);
-        }
-        return stringBuilder.toString();
-    }*/
 
 }

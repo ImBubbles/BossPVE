@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,20 +38,22 @@ public class Ferrum extends IronGolem implements IEntity {
     private UtilEntity utilEntity;
 
     public Ferrum(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getSpawnLocation());
+        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Ferrum(BossPVE plugin, Location location) {
-        super(EntityType.IRON_GOLEM, ((CraftWorld) plugin.getMultiverseCore().getMVWorldManager().getMVWorld(location.getWorld()).getCBWorld()).getHandle());
+    public Ferrum(BossPVE plugin, Level level, Location location) {
+        super(EntityType.IRON_GOLEM, level);
         this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
-        setPos(location.getX(),location.getY(),location.getZ());
         setCustomNameVisible(true);
         expToDrop=0;
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
         setHealth((float) utilEntity.getMaxHealth());
         setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
+        if(location!=null) {
+            setPos(location.getX(),location.getY(),location.getZ());
+        }
         goalSelector.addGoal(0, new MeleeAttackGoal(
                 this, 1, false
         ));
@@ -72,10 +75,11 @@ public class Ferrum extends IronGolem implements IEntity {
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Ferrum(plugin,location);
+        Entity entity = new Ferrum(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
+
     @Override
     public List<ItemStack> getDrops() {
         List<ItemStack> result=new ArrayList<>();
@@ -90,6 +94,11 @@ public class Ferrum extends IronGolem implements IEntity {
             result.add(((EnchantItem) plugin.getItemManager().getItemByName("keyfinderEnch")).getAtLevel(3));
         }
         return result;
+    }
+
+    @Override
+    public Entity clone(Level level) {
+        return new Ferrum(plugin, level, null);
     }
 
     @Override

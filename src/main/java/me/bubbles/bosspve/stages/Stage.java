@@ -2,15 +2,18 @@ package me.bubbles.bosspve.stages;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.manager.IEntity;
+import me.bubbles.bosspve.game.GameEntity;
 import me.bubbles.bosspve.ticker.Timer;
 import me.bubbles.bosspve.utility.UtilLocation;
 import me.bubbles.bosspve.utility.UtilUserData;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -107,7 +110,9 @@ public class Stage extends Timer {
         while(iterator.hasNext()) {
             Entity entity = iterator.next();
             if(entity.isAlive()) {
-                entity.kill();
+                LivingEntity livingEntity = (LivingEntity) entity;
+                livingEntity.remove(Entity.RemovalReason.DISCARDED);
+                plugin.getGameManager().delete(plugin.getGameManager().getGameEntity(entity));
             }
             iterator.remove();
         }
@@ -118,9 +123,10 @@ public class Stage extends Timer {
         while(iterator.hasNext()) {
             Entity entity = iterator.next();
             if(entity.isAlive()) {
-                CraftEntity craftEntity = CraftEntity.getEntity((CraftServer) Bukkit.getServer(), entity);
-                craftEntity
-                        .setLastDamageCause(new EntityDamageByEntityEvent(player, craftEntity, EntityDamageEvent.DamageCause.ENTITY_ATTACK, 1000000));
+                LivingEntity livingEntity = (LivingEntity) entity;
+                livingEntity.setLastHurtByPlayer(((CraftPlayer) player).getHandle());
+                livingEntity.kill();
+                plugin.getGameManager().delete(plugin.getGameManager().getGameEntity(entity));
             }
             iterator.remove();
         }

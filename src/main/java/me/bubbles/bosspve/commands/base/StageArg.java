@@ -21,7 +21,6 @@ public class StageArg extends Argument {
     @Override
     public void run(CommandSender sender, String[] args, boolean alias) {
         super.run(sender, args, alias);
-        //TODO allow 0 args to be passed to open gui
         if(!permissionCheck()) {
             return;
         }

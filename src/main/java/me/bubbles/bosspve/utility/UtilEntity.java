@@ -3,10 +3,13 @@ package me.bubbles.bosspve.utility;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
+import net.minecraft.world.entity.Entity;
 
 import java.util.HashMap;
 
 public class UtilEntity {
+
+    private IEntity iEntity;
 
     private double xp;
     private double damage;
@@ -20,6 +23,7 @@ public class UtilEntity {
                 numFlags.put((EntityFlag) flag.getFlag(), flag.getValue());
             }
         }
+        this.iEntity=iEntity;
         this.xp=numFlags.getOrDefault(EntityFlag.XP, 1D);
         this.money=numFlags.getOrDefault(EntityFlag.MONEY, 1D);
         this.maxHealth=numFlags.getOrDefault(EntityFlag.MAX_HEALTH, 10D);

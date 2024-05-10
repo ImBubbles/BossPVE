@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Vindicator;
+import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,18 +38,20 @@ public class Hellbringer extends Vindicator implements IEntity {
     private UtilEntity utilEntity;
 
     public Hellbringer(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getSpawnLocation());
+        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Hellbringer(BossPVE plugin, Location location) {
-        super(EntityType.VINDICATOR, ((CraftWorld) plugin.getMultiverseCore().getMVWorldManager().getMVWorld(location.getWorld()).getCBWorld()).getHandle());
+    public Hellbringer(BossPVE plugin, Level level, Location location) {
+        super(EntityType.VINDICATOR, level);
         this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
-        setPos(location.getX(),location.getY(),location.getZ());
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
         setHealth((float) utilEntity.getMaxHealth());
+        if(location!=null) {
+            setPos(location.getX(),location.getY(),location.getZ());
+        }
         expToDrop=0;
         setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
         goalSelector.addGoal(0, new MeleeAttackGoal(
@@ -71,8 +74,13 @@ public class Hellbringer extends Vindicator implements IEntity {
     }
 
     @Override
+    public Entity clone(Level level) {
+        return new Hellbringer(plugin, level, null);
+    }
+
+    @Override
     public Entity spawn(Location location) {
-        Entity entity = new Hellbringer(plugin,location);
+        Entity entity = new Hellbringer(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }

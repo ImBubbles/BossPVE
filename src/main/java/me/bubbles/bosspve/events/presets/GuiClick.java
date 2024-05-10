@@ -7,12 +7,12 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.Arrays;
 
-public class GuiClickEvent extends Event {
+public class GuiClick extends Event {
 
     private Inventory inventory;
-    private boolean allow;
+    private final boolean allow;
 
-    public GuiClickEvent(BossPVE plugin, Inventory inventory, boolean allow) {
+    public GuiClick(BossPVE plugin, Inventory inventory, boolean allow) {
         super(plugin, Arrays.asList(InventoryClickEvent.class, InventoryCloseEvent.class));
         this.inventory=inventory;
         this.allow=allow;
@@ -43,6 +43,10 @@ public class GuiClickEvent extends Event {
             }
         }
         event.setCancelled(!allow);
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory=inventory;
     }
 
 }

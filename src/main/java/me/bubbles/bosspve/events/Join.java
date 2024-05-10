@@ -20,7 +20,7 @@ public class Join extends Event {
     @Override
     public void onEvent(org.bukkit.event.Event event) {
         PlayerJoinEvent e = (PlayerJoinEvent) event;
-        if(Bukkit.getOnlinePlayers().size()==1) {
+        /*if(Bukkit.getOnlinePlayers().size()==1) {
             for(World world : Bukkit.getWorlds()) {
                 world.getEntities().forEach(entity -> {
                     if(!(entity instanceof Player)) {
@@ -29,7 +29,7 @@ public class Join extends Event {
                     }
                 });
             }
-        }
+        }*/
         UtilUserData uud = UtilUserData.getUtilUserData(e.getPlayer().getUniqueId());
         if(uud.getXp()==-1) {
             UUID uuid = e.getPlayer().getUniqueId();

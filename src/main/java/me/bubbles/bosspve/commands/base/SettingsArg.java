@@ -4,12 +4,14 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.database.databases.SettingsDB;
 import me.bubbles.bosspve.events.presets.GuiClickCommand;
+import me.bubbles.bosspve.events.presets.GuiClickIndex;
 import me.bubbles.bosspve.events.presets.GuiClickRunnable;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.settings.Settings;
 import me.bubbles.bosspve.utility.UtilDatabase;
 import me.bubbles.bosspve.utility.UtilNumber;
 import me.bubbles.bosspve.utility.UtilUserData;
+import me.bubbles.bosspve.utility.guis.command.ClickGUI;
 import me.bubbles.bosspve.utility.pagifier.Gridifier;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,8 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
 
 public class SettingsArg extends Argument {
 
@@ -36,8 +36,6 @@ public class SettingsArg extends Argument {
         if(!permissionCheck()) {
             return;
         }
-        Settings[] settings = Settings.values();
-        Gridifier<Settings> grid = new Gridifier<Settings>(Settings.class, settings, 2, 9);
 
         int page;
 
@@ -51,87 +49,85 @@ public class SettingsArg extends Argument {
             page = 0;
         }
 
-        page = (int) UtilNumber.clampBorder(grid.getTotalPages()-1, 0, page);
-
-        utilSender.getPlayer().openInventory(generateGUI(grid, page));
+        utilSender.getPlayer().openInventory(generateGUI(page));
 
     }
 
-    private Inventory generateGUI(Gridifier<Settings> gridifier, int pageNum) {
-
-        Inventory page = Bukkit.createInventory(null, 27, "Settings ("+(pageNum+1)+"/"+gridifier.getTotalPages()+")");
-        ArrayList<Settings> listed = new ArrayList<>();
+    private Inventory generateGUI(int pageNum) {
 
         GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId());
         UtilUserData uud = gamePlayer.getCache();
 
-        for(int f=0; f<17; f++) {
-
-            // SETTING BUTTON
-
-            if(Settings.values().length<((18*pageNum+f)+1)) {
-                break;
+        ClickGUI<Settings> gui = new ClickGUI<Settings>(plugin, utilSender.getPlayer(), Settings.class, Settings.values(), pageNum, false) {
+            @Override
+            public ItemStack getItemStack(Settings object) {
+                int index = SettingsDB.getValue(uud, object);
+                ItemStack settingButton = new ItemStack(object.getMaterial(object.getOption(index)));
+                ItemMeta itemMeta = settingButton.getItemMeta();
+                itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                        "&f" + object.getDisplayName() + ": " + object.valueToString(object.getOption(index)))
+                );
+                settingButton.setItemMeta(itemMeta);
+                return settingButton;
             }
 
-            Settings setting = Settings.values()[(18*pageNum+f)];
-            int index = SettingsDB.getValue(uud, setting);
-            ItemStack settingButton = new ItemStack(setting.getMaterial(setting.getOption(index)));
-            ItemMeta itemMeta = settingButton.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                    "&f" + setting.getDisplayName() + ": " + setting.valueToString(setting.getOption(index)))
-            );
-            /*if(isBool) {
+            @Override
+            public GuiClickIndex getGuiClick(Settings object, int index) {
+                int i = SettingsDB.getValue(uud, object);
+                Object next = object.getNext(object.getOption(i));
+                Runnable runnable = () -> {
+                    UtilDatabase.SettingsDB().setRelation(gamePlayer.getUuid(), object.toString(), object.getIndex(next));
+                    gamePlayer.updateCache();
+                    Player player = utilSender.getPlayer();
+                    player.closeInventory();
+                    Bukkit.getServer().dispatchCommand(player, "settings");
+                };
+                return new GuiClickRunnable(plugin, inventory, index, runnable, utilSender.getPlayer());
+            }
 
-            } else {
+            @Override
+            public ItemStack getBackItemStack() {
+                ItemStack backButton = new ItemStack(Material.ARROW);
+                ItemMeta itemMeta = backButton.getItemMeta();
                 itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                        "&f" + setting.getDisplayName() + ": " + value
+                        "&fPage " + (page-1)
                 ));
-            }*/
-            settingButton.setItemMeta(itemMeta);
-            page.setItem(f, settingButton);
+                backButton.setItemMeta(itemMeta);
+                return backButton;
+            }
 
-            listed.add(setting);
-        }
+            @Override
+            public ItemStack getForwardItemStack() {
+                ItemStack nextButton = new ItemStack(Material.FEATHER);
+                ItemMeta itemMeta = nextButton.getItemMeta();
+                itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
+                        "&fPage " + (page+1)
+                ));
+                nextButton.setItemMeta(itemMeta);
+                return nextButton;
+            }
 
-        for(Settings setting : listed) {
-            int index = SettingsDB.getValue(uud, setting);
-            Object next = setting.getNext(setting.getOption(index));
-            Runnable runnable = () -> {
-                UtilDatabase.SettingsDB().setRelation(gamePlayer.getUuid(), setting.toString(), setting.getIndex(next));
-                gamePlayer.updateCache();
-                Player player = utilSender.getPlayer();
-                player.closeInventory();
-                Bukkit.getServer().dispatchCommand(player, "settings");
-            };
-            plugin.getEventManager().addEvent(new GuiClickRunnable(plugin, page, listed.indexOf(setting), runnable, utilSender.getPlayer()));
-        }
+            @Override
+            public GuiClickIndex getBackCommand(int index) {
+                return new GuiClickCommand(plugin, inventory, index, "settings "+(page-1), utilSender.getPlayer());
+            }
 
-        // BACK & NEXT BUTTON
+            @Override
+            public GuiClickIndex getForwardCommand(int index) {
+                return new GuiClickCommand(plugin, inventory, index, "settings "+(page+1), utilSender.getPlayer());
+            }
 
-        if(pageNum>0) {
-            ItemStack backButton = new ItemStack(Material.ARROW);
-            ItemMeta itemMeta = backButton.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                    "&fPage " + (pageNum-1)
-            ));
-            backButton.setItemMeta(itemMeta);
-            page.setItem(18, backButton);
-            plugin.getEventManager().addEvent(new GuiClickCommand(plugin, page, 18, "settings "+(pageNum-1), utilSender.getPlayer()));
-        }
+            @Override
+            public ItemStack getBottomItemStack() {
+                return new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+            }
 
-        if(pageNum<gridifier.getTotalPages()-1) {
-            ItemStack nextButton = new ItemStack(Material.FEATHER);
-            ItemMeta itemMeta = nextButton.getItemMeta();
-            itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                    "&fPage " + (pageNum+1)
-            ));
-            nextButton.setItemMeta(itemMeta);
-            page.setItem(26, nextButton);
-            plugin.getEventManager().addEvent(new GuiClickCommand(plugin, page, 26, "settings "+(pageNum+1), utilSender.getPlayer()));
-        }
-
-        return page;
-
+            @Override
+            public ItemStack getBackground() {
+                return new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+            }
+        };
+        return gui.build();
     }
 
 }
