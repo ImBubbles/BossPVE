@@ -27,7 +27,13 @@ public class EnchantManager {
                 new Resistance(plugin),
                 new Damager(plugin),
                 new KeyFinder(plugin),
-                new Banker(plugin)
+                new Banker(plugin),
+                new Grinder(plugin),
+                new Throw(plugin),
+                new Nuker(plugin),
+                new Bloodsucker(plugin),
+                new Essence(plugin),
+                new Soulful(plugin)
         );
         UtilEnchant.freezeRegistry();
         registerEnchantItems();

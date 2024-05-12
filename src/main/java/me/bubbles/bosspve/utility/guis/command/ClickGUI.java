@@ -23,8 +23,7 @@ public abstract class ClickGUI<T> extends GUI implements IClickGUI<T> {
         int rows = fullSize ? 5 : 2;
         this.gridifier = new Gridifier<>(clazz, array, rows, 9);
         this.indexCap = fullSize ? 45 : 18;
-        this.page=page;
-        buildPage();
+        setPage(page);
     }
 
     public Gridifier<T> getGridifier() {
@@ -32,7 +31,7 @@ public abstract class ClickGUI<T> extends GUI implements IClickGUI<T> {
     }
 
     public void setPage(int page) {
-        this.page=(int) UtilNumber.clampBorder(gridifier.getTotalPages()-1, 0, page);
+        this.page=(int) UtilNumber.clampBorder(gridifier.getTotalPages(), 0, page);
         buildPage();
     }
 
@@ -40,7 +39,7 @@ public abstract class ClickGUI<T> extends GUI implements IClickGUI<T> {
 
         for(int i=0; i<indexCap; i++) {
 
-            int completeIndex = ((indexCap+1)*page+i)+1;
+            int completeIndex = ((indexCap)*page+i)+1;
 
             if(array.length<completeIndex) {
                 break;
@@ -69,7 +68,7 @@ public abstract class ClickGUI<T> extends GUI implements IClickGUI<T> {
         }
 
         if(getBottomItemStack()!=null) {
-            int indexBot = fullSize ? 45 : 18;
+            int indexBot = fullSize ? 45 : 19;
             int indexTop = fullSize ? 52 : 25;
             for(int i=indexBot; i<=indexTop; i++) {
                 set(i, getBottomItemStack(), new GuiClickIndex(plugin, inventory, i, false));

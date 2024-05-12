@@ -46,13 +46,16 @@ public class Goblin extends Piglin implements IEntity {
         super(EntityType.PIGLIN, level);
         this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
+        if(location!=null) {
+            setPos(location.getX(),location.getY(),location.getZ());
+        } else {
+            remove(RemovalReason.DISCARDED);
+            return;
+        }
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
         setHealth((float) utilEntity.getMaxHealth());
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        }
         expToDrop=0;
         setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
         goalSelector.addGoal(0, new MeleeAttackGoal(
@@ -76,11 +79,6 @@ public class Goblin extends Piglin implements IEntity {
     }
 
     @Override
-    public Entity clone(Level level) {
-        return new Goblin(plugin, level, null);
-    }
-
-    @Override
     public Entity spawn(Location location) {
         Entity entity = new Goblin(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -95,7 +93,7 @@ public class Goblin extends Piglin implements IEntity {
     @Override
     public List<ItemStack> getDrops() {
         List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,300,2)) {
+        if(UtilNumber.rollTheDice(1,200,3)) {
                 result.add(((EnchantItem) plugin.getItemManager().getItemByName("keyfinderEnch")).getAtLevel(1));
         }
         return result;
@@ -104,10 +102,10 @@ public class Goblin extends Piglin implements IEntity {
     @Override
     public HashSet<Flag<EntityFlag, Double>> getFlags() {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 20D, false));
-        result.add(new Flag<>(EntityFlag.MONEY, 15D, false));
-        result.add(new Flag<>(EntityFlag.XP, 5D, false));
-        result.add(new Flag<>(EntityFlag.DAMAGE, 20D, false));
+        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 50D, false));
+        result.add(new Flag<>(EntityFlag.MONEY, 40D, false));
+        result.add(new Flag<>(EntityFlag.XP, 10D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 35D, false));
         return result;
     }
 

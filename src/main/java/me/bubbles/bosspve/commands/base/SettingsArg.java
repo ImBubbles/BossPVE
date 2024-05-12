@@ -76,7 +76,9 @@ public class SettingsArg extends Argument {
                 int i = SettingsDB.getValue(uud, object);
                 Object next = object.getNext(object.getOption(i));
                 Runnable runnable = () -> {
-                    UtilDatabase.SettingsDB().setRelation(gamePlayer.getUuid(), object.toString(), object.getIndex(next));
+                    //UtilUserData.save(plugin, gamePlayer.getCache());
+                    //UtilDatabase.SettingsDB().setRelation(gamePlayer.getUuid(), object.toString(), object.getIndex(next));
+                    uud.setSetting(object.toString(), object.getIndex(next));
                     gamePlayer.updateCache();
                     Player player = utilSender.getPlayer();
                     player.closeInventory();

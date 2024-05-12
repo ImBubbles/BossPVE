@@ -126,8 +126,8 @@ public final class BossPVE extends JavaPlugin {
     // RELOAD CFG
     public void reload() {
         getStageManager().setSpawningAll(false);
-        getConfigManager().reloadAll();
         initStageManager();
+        getConfigManager().reloadAll();
     }
 
     // STAGE MANAGER

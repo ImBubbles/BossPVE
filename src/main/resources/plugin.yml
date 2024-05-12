@@ -32,3 +32,6 @@ commands:
   spawn:
     usage: /<command>
     description: Teleport to spawn
+  items:
+    usage: /<command>
+    description:

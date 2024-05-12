@@ -25,7 +25,12 @@ public class EntityManager {
                 () -> new Hellbringer(plugin),
                 () -> new Ferrum(plugin),
                 () -> new Goblin(plugin),
-                () -> new Simpleton(plugin)
+                () -> new Simpleton(plugin),
+                () -> new AngryBee(plugin),
+                () -> new Ninja(plugin),
+                () -> new Volcono(plugin),
+                () -> new Protector(plugin),
+                () -> new Vampire(plugin)
         );
     }
 

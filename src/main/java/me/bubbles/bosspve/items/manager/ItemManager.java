@@ -1,39 +1,55 @@
 package me.bubbles.bosspve.items.manager;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.items.armor.bee.BeeSet;
+import me.bubbles.bosspve.items.armor.ninja.NinjaSet;
 import me.bubbles.bosspve.items.armor.ogre.OgreSet;
+import me.bubbles.bosspve.items.armor.vampire.VampireSet;
+import me.bubbles.bosspve.items.armor.volcanic.VolcanicSet;
 import me.bubbles.bosspve.items.manager.bases.armor.ArmorSet;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.items.util.EnchantExtractor;
 import me.bubbles.bosspve.items.util.Extracted;
+import me.bubbles.bosspve.items.weapons.BeeStinger;
+import me.bubbles.bosspve.items.weapons.NinjaDagger;
 import me.bubbles.bosspve.items.weapons.SkeletonSword;
+import me.bubbles.bosspve.items.weapons.VolcanicTear;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ItemManager {
 
     public BossPVE plugin;
-    private HashSet<Item> items;
+    private List<Item> items;
     private HashSet<ArmorSet> armorSets;
     private EnchantManager enchantManager;
 
     public ItemManager(BossPVE plugin) {
         this.plugin = plugin;
-        items=new HashSet<>();
+        items=new ArrayList<>();
         armorSets=new HashSet<>();
         registerItem(
                 new SkeletonSword(plugin),
+                new VolcanicTear(plugin),
+                new NinjaDagger(plugin),
+                new BeeStinger(plugin),
                 new EnchantExtractor(plugin),
                 new Extracted(plugin)
         );
         // REGISTER ARMOR
         registerArmorSet(
-                new OgreSet(plugin)
+                new OgreSet(plugin),
+                new VolcanicSet(plugin),
+                new NinjaSet(plugin),
+                new BeeSet(plugin),
+                new VampireSet(plugin)
         );
     }
 
@@ -61,7 +77,7 @@ public class ItemManager {
         }
     }
 
-    public HashSet<Item> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 

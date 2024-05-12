@@ -45,15 +45,18 @@ public class Ferrum extends IronGolem implements IEntity {
         super(EntityType.IRON_GOLEM, level);
         this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
+        if(location!=null) {
+            setPos(location.getX(),location.getY(),location.getZ());
+        } else {
+            remove(RemovalReason.DISCARDED);
+            return;
+        }
         setCustomNameVisible(true);
         expToDrop=0;
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
         setHealth((float) utilEntity.getMaxHealth());
         setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        }
         goalSelector.addGoal(0, new MeleeAttackGoal(
                 this, 1, false
         ));
@@ -86,19 +89,14 @@ public class Ferrum extends IronGolem implements IEntity {
         if(UtilNumber.rollTheDice(1,300,2)) {
                 result.add(((EnchantItem) plugin.getItemManager().getItemByName("resistanceEnch")).getAtLevel(2));
         }
-        /*if(UtilNumber.rollTheDice(1,250,4)) {
+        if(UtilNumber.rollTheDice(1,250,4)) {
             EnchantItem throwEnch = ((EnchantItem) plugin.getItemManager().getItemByName("throwEnch"));
             result.add(throwEnch.getAtLevel(1));
-        }*/
+        }
         if(UtilNumber.rollTheDice(1,300,2)) {
             result.add(((EnchantItem) plugin.getItemManager().getItemByName("keyfinderEnch")).getAtLevel(3));
         }
         return result;
-    }
-
-    @Override
-    public Entity clone(Level level) {
-        return new Ferrum(plugin, level, null);
     }
 
     @Override
@@ -109,10 +107,10 @@ public class Ferrum extends IronGolem implements IEntity {
     @Override
     public HashSet<Flag<EntityFlag, Double>> getFlags() {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 100D, false));
-        result.add(new Flag<>(EntityFlag.MONEY, 100D, false));
+        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 200D, false));
+        result.add(new Flag<>(EntityFlag.MONEY, 200D, false));
         result.add(new Flag<>(EntityFlag.XP, 50D, false));
-        result.add(new Flag<>(EntityFlag.DAMAGE, 25D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 50D, false));
         return result;
     }
 

@@ -73,7 +73,7 @@ public class PreparedMessages {
                 sendMessage(gamePlayer, MessageType.KILL_MESSAGE, "%prefix% %primary%You killed a %secondary%"+entity.getUncoloredName()+"%primary% and gained %secondary%"+xp+"%primary% XP.");
             }
         } else {
-            sendMessage(gamePlayer, MessageType.KILL_MESSAGE, "%prefix% %primary%You killed a %secondary%"+entity.getUncoloredName()+".");
+            sendMessage(gamePlayer, MessageType.KILL_MESSAGE, "%prefix% %primary%You killed a %secondary%"+entity.getUncoloredName()+"%primary%.");
         }
     }
 
@@ -98,6 +98,10 @@ public class PreparedMessages {
         } else if (money>0) {
             sendMessage(gamePlayer, MessageType.BALANCE_GAIN, "%prefix% %primary%You gained %secondary%$"+money+"%primary%.");
         }
+    }
+
+    public static void other(GamePlayer gamePlayer, String message) {
+        sendMessage(gamePlayer, MessageType.OTHER, message);
     }
 
 }

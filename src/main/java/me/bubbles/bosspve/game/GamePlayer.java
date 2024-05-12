@@ -24,11 +24,12 @@ public class GamePlayer extends GameBase {
     }
 
     public void updateHealthBar() {
-        if(player.getHealth()==0) {
+        if(player.getHealth()==0D) {
             return;
         }
         double percent = health/maxHealth;
-        if((int) 20*percent<0.5) {
+        if(20D*percent<0.5) {
+            player.setHealth(1);
             return;
         }
         player.setHealth(20*percent);

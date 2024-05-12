@@ -2,6 +2,7 @@ package me.bubbles.bosspve.events.presets;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 
@@ -22,17 +23,29 @@ public class GuiClick extends Event {
     public void onEvent(org.bukkit.event.Event event) {
         if(event instanceof InventoryClickEvent) {
             InventoryClickEvent e = (InventoryClickEvent) event;
-            if(e.getAction().equals(InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
-                plugin.getEventManager().removeEvent(this);
+            /*if(e.getAction().equals(InventoryAction.PICKUP_ALL)) {
+                click(e);
+            }*/
+            //click(e);
+            if(e.getClickedInventory()==null) {
+                return;
             }
-            click(e);
+            if(e.getClickedInventory().getHolder()==null) {
+                return;
+            }
+            if(e.getClickedInventory().getHolder().equals(inventory.getHolder())) {
+                e.setCancelled(!allow);
+            }
         }
         if(event instanceof InventoryCloseEvent) {
-            plugin.getEventManager().removeEvent(this);
+            InventoryCloseEvent e = (InventoryCloseEvent) event;
+            if(e.getPlayer().equals(inventory.getHolder())) {
+                plugin.getEventManager().removeEvent(this);
+            }
         }
     }
 
-    private void click(InventoryClickEvent event) {
+    /*private void click(InventoryClickEvent event) {
         Inventory clickedInventory = event.getClickedInventory();
         if(clickedInventory==null) {
             return;
@@ -43,10 +56,14 @@ public class GuiClick extends Event {
             }
         }
         event.setCancelled(!allow);
-    }
+    }*/
 
     public void setInventory(Inventory inventory) {
         this.inventory=inventory;
+    }
+
+    public void unregister() {
+        plugin.getEventManager().removeEvent(this);
     }
 
 }

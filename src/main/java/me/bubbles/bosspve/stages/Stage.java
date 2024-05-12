@@ -6,6 +6,7 @@ import me.bubbles.bosspve.game.GameEntity;
 import me.bubbles.bosspve.ticker.Timer;
 import me.bubbles.bosspve.utility.UtilLocation;
 import me.bubbles.bosspve.utility.UtilUserData;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.Bukkit;
@@ -102,34 +103,50 @@ public class Stage extends Timer {
     }
 
     public void onKill(Entity entity) {
-        spawnedEntities.remove(entity);
+        //spawnedEntities.remove(entity);
+        Iterator<Entity> iterator = spawnedEntities.iterator();
+        while (iterator.hasNext()) {
+            Entity spawned = iterator.next();
+            if(spawned.getUUID().equals(entity.getUUID())) {
+                iterator.remove();
+                return;
+            }
+        }
     }
 
     public void killAll() {
-        Iterator<Entity> iterator = spawnedEntities.iterator();
-        while(iterator.hasNext()) {
-            Entity entity = iterator.next();
+        for(Entity entity : spawnedEntities) {
             if(entity.isAlive()) {
                 LivingEntity livingEntity = (LivingEntity) entity;
-                livingEntity.remove(Entity.RemovalReason.DISCARDED);
                 plugin.getGameManager().delete(plugin.getGameManager().getGameEntity(entity));
+                livingEntity.remove(Entity.RemovalReason.DISCARDED);
             }
-            iterator.remove();
         }
+        spawnedEntities=new HashSet<>();
     }
 
     public void killAll(Player player) {
         Iterator<Entity> iterator = spawnedEntities.iterator();
+        ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
         while(iterator.hasNext()) {
             Entity entity = iterator.next();
             if(entity.isAlive()) {
                 LivingEntity livingEntity = (LivingEntity) entity;
-                livingEntity.setLastHurtByPlayer(((CraftPlayer) player).getHandle());
+                if(livingEntity.getLastAttacker()!=null) {
+                    if(livingEntity.getLastAttacker() instanceof ServerPlayer) {
+                        ServerPlayer attacker = (ServerPlayer) livingEntity.getLastAttacker();
+                        if(!attacker.equals(serverPlayer)) {
+                            continue;
+                        }
+                    }
+                }
+                iterator.remove();
+                livingEntity.setLastHurtByPlayer(serverPlayer);
                 livingEntity.kill();
-                plugin.getGameManager().delete(plugin.getGameManager().getGameEntity(entity));
+                //plugin.getGameManager().delete(plugin.getGameManager().getGameEntity(entity));
             }
-            iterator.remove();
         }
+        spawnedEntities=new HashSet<>();
     }
 
     private boolean loadEntities() {
@@ -149,7 +166,7 @@ public class Stage extends Timer {
             boolean cont=true;
             for(String key : requiredEntityKeys) {
                 if(!entitySection.contains(key)) {
-                    plugin.getLogger().log(Level.SEVERE,"Could not load entity: " + entityKey +"."+key+" @ "+key);
+                    plugin.getLogger().log(Level.SEVERE,"Could not load entity: " + entityKey +"."+key+" @ "+getLevelRequirement());
                     cont=false;
                 }
             }
@@ -163,6 +180,11 @@ public class Stage extends Timer {
                     UtilLocation.toLocation(plugin,entitySection.getString("pos")),
                     entitySection.getInt("interval")
             );
+            if(!isInside(stageEntity.getSpawnLocation())) {
+                plugin.getLogger().log(Level.WARNING, "Could not load entity: "+entityID + " outside of stage " + " @ " + getLevelRequirement());
+                result=false;
+                continue;
+            }
             entityList.add(stageEntity);
             result=true;
         }
@@ -248,7 +270,8 @@ public class Stage extends Timer {
     }
 
     public boolean allowSpawn() {
-        return spawnedEntities.stream().filter(Entity::isAlive).collect(Collectors.toList()).size()<maxEntities;
+        spawnedEntities=spawnedEntities.stream().filter(Entity::isAlive).collect(Collectors.toCollection(HashSet::new));
+        return spawnedEntities.size()<maxEntities;
     }
 
     public ConfigurationSection getConfigurationSection() {

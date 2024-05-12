@@ -28,7 +28,7 @@ public class Gridifier<T> {
         Generic3DArray<T> result = new Generic3DArray<>(type, getTotalPages(), rows, columns);
         int page=0;
         int y=0;
-        for(int i=0; i<pagifier.getTotalPages(); i++) {
+        for(int i=0; i<pagifier.getTotalPages()-1; i++) {
             result.set(page, y, pagifier.getPage(i));
             y++;
             if(y==columns) {
@@ -40,7 +40,11 @@ public class Gridifier<T> {
     }
 
     public int getTotalPages() {
-        return pagifier.getTotalPages()%columns==0 ? pagifier.getTotalPages()/columns : (pagifier.getTotalPages()/columns)+1;
+        return pagifier.getTotalPages()%rows==0 ? pagifier.getTotalPages()/rows : (pagifier.getTotalPages()/rows)+1;
     }
+
+    /*public int getTotalPages() {
+        return pages.get().length;
+    }*/
 
 }

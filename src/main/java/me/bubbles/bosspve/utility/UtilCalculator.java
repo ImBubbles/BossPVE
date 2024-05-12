@@ -170,7 +170,8 @@ public class UtilCalculator {
                 }
             }
         }
-        ItemStack offHandStack = player.getInventory().getItemInOffHand();
+
+        /*ItemStack offHandStack = player.getInventory().getItemInOffHand();
         if(offHandStack!=null) {
             UtilItemStack offHand = new UtilItemStack(plugin, player.getInventory().getItemInOffHand());
             for(Flag<ItemFlag, Double> flag : offHand.getFlags()) {
@@ -178,7 +179,7 @@ public class UtilCalculator {
                     flags.add(flag);
                 }
             }
-        }
+        }*/
 
         // ARMOR CONTENTS
 

@@ -46,6 +46,11 @@ public class UtilItemStack {
         UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         int enchantsAmt = itemStack.getEnchantments().size();
         boolean cont=true;
+        if(item!=null) {
+            if((!item.getDescription().equals(""))&&item.getDescription()!=null) {
+                lore.add(UtilString.colorFillPlaceholders("&8"+item.getDescription()));
+            }
+        }
         for(Enchantment bukkitEnchantment : itemStack.getEnchantments().keySet()) {
             net.minecraft.world.item.enchantment.Enchantment nmsEnchant = CraftEnchantment.bukkitToMinecraft(bukkitEnchantment);
             if(nmsEnchant instanceof Enchant) {
@@ -73,9 +78,6 @@ public class UtilItemStack {
             }
         }
         if(item!=null) {
-            if((!item.getDescription().equals(""))&&item.getDescription()!=null) {
-                lore.add(UtilString.colorFillPlaceholders("&8"+item.getDescription()));
-            }
             String damage = "%primary%Damage:%secondary%";
             double dmgAdd = UtilCalculator.getFlagSum(this, ItemFlag.DAMAGE_ADD);
             if(dmgAdd!=0) {

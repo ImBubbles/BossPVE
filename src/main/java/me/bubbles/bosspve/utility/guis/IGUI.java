@@ -11,4 +11,8 @@ public interface IGUI {
     ItemStack getBackground();
     //GuiClickEvent getGuiClickEvent(int index);
 
+    default String getTitle() {
+        return "Chest";
+    }
+
 }

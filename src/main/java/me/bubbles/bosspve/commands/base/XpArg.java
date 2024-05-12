@@ -6,6 +6,7 @@ import me.bubbles.bosspve.utility.UtilUserData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class XpArg extends Argument {
 
@@ -28,8 +29,8 @@ public class XpArg extends Argument {
                 return;
             }
         }
-        UtilUserData uud = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache();
         if(args.length==relativeIndex) { // no args
+            UtilUserData uud = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache();
             utilSender.sendMessage("%prefix% %primary%Your xp is %secondary%"+uud.getXp()+"%primary%.");
             return;
         }
@@ -41,6 +42,13 @@ public class XpArg extends Argument {
         if(!player.hasPlayedBefore()&&player.getPlayer()==null) {
             utilSender.sendMessage("%prefix% %primary%Could not find player %secondary%"+args[relativeIndex]+"%primary%.");
             return;
+        }
+        Player onlinePlayer = player.getPlayer();
+        UtilUserData uud;
+        if(onlinePlayer!=null) {
+            uud=plugin.getGameManager().getGamePlayer(onlinePlayer).getCache();
+        } else {
+            uud=UtilUserData.getUtilUserData(player.getUniqueId());
         }
         utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s %primary%xp is %secondary%"+uud.getXp()+"%primary%.");
     }

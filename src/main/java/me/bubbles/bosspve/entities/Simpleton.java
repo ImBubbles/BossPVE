@@ -42,13 +42,16 @@ public class Simpleton extends Skeleton implements IEntity {
         super(EntityType.SKELETON, level);
         this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
+        if(location!=null) {
+            setPos(location.getX(),location.getY(),location.getZ());
+        } else {
+            remove(RemovalReason.DISCARDED);
+            return;
+        }
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
         setHealth((float) utilEntity.getMaxHealth());
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        }
         goalSelector.addGoal(0, new RangedBowAttackGoal<>(
                 this, 1, 1, 5
         ));
@@ -75,16 +78,6 @@ public class Simpleton extends Skeleton implements IEntity {
     }
 
     @Override
-    public Entity clone(Level level) {
-        return new Simpleton(plugin, level, null);
-    }
-
-    @Override
-    public boolean shouldDropExperience() {
-        return false;
-    }
-
-    @Override
     public Entity spawn(Location location) {
         Entity entity = new Simpleton(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -99,13 +92,13 @@ public class Simpleton extends Skeleton implements IEntity {
     @Override
     public List<ItemStack> getDrops() {
         List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,100,2)) {
+        if(UtilNumber.rollTheDice(1,200,1)) {
             result.add(plugin.getItemManager().getItemByName("telepathyEnch").nmsAsItemStack());
         }
         if(UtilNumber.rollTheDice(1,200,1)) {
             result.add(plugin.getItemManager().getItemByName("speedEnch").nmsAsItemStack());
         }
-        if(UtilNumber.rollTheDice(1,100,2)) {
+        if(UtilNumber.rollTheDice(1,200,1)) {
             result.add(plugin.getItemManager().getItemByName("skeletonSword").nmsAsItemStack());
         }
         return result;

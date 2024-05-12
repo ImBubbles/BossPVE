@@ -20,6 +20,7 @@ public class Join extends Event {
     @Override
     public void onEvent(org.bukkit.event.Event event) {
         PlayerJoinEvent e = (PlayerJoinEvent) event;
+        e.setJoinMessage("");
         /*if(Bukkit.getOnlinePlayers().size()==1) {
             for(World world : Bukkit.getWorlds()) {
                 world.getEntities().forEach(entity -> {

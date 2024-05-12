@@ -15,6 +15,7 @@ public class Leave extends Event {
     @Override
     public void onEvent(org.bukkit.event.Event event) {
         PlayerQuitEvent e = (PlayerQuitEvent) event;
+        e.setQuitMessage("");
         GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(e.getPlayer().getUniqueId());
         UtilUserData uud = gamePlayer.getCache();
         UtilUserData.save(plugin, uud);

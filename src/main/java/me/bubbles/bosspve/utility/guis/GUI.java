@@ -4,9 +4,11 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.presets.GuiClick;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
@@ -29,7 +31,7 @@ public abstract class GUI implements IGUI {
 
     protected void set(int index, ItemStack itemStack, GuiClick guiClick) {
         inventory.setItem(index, itemStack);
-        if(guiClick !=null) {
+        if(guiClick!=null) {
             queueClickEvent(guiClick);
         }
     }

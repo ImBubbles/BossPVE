@@ -2,6 +2,8 @@ package me.bubbles.bosspve.events;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
+import me.bubbles.bosspve.game.GamePlayer;
+import me.bubbles.bosspve.utility.UtilCalculator;
 import me.bubbles.bosspve.utility.UtilItemStack;
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Material;
@@ -39,6 +41,8 @@ public class UpdateLore extends Event {
         itemMeta.setLore(uis.getUpdatedLoreForPlayer(e.getPlayer()));
         itemStack.setItemMeta(itemMeta);
         player.getInventory().setItem(e.getNewSlot(),itemStack);
+        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+        gamePlayer.setMaxHealth(UtilCalculator.getMaxHealth(player));
     }
 
     public boolean isVoucher(ItemStack itemStack) {

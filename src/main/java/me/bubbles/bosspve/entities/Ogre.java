@@ -42,13 +42,16 @@ public class Ogre extends ZombieVillager implements IEntity {
         super(EntityType.ZOMBIE_VILLAGER, level);
         this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
+        if(location!=null) {
+            setPos(location.getX(),location.getY(),location.getZ());
+        } else {
+            remove(RemovalReason.DISCARDED);
+            return;
+        }
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
         setHealth((float) utilEntity.getMaxHealth());
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        }
         expToDrop=0;
         goalSelector.addGoal(0, new MeleeAttackGoal(
                 this, 1, false
@@ -75,11 +78,6 @@ public class Ogre extends ZombieVillager implements IEntity {
     }
 
     @Override
-    public Entity clone(Level level) {
-        return new Ogre(plugin, level, null);
-    }
-
-    @Override
     public Entity spawn(Location location) {
         Entity entity = new Ogre(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -94,24 +92,19 @@ public class Ogre extends ZombieVillager implements IEntity {
     @Override
     public List<ItemStack> getDrops() {
         List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,100,1)) {
+        if(UtilNumber.rollTheDice(1,350,1)) {
             result.add(plugin.getItemManager().getItemByName("ogreBoots").nmsAsItemStack());
         }
-        if(UtilNumber.rollTheDice(1,100,1)) {
+        if(UtilNumber.rollTheDice(1,350,1)) {
             result.add(plugin.getItemManager().getItemByName("ogrePants").nmsAsItemStack());
         }
-        if(UtilNumber.rollTheDice(1,100,1)) {
+        if(UtilNumber.rollTheDice(1,350,1)) {
             result.add(plugin.getItemManager().getItemByName("ogreChestplate").nmsAsItemStack());
         }
-        if(UtilNumber.rollTheDice(1,100,1)) {
+        if(UtilNumber.rollTheDice(1,350,1)) {
             result.add(plugin.getItemManager().getItemByName("ogreHelmet").nmsAsItemStack());
         }
         return result;
-    }
-
-    @Override
-    public boolean shouldDropExperience() {
-        return false;
     }
 
     @Override

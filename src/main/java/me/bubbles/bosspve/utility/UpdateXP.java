@@ -40,8 +40,9 @@ public class UpdateXP extends Timer {
 
         float nextLevel = level+1;
         float xpRequirement = nextLevel*nextLevel*10;
+        float lastXpRequirement = level*level*10;
 
-        return xp/xpRequirement;
+        return (xp-lastXpRequirement)/(xpRequirement-lastXpRequirement);
 
     }
 

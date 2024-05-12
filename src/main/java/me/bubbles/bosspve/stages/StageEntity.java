@@ -23,6 +23,10 @@ public class StageEntity extends Timer {
         this.location=location;
     }
 
+    public Location getSpawnLocation() {
+        return location;
+    }
+
     @Override
     public void onComplete() {
         if(stage.allowSpawn()) {

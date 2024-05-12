@@ -7,6 +7,7 @@ import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.utility.messages.PreparedMessages;
 import me.bubbles.bosspve.utility.nms.FixedDamageSource;
+import net.minecraft.Util;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -32,6 +33,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class UtilCustomEvents {
 
@@ -58,6 +60,8 @@ public class UtilCustomEvents {
         Stage stage = plugin.getStageManager().getStage(e.getEntity().getLocation());
         if(stage!=null) {
             stage.onKill(((CraftEntity) e.getEntity()).getHandle());
+        } else {
+            plugin.getLogger().log(Level.SEVERE, "STAGE NOT FOUND");
         }
         if(e.getEntity().getKiller()==null) {
             e.getDrops().clear();
@@ -82,8 +86,21 @@ public class UtilCustomEvents {
                 telepathy = uis.getCustomEnchants().contains(plugin.getItemManager().getEnchantManager().getEnchant("telepathy"));
             }
             if(telepathy) {
-                int i = 0;
-                while(player.getInventory().firstEmpty()!=-1&&(i+1)<drops.size()) {
+                //int i = 0;
+
+                for(int i=0; i<drops.size(); i++) {
+                    ItemStack drop = drops.get(i);
+                    PreparedMessages.itemDrop(gamePlayer, entity, drop);
+                    if(player.getInventory().firstEmpty()!=-1) {
+                        player.getInventory().addItem(drop);
+                    } else {
+                        Location location = e.getEntity().getLocation();
+                        Item item = location.getWorld().dropItem(location, drop);
+                        dropped.add(item);
+                    }
+                }
+
+                /*while((player.getInventory().firstEmpty()!=-1)&&((i+1)<drops.size())) {
                     ItemStack drop = drops.get(i);
                     PreparedMessages.itemDrop(gamePlayer, entity, drop);
                     player.getInventory().addItem(drop);
@@ -96,7 +113,7 @@ public class UtilCustomEvents {
                         Item item = location.getWorld().dropItem(location, drop);
                         dropped.add(item);
                     }
-                }
+                }*/
             } else {
                 Location location = e.getEntity().getLocation();
                 for(ItemStack drop : drops) {
@@ -143,7 +160,9 @@ public class UtilCustomEvents {
         if(player==null) {
             return;
         }
-        result=UtilNumber.clampBorder(result, 0, result-UtilCalculator.getProtection(player));
+        //result=UtilNumber.clampBorder(result, 0, result-UtilCalculator.getProtection(player));
+        double protection = UtilCalculator.getProtection(player);
+        result=UtilNumber.clampBorder(result, 0, (result/(protection*protection)));
         GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
         //player.setHealth(20);
         e.setDamage(0);
@@ -201,7 +220,12 @@ public class UtilCustomEvents {
             net.minecraft.world.entity.LivingEntity nmsEntity = ((CraftLivingEntity) livingEntity).getHandle();
             nmsEntity.setLastHurtByPlayer(((CraftPlayer) player).getHandle());
             //livingEntity.setLastDamageCause(e);
-            livingEntity.setHealth(UtilNumber.clampBorder(livingEntity.getHealth(), 0, (livingEntity.getHealth())-result));
+            result = UtilNumber.clampBorder(livingEntity.getHealth(), 0, (livingEntity.getHealth())-result);
+            if(result==0) {
+                nmsEntity.kill();
+            } else {
+                livingEntity.setHealth(result);
+            }
             //FixedDamageSource damageSource = UtilCalculator.damageSourceFromBukkit(DamageType.PLAYER_ATTACK, player, e.getEntity(), player.getLocation());
             //((CraftEntity) e.getEntity()).getHandle().hurt(damageSource, (float) 0);
             //System.out.println("final dmg: "+e.getFinalDamage());

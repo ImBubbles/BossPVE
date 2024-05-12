@@ -31,7 +31,9 @@ public class EventManager {
                 new WorldLoad(plugin),
                 new UpdateHealthBar(plugin),
                 new Respawn(plugin),
-                new ServerLoad(plugin)
+                new ServerLoad(plugin),
+                new ArmorPutOn(plugin),
+                new ArmorClickOn(plugin)
         );
     }
 

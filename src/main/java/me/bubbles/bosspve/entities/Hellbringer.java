@@ -45,13 +45,16 @@ public class Hellbringer extends Vindicator implements IEntity {
         super(EntityType.VINDICATOR, level);
         this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
+        if(location!=null) {
+            setPos(location.getX(),location.getY(),location.getZ());
+        } else {
+            remove(RemovalReason.DISCARDED);
+            return;
+        }
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
         setHealth((float) utilEntity.getMaxHealth());
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        }
         expToDrop=0;
         setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
         goalSelector.addGoal(0, new MeleeAttackGoal(
@@ -74,11 +77,6 @@ public class Hellbringer extends Vindicator implements IEntity {
     }
 
     @Override
-    public Entity clone(Level level) {
-        return new Hellbringer(plugin, level, null);
-    }
-
-    @Override
     public Entity spawn(Location location) {
         Entity entity = new Hellbringer(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -96,6 +94,9 @@ public class Hellbringer extends Vindicator implements IEntity {
         if(UtilNumber.rollTheDice(1,300,2)) {
             result.add(plugin.getItemManager().getItemByName("resistanceEnch").nmsAsItemStack());
         }
+        if(UtilNumber.rollTheDice(1,250,2)) {
+            result.add(plugin.getItemManager().getItemByName("damagerEnch").nmsAsItemStack());
+        }
         if(UtilNumber.rollTheDice(1,250,4)) {
             EnchantItem speedEnch = ((EnchantItem) plugin.getItemManager().getItemByName("speedEnch"));
             result.add(speedEnch.getAtLevel(2));
@@ -109,7 +110,7 @@ public class Hellbringer extends Vindicator implements IEntity {
         result.add(new Flag<>(EntityFlag.MAX_HEALTH, 10D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 10D, false));
         result.add(new Flag<>(EntityFlag.XP, 4D, false));
-        result.add(new Flag<>(EntityFlag.DAMAGE, 9D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 12D, false));
         return result;
     }
 

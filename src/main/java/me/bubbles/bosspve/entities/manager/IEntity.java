@@ -21,7 +21,6 @@ import java.util.List;
 public interface IEntity {
 
     Entity spawn(Location location);
-    Entity clone(Level level);
     UtilEntity getUtilEntity();
     default void onEvent(BossPVE plugin, Event event) {
         if(event instanceof EntityDeathEvent) {
