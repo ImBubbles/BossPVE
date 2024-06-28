@@ -8,18 +8,19 @@ import org.bukkit.inventory.Inventory;
 public class GuiClickRunnable extends GuiClickIndex {
 
     private Runnable run;
-    private CommandSender commandSender;
 
-    public GuiClickRunnable(BossPVE plugin, Inventory inventory, int index, Runnable run, CommandSender commandSender) {
+    public GuiClickRunnable(BossPVE plugin, Inventory inventory, int index, Runnable run) {
         super(plugin, inventory, index, false);
         this.run=run;
-        this.commandSender=commandSender;
     }
 
     @Override
     public void onEvent(org.bukkit.event.Event event) {
         super.onEvent(event);
         if(!(event instanceof InventoryClickEvent)) {
+            return;
+        }
+        if(!cont()) {
             return;
         }
         if(isIndex()) {

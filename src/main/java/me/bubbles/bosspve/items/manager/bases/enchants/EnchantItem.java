@@ -4,13 +4,15 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.utility.UtilItemStack;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.v1_21_R1.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -22,15 +24,56 @@ public class EnchantItem extends Item {
     private Enchant enchant;
 
     public EnchantItem(BossPVE plugin, Material material, Enchant enchant, String nbtIdentifier) {
-        super(plugin, material, nbtIdentifier.toLowerCase()+"Ench");
+        super(plugin, material, nbtIdentifier.replace(" ", "").toLowerCase()+"Ench");
         this.enchant=enchant;
         ItemStack itemStack = nmsAsItemStack();
-        itemStack.addUnsafeEnchantment(CraftEnchantment.minecraftToBukkit(enchant),1);
+        //itemStack.addUnsafeEnchantment(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()),1);
+
+        // ADD ENCHANT
+
         ItemMeta itemMeta = itemStack.getItemMeta();
+        /*if(itemMeta.hasEnchant(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()))) {
+            itemMeta.removeEnchant(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()));
+        }*/
+        itemMeta.addEnchant(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()), 1, true);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemStack.setItemMeta(itemMeta);
+
+        // SET LORE
+
+        itemMeta = itemStack.getItemMeta();
+
         itemMeta.setLore(new UtilItemStack(plugin,itemStack).getUpdatedLore());
         itemStack.setItemMeta(itemMeta);
+
         setNMSStack(itemStack);
+
     }
+
+    /*@Override
+    public net.minecraft.world.item.ItemStack getNMSStack() {
+        *//*ItemStack itemStack = super.nmsAsItemStack();
+        //itemStack.addUnsafeEnchantment(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()),1);
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        itemMeta.setLore(new UtilItemStack(plugin,itemStack).getUpdatedLore());
+        //itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        itemStack.setItemMeta(itemMeta);*//*
+
+
+        *//*ItemStack result = ItemStack.deserialize(nmsAsItemStack().serialize());
+        ItemMeta itemMeta = result.getItemMeta();
+        itemMeta.removeEnchant(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()));
+        itemMeta.addEnchant(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()), 1, true);
+        result.setItemMeta(itemMeta);
+        itemMeta.setLore(new UtilItemStack(plugin,result).getUpdatedLore());
+        result.setItemMeta(itemMeta);
+
+        return CraftItemStack.asNMSCopy(result);*//*
+
+        return CraftItemStack.asNMSCopy(getAtLevel(1));
+
+        //return super.getNMSStack();
+    }*/
 
     @Override
     public void setDisplayName(String string) {
@@ -79,15 +122,21 @@ public class EnchantItem extends Item {
                     }
                 }
                 if(!allowedCont.get()) {
+                    e.setResult(null);
                     return;
                 }
             }
             if((!firstCustomEnchants.isEmpty()&&(!secondCustomEnchants.isEmpty()))) {
                 if(!anyOverLap(firstCustomEnchants,secondCustomEnchants)) {
+                    e.setResult(null);
                     return;
                 }
             }
             ItemStack result = uis.enchantItem(secondSlot);
+            UtilItemStack utilResult = new UtilItemStack(plugin, result, customFirst);
+            ItemMeta resultMeta = result.getItemMeta();
+            resultMeta.setLore(utilResult.getUpdatedLore());
+            result.setItemMeta(resultMeta);
             e.getInventory().setItem(2,result);
             result.setAmount(1);
             e.setResult(result);
@@ -110,6 +159,9 @@ public class EnchantItem extends Item {
             if(firstSlot==null||secondSlot==null||thirdSlot==null) {
                 return;
             }
+            if(thirdSlot.getType().equals(Material.AIR)) {
+                return;
+            }
             if(!equals(secondSlot)) {
                 return;
             }
@@ -124,8 +176,8 @@ public class EnchantItem extends Item {
     public ItemStack getAtLevel(int level) {
         ItemStack result = ItemStack.deserialize(nmsAsItemStack().serialize());
         ItemMeta itemMeta = result.getItemMeta();
-        itemMeta.removeEnchant(CraftEnchantment.minecraftToBukkit(enchant));
-        itemMeta.addEnchant(CraftEnchantment.minecraftToBukkit(enchant), level, true);
+        itemMeta.removeEnchant(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()));
+        itemMeta.addEnchant(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()), level, true);
         result.setItemMeta(itemMeta);
         itemMeta.setLore(new UtilItemStack(plugin,result).getUpdatedLore());
         result.setItemMeta(itemMeta);

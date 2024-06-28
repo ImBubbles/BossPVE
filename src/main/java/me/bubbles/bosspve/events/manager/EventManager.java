@@ -3,7 +3,6 @@ package me.bubbles.bosspve.events.manager;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.*;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -33,7 +32,9 @@ public class EventManager {
                 new Respawn(plugin),
                 new ServerLoad(plugin),
                 new ArmorPutOn(plugin),
-                new ArmorClickOn(plugin)
+                new ArmorClickOn(plugin),
+                new EntityDeath(plugin),
+                new EntityRemove(plugin)
         );
     }
 
@@ -56,6 +57,10 @@ public class EventManager {
                 .filter(eventObj -> eventObj.getEvents().contains(event.getClass()))
                 .collect(Collectors.toList())
                 .forEach(eventObj -> eventObj.onEvent(event));
+    }
+
+    public HashSet<Event> getEvents() {
+        return events;
     }
 
     public void registerListener() {

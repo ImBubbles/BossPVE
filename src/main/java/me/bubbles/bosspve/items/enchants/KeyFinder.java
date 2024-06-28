@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class KeyFinder extends Enchant {
 
     public KeyFinder(BossPVE plugin) {
-        super(plugin, Rarity.VERY_RARE, "KeyFinder", Material.TRIPWIRE_HOOK, 20);
+        super(plugin, "Key Finder", Material.TRIPWIRE_HOOK, 20);
         getEnchantItem().setDisplayName("&dKey Finder");
         allowedTypes.addAll(
                 Arrays.asList(
@@ -40,7 +40,7 @@ public class KeyFinder extends Enchant {
                 return;
             }
             //int level = main.getItemMeta().getEnchantLevel(this);
-            int level = new UtilItemStack(plugin, main).getEnchantLevel(this);
+            int level = new UtilItemStack(plugin, main).getEnchantLevel(getEnchantment());
             double addition = level-1*(.25);
             if(UtilNumber.rollTheDice(1,1000,3+addition)) {
                 giveKey(player,"Stage",level);

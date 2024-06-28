@@ -79,12 +79,12 @@ public class SettingsArg extends Argument {
                     //UtilUserData.save(plugin, gamePlayer.getCache());
                     //UtilDatabase.SettingsDB().setRelation(gamePlayer.getUuid(), object.toString(), object.getIndex(next));
                     uud.setSetting(object.toString(), object.getIndex(next));
-                    gamePlayer.updateCache();
+                    //gamePlayer.updateCache();
                     Player player = utilSender.getPlayer();
                     player.closeInventory();
                     Bukkit.getServer().dispatchCommand(player, "settings");
                 };
-                return new GuiClickRunnable(plugin, inventory, index, runnable, utilSender.getPlayer());
+                return new GuiClickRunnable(plugin, inventory, index, runnable);
             }
 
             @Override

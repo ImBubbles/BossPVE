@@ -29,27 +29,27 @@ public abstract class Setting<T> implements ISetting<T> {
         this.options=options;
     }
 
-    protected String getDisplayName() {
+    public String getDisplayName() {
         return displayName;
     }
 
-    protected String getKey() {
+    public String getKey() {
         return key;
     }
 
-    protected int getIndex(T option) {
+    public int getIndex(T option) {
         return options.indexOf(option);
     }
 
-    protected T getOption(int index) {
+    public T getOption(int index) {
         return options.get(index);
     }
 
-    protected T getDefault() {
+    public T getDefault() {
         return normal;
     }
 
-    protected T getNext(T option) {
+    public T getNext(T option) {
         int current = options.indexOf(option);
         int next = (int) UtilNumber.clampLoop(options.size()-1, 0, current+1);
         return options.get(next);

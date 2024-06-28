@@ -4,14 +4,10 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.utility.UtilCalculator;
-import me.bubbles.bosspve.utility.UtilItemStack;
-import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class UpdateLore extends Event {
 
@@ -33,19 +29,17 @@ public class UpdateLore extends Event {
         if(!itemStack.hasItemMeta()) {
             return;
         }
-        if(isVoucher(itemStack)) {
-            return;
-        }
-        UtilItemStack uis = new UtilItemStack(plugin, itemStack);
+        /*Item item = plugin.getItemManager().getItemFromStack(itemStack);
+        UtilItemStack uis = new UtilItemStack(plugin, itemStack, item);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setLore(uis.getUpdatedLoreForPlayer(e.getPlayer()));
+        itemMeta.setLore(uis.getUpdatedLore(e.getPlayer()));
         itemStack.setItemMeta(itemMeta);
-        player.getInventory().setItem(e.getNewSlot(),itemStack);
+        player.getInventory().setItem(e.getNewSlot(),itemStack);*/
         GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
         gamePlayer.setMaxHealth(UtilCalculator.getMaxHealth(player));
     }
 
-    public boolean isVoucher(ItemStack itemStack) {
+    /*public boolean isVoucher(ItemStack itemStack) {
         if(itemStack==null) {
             return false;
         }
@@ -57,6 +51,6 @@ public class UpdateLore extends Event {
         }
         CompoundTag nbtTagCompound = CraftItemStack.asNMSCopy(itemStack).getOrCreateTag();
         return !nbtTagCompound.getString("Tweetzy:Vouchers").equals("");
-    }
+    }*/
 
 }

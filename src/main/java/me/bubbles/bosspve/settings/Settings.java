@@ -21,12 +21,28 @@ public enum Settings {
         public Material getMaterial(Boolean option) {
             return option ? Material.STICK : Material.BARRIER;
         }
+    }),
+    LEVELUP_MESSAGES(new BooleanSetting("LEVELUP_MESSAGES", "Level Up Display", true) {
+        @Override
+        public Material getMaterial(Boolean option) {
+            return option ? Material.EMERALD : Material.EMERALD_ORE;
+        }
+    }),
+    NEXTSTAGE_MESSAGES(new BooleanSetting("NEXTSTAGE_MESSAGES", "Stage Unlock Display", true) {
+        @Override
+        public Material getMaterial(Boolean option) {
+            return option ? Material.EXPERIENCE_BOTTLE : Material.GLASS_BOTTLE;
+        }
     });
 
     private Setting setting;
 
     Settings(Setting setting) {
         this.setting=setting;
+    }
+
+    public Setting get() {
+        return setting;
     }
 
     public String getDisplayName() {

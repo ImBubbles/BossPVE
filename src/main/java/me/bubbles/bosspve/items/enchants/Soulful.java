@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class Soulful extends Enchant {
 
     public Soulful(BossPVE plugin) {
-        super(plugin, Rarity.RARE, "Soulful", Material.REDSTONE, 15);
+        super(plugin, "Soulful", Material.REDSTONE, 15);
         getEnchantItem().setDisplayName("&eSoulful");
         allowedTypes.addAll(
                 Arrays.asList(

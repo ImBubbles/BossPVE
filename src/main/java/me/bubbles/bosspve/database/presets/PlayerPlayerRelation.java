@@ -23,16 +23,15 @@ public abstract class PlayerPlayerRelation extends Database {
 
     public HashSet<UUID> getRelations(UUID player) {
         HashSet<UUID> result = new HashSet<>();
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM " + tableName + " WHERE user=?");
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT * FROM " + tableName + " WHERE user=?");) {
             statement.setString(1, player.toString());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 result.add(UUID.fromString(rs.getString("related")));
             }
             rs.close();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
         }
@@ -41,14 +40,12 @@ public abstract class PlayerPlayerRelation extends Database {
 
     public boolean addRelation(UUID player, UUID player2) {
         removeRelation(player, player2);
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + " " +
-                    "(user, related) VALUES (?, ?)");
-
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + " " +
+                     "(user, related) VALUES (?, ?)");) {
             statement.setString(1, player.toString());
             statement.setString(2, player2.toString());
             statement.execute();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
             return false;
@@ -57,12 +54,11 @@ public abstract class PlayerPlayerRelation extends Database {
     }
 
     public boolean removeRelation(UUID player, UUID player2) {
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE user=? AND related=?");
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE user=? AND related=?");) {
             statement.setString(1, player.toString());
             statement.setString(2, player2.toString());
             statement.execute();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
             return false;
@@ -72,15 +68,14 @@ public abstract class PlayerPlayerRelation extends Database {
 
     public boolean isRelatedWith(UUID player, UUID player2) {
         boolean result = false;
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM " + tableName + " WHERE user=? AND related=?");
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT * FROM " + tableName + " WHERE user=? AND related=?");) {
             statement.setString(1, player.toString());
             statement.setString(2, player2.toString());
             ResultSet rs = statement.executeQuery();
             result = rs.next();
             rs.close();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
         }

@@ -1,5 +1,7 @@
 package me.bubbles.bosspve.utility;
 
+import java.text.DecimalFormat;
+
 public class UtilNumber {
 
     public static boolean rollTheDice(double min, double max, double below) {
@@ -38,6 +40,14 @@ public class UtilNumber {
             return prev;
         }
         return now;
+    }
+
+    public static String formatMoney(double number) {
+        return new DecimalFormat("#,###.##").format(number);
+    }
+
+    public static String formatWhole(double number) {
+        return new DecimalFormat("#,###").format(number);
     }
 
 }

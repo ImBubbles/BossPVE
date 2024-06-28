@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class Essence extends Enchant {
 
     public Essence(BossPVE plugin) {
-        super(plugin, Rarity.RARE, "Essence", Material.REDSTONE, 15);
+        super(plugin, "Essence", Material.REDSTONE, 15);
         getEnchantItem().setDisplayName("&d&lEssence");
         allowedTypes.addAll(
                 Arrays.asList(

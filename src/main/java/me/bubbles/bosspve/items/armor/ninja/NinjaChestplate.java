@@ -23,7 +23,7 @@ public class NinjaChestplate extends Armor {
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&8&lNinja Chesplate"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

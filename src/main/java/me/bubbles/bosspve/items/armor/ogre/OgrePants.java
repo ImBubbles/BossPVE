@@ -23,7 +23,7 @@ public class OgrePants extends Armor {
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&3&lOgre's Pants"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);

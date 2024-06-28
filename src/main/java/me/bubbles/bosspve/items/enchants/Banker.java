@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class Banker extends Enchant {
 
     public Banker(BossPVE plugin) {
-        super(plugin, Rarity.VERY_RARE, "Banker", Material.EMERALD, 20);
+        super(plugin, "Banker", Material.EMERALD, 20);
         getEnchantItem().setDisplayName("&a&lBanker");
         allowedTypes.addAll(
                 Arrays.asList(
@@ -40,11 +40,11 @@ public class Banker extends Enchant {
                 return;
             }
             //int level = main.getItemMeta().getEnchantLevel(this);
-            int level = new UtilItemStack(plugin, main).getEnchantLevel(this);
+            int level = new UtilItemStack(plugin, main).getEnchantLevel(getEnchantment());
             double addition = level-1*(.5);
             if(UtilNumber.rollTheDice(1,1000,3+addition)) {
                 GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
-                gamePlayer.give(0, level*1000, null, true);
+                gamePlayer.give(0, level*1000, null, false);
                 PreparedMessages.onProc(gamePlayer, this);
                 /*UtilUser utilUser = new UtilUser(plugin,player);
                 utilUser.giveMoney(level*1000,true);

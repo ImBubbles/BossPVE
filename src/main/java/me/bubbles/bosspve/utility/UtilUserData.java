@@ -2,6 +2,8 @@ package me.bubbles.bosspve.utility;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.database.databases.SettingsDB;
+import me.bubbles.bosspve.settings.Setting;
+import me.bubbles.bosspve.settings.Settings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +18,7 @@ public class UtilUserData {
     public UtilUserData(UUID uuid, int xp) {
         this.uuid=uuid;
         this.xp=xp;
+        this.settings=new HashMap<>();
         SettingsDB db = UtilDatabase.SettingsDB();
         settings=db.getEntries(uuid);
     }
@@ -34,6 +37,10 @@ public class UtilUserData {
 
     public HashMap<String, Integer> getSettings() {
         return settings;
+    }
+
+    public int getOrDefault(Settings setting) {
+        return SettingsDB.getValue(this, setting);
     }
 
     public void addSetting(String string, int integer) {

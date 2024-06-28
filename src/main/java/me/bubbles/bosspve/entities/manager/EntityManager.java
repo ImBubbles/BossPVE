@@ -4,7 +4,6 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
 import org.bukkit.event.Event;
 
 import java.util.Arrays;

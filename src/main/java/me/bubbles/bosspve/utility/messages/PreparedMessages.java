@@ -1,10 +1,8 @@
 package me.bubbles.bosspve.utility.messages;
 
-import me.bubbles.bosspve.database.databases.SettingsDB;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
-import me.bubbles.bosspve.settings.Settings;
 import me.bubbles.bosspve.utility.UtilUserData;
 import me.bubbles.bosspve.utility.string.UtilString;
 import org.bukkit.inventory.ItemStack;
@@ -14,8 +12,11 @@ public class PreparedMessages {
     private static void sendMessage(GamePlayer gamePlayer,
             MessageType type,
             String string) {
-        UtilUserData uud = gamePlayer.getCache();
-        if(type.equals(MessageType.KILL_MESSAGE)) {
+        //UtilUserData uud = gamePlayer.getCache();
+        if(!type.allowMessage(gamePlayer)) {
+            return;
+        }
+        /*if(type.equals(MessageType.KILL_MESSAGE)) {
             if(!((Boolean) Settings.KILL_MESSAGES.getOption(SettingsDB.getValue(uud, Settings.KILL_MESSAGES)))) {
                 return;
             }
@@ -29,7 +30,7 @@ public class PreparedMessages {
             if(!((Boolean) Settings.ITEMDROP_MESSAGES.getOption(SettingsDB.getValue(uud, Settings.ITEMDROP_MESSAGES)))) {
                 return;
             }
-        }
+        }*/
         gamePlayer.getBukkitPlayer().sendMessage(UtilString.colorFillPlaceholders(string));
     }
 

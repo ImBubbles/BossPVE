@@ -11,7 +11,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.v1_21_R1.enchantments.CraftEnchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public abstract class Enchant extends Enchantment implements IEnchant {
+public abstract class Enchant implements IEnchant {
 
     public BossPVE plugin;
     private PlayerTimerManager timerManager;
@@ -30,13 +30,13 @@ public abstract class Enchant extends Enchantment implements IEnchant {
     private Material material;
     public HashSet<Item.Type> allowedTypes;
     private NamespacedKey namespacedKey;
+    private Enchantment enchantment;
 
-    public Enchant(BossPVE plugin, Rarity rarity, String name, Material material, int maxLevel) {
-        this(plugin, rarity, name, material, maxLevel,0);
+    public Enchant(BossPVE plugin, String name, Material material, int maxLevel) {
+        this(plugin, name, material, maxLevel,0);
     }
 
-    public Enchant(BossPVE plugin, Rarity rarity, String name, Material material, int maxLevel, int coolDown) {
-        super(rarity, null, EquipmentSlot.values());
+    public Enchant(BossPVE plugin, String name, Material material, int maxLevel, int coolDown) {
         this.name=name;
         this.plugin=plugin;
         this.coolDown=coolDown;
@@ -48,13 +48,18 @@ public abstract class Enchant extends Enchantment implements IEnchant {
         register();
     }
 
-    @Override
     public int getMaxLevel() {
         return this.maxLevel;
     }
 
     public void register() {
         UtilEnchant.registerEnchant(this);
+    }
+    public void setEnchantment(Enchantment enchantment) {
+        this.enchantment=enchantment;
+    }
+    public Enchantment getEnchantment() {
+        return enchantment;
     }
 
     public void onEvent(Event event) {
@@ -74,7 +79,7 @@ public abstract class Enchant extends Enchantment implements IEnchant {
             if(!mainHand.getItemMeta().hasEnchants()) {
                 continue;
             }
-            if(!mainHand.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(this))) {
+            if(!mainHand.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(enchantment))) {
                 continue;
             }
             result.put(player,mainHand);
@@ -95,7 +100,7 @@ public abstract class Enchant extends Enchantment implements IEnchant {
             if(!mainHand.getItemMeta().hasEnchants()) {
                 continue;
             }
-            if(!mainHand.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(this))) {
+            if(!mainHand.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(enchantment))) {
                 continue;
             }
             result.put(player,mainHand);
@@ -120,7 +125,7 @@ public abstract class Enchant extends Enchantment implements IEnchant {
         if(!itemStack.getItemMeta().hasEnchants()) {
             return false;
         }
-        return itemStack.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(this));
+        return itemStack.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(enchantment));
     }
 
     public boolean coolDowns() {

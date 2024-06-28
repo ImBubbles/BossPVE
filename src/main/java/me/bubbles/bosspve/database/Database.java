@@ -22,8 +22,10 @@ public abstract class Database implements IDatabase {
         this.database = database;
         this.username = username;
         this.password = password;
+        if(launchStatement==null) {
+            return;
+        }
         try {
-
             if (launchStatement != null) {
                 // TABLE EXAMPLE
                 /*PreparedStatement statement = connection.prepareStatement(
@@ -32,10 +34,8 @@ public abstract class Database implements IDatabase {
                                 "xp INT NOT NULL DEFAULT 0," +
                                 "PRIMARY KEY (uuid)" +
                                 ")");*/
-                try (Connection connection = getConnection()) {
-                    PreparedStatement statement = connection.prepareStatement(launchStatement);
+                try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(launchStatement);) {
                     statement.execute();
-                    statement.close();
                 }
             }
         } catch (Exception exc) {

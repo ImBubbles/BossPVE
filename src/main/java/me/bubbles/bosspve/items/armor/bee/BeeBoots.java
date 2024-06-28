@@ -23,7 +23,7 @@ public class BeeBoots extends Armor {
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&e&lBee Boots"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

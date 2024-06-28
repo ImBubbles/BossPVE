@@ -21,16 +21,15 @@ public abstract class PlayerIntegerRelation extends Database {
 
     public int getValue(UUID player) {
         int result = -1;
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM " + tableName + " WHERE uuid=?");
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT * FROM " + tableName + " WHERE uuid=?");) {
             statement.setString(1, player.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 result=rs.getInt("val");
             }
             rs.close();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
         }
@@ -39,14 +38,12 @@ public abstract class PlayerIntegerRelation extends Database {
 
     public boolean setRelation(UUID player, int value) {
         removeRelation(player);
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + " " +
-                    "(uuid, val) VALUES (?, ?)");
-
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + " " +
+                     "(uuid, val) VALUES (?, ?)");) {
             statement.setString(1, player.toString());
             statement.setInt(2, value);
             statement.execute();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
             return false;
@@ -55,11 +52,10 @@ public abstract class PlayerIntegerRelation extends Database {
     }
 
     public boolean removeRelation(UUID player) {
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE uuid=?");
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE uuid=?");) {
             statement.setString(1, player.toString());
             statement.execute();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
             return false;
@@ -69,14 +65,13 @@ public abstract class PlayerIntegerRelation extends Database {
 
     public boolean hasValue(UUID player) {
         boolean result = false;
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM " + tableName + " WHERE uuid=?");
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT * FROM " + tableName + " WHERE uuid=?");) {
             statement.setString(1, player.toString());
             ResultSet rs = statement.executeQuery();
             result = rs.next();
             rs.close();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
         }

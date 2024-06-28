@@ -40,8 +40,8 @@ public class ItemArg extends Argument {
         }
         ItemStack result = null;
         if(item instanceof EnchantItem) {
+            EnchantItem enchantItem = (EnchantItem) item;
             if(args.length>=relativeIndex+2) {
-                EnchantItem enchantItem = (EnchantItem) item;
                 int level;
                 try {
                     level=Integer.parseInt(args[relativeIndex+2]);
@@ -53,6 +53,8 @@ public class ItemArg extends Argument {
                 }else{
                     result=enchantItem.nmsAsItemStack();
                 }
+            } else {
+                result=enchantItem.nmsAsItemStack();
             }
         }
         if(result==null) {

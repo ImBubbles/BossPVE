@@ -100,7 +100,7 @@ public final class BossPVE extends JavaPlugin {
         if(stageManager!=null) {
             stageManager.getStages().forEach(stage -> {
                 stage.setEnabled(false);
-                stage.killAll();
+                stage.removeAll();
                 World world = stage.getSpawn().getWorld();
                 if(world!=null) {
                     world.save();

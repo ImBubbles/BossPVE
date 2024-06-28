@@ -11,7 +11,7 @@ public class GiveXpArg extends Argument {
 
     public GiveXpArg(BossPVE plugin, int index) {
         super(plugin, "givexp", "givexp <player> <amount>", index);
-        setPermission("givexp");
+        setPermission("admin");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class GiveXpArg extends Argument {
         }
         UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         uud.setXp(uud.getXp()+xp);
-        UtilUserData.save(plugin, uud);
+        //UtilUserData.save(plugin, uud);
         utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s%primary% xp is now %secondary%"+uud.getXp()+"%primary%.");
     }
 

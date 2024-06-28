@@ -1,4 +1,4 @@
-package me.bubbles.bosspve.items.weapons;
+package me.bubbles.bosspve.items.weapons.vampire;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.flags.Flag;
@@ -12,16 +12,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashSet;
 
-public class NinjaDagger extends Item {
+public class VampireEyeFragment extends Item {
 
-    public NinjaDagger(BossPVE plugin) {
-        super(plugin, Material.SHEARS, "ninjaDagger");
+    public VampireEyeFragment(BossPVE plugin) {
+        super(plugin, Material.SPIDER_EYE, "vampireEyeFragment");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                "&8&lNinja's Dagger"
+                "&4Vampire Eye Fragment"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore(null));
+        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -30,22 +30,13 @@ public class NinjaDagger extends Item {
     }
 
     @Override
-    public HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> getFlags() {
-        HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 45D, false));
-        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.MONEY_ADD, 5D, false));
-        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.XP_ADD, 4D, false));
-        return result;
-    }
-
-    @Override
     public Type getType() {
-        return Type.WEAPON;
+        return Type.MISC;
     }
 
     @Override
     public String getDescription() {
-        return "From the fallen ninjas";
+        return "One of nine";
     }
 
 }

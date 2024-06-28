@@ -3,12 +3,14 @@ package me.bubbles.bosspve.utility;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.flags.ItemFlag;
+import me.bubbles.bosspve.items.manager.ItemManager;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.utility.string.UtilString;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_20_R3.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.v1_21_R1.enchantments.CraftEnchantment;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,30 +24,33 @@ import java.util.List;
 public class UtilItemStack {
 
     private ItemStack itemStack;
+    private Item item;
     private BossPVE plugin;
 
     public UtilItemStack(BossPVE plugin, ItemStack itemStack) {
         this.plugin=plugin;
         this.itemStack=itemStack;
+        this.item=plugin.getItemManager().getItemFromStack(itemStack);
     }
 
-    @SuppressWarnings("deprecation")
-    public List<String> getUpdatedLore(ItemStack itemStack) {
-        List<String> lore=new ArrayList<>();
-        for(Enchantment enchantment : itemStack.getEnchantments().keySet()) {
-            lore.add(ChatColor.translateAlternateColorCodes('&',
-                    "&9" + enchantment.getName() + " " + itemStack.getItemMeta().getEnchantLevel(enchantment)
-            ));
-        }
-        return lore;
+    public UtilItemStack(BossPVE plugin, ItemStack itemStack, Item item) {
+        this.plugin=plugin;
+        this.itemStack=itemStack;
+        this.item=item;
     }
 
-    public List<String> getUpdatedLoreForPlayer(ItemStack itemStack, Player player) {
+    public List<String> getUpdatedLore() {
+        return getUpdatedLore(null);
+    }
+
+    public List<String> getUpdatedLore(Player player) {
         List<String> lore = new ArrayList<>();
-        Item item = plugin.getItemManager().getItemFromStack(itemStack);
-        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+        //Item item = plugin.getItemManager().getItemFromStack(itemStack);
+        UtilUserData uud=null;
+        if(player!=null) {
+            uud=plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+        }
         int enchantsAmt = itemStack.getEnchantments().size();
-        boolean cont=true;
         if(item!=null) {
             if((!item.getDescription().equals(""))&&item.getDescription()!=null) {
                 lore.add(UtilString.colorFillPlaceholders("&8"+item.getDescription()));
@@ -53,12 +58,24 @@ public class UtilItemStack {
         }
         for(Enchantment bukkitEnchantment : itemStack.getEnchantments().keySet()) {
             net.minecraft.world.item.enchantment.Enchantment nmsEnchant = CraftEnchantment.bukkitToMinecraft(bukkitEnchantment);
-            if(nmsEnchant instanceof Enchant) {
-                Enchant enchant = (Enchant) nmsEnchant;
-                if(!(uud.getLevel()>=enchant.getLevelRequirement())) {
-                    lore.add(ChatColor.translateAlternateColorCodes('&',
-                            "&c" + enchant.getName() + " " + itemStack.getItemMeta().getEnchantLevel(bukkitEnchantment)
-                    ));
+            Enchant enchant = plugin.getItemManager().getEnchantManager().getEnchant(nmsEnchant.description().getString());
+            if(enchant!=null) {
+                if(uud!=null) {
+                    if(!(uud.getLevel()>=enchant.getLevelRequirement())) {
+                        lore.add(ChatColor.translateAlternateColorCodes('&',
+                                "&c" + enchant.getName() + " " + itemStack.getItemMeta().getEnchantLevel(bukkitEnchantment)
+                        ));
+                    } else {
+                        lore.add(ChatColor.translateAlternateColorCodes('&',
+                                "&9" + enchant.getName() + " " + itemStack.getItemMeta().getEnchantLevel(bukkitEnchantment)
+                        ));
+                        if(enchantsAmt<=5) {
+                            if(enchant.getDescription()!=null) {
+                                lore.add(ChatColor.translateAlternateColorCodes('&',"&7"+enchant.getDescription()));
+                            }
+                        }
+                        continue;
+                    }
                 } else {
                     lore.add(ChatColor.translateAlternateColorCodes('&',
                             "&9" + enchant.getName() + " " + itemStack.getItemMeta().getEnchantLevel(bukkitEnchantment)
@@ -68,14 +85,13 @@ public class UtilItemStack {
                             lore.add(ChatColor.translateAlternateColorCodes('&',"&7"+enchant.getDescription()));
                         }
                     }
-                    cont=false;
+                    continue;
                 }
-            }
-            if(cont) {
+            }/* else {
                 lore.add(ChatColor.translateAlternateColorCodes('&',
                         "&9" + bukkitEnchantment.getName() + " " + itemStack.getItemMeta().getEnchantLevel(bukkitEnchantment)
                 ));
-            }
+            }*/
         }
         if(item!=null) {
             String damage = "%primary%Damage:%secondary%";
@@ -117,6 +133,25 @@ public class UtilItemStack {
             if(xpAdd!=0||xpMult!=1) {
                 lore.add(UtilString.colorFillPlaceholders(money));
             }
+
+            // Health
+
+            String health = "%primary%Health:%secondary%";
+            double healthAdd = UtilCalculator.getFlagSum(this, ItemFlag.HEALTH_ADD);
+            if(healthAdd!=0) {
+                health+=" +"+healthAdd;
+            }
+            double healthMult = UtilCalculator.getFlagProduct(this, ItemFlag.HEALTH_MULT);
+            if(healthMult!=1) {
+                health+=(healthMult>1 ? " +" : " -");
+                health+="(%"+Math.abs((int) ((healthAdd*100)-100))+")";
+            }
+            if(healthAdd!=0||healthMult!=1) {
+                lore.add(UtilString.colorFillPlaceholders(health));
+            }
+
+            // Defence
+
             String defence = "%primary%Defence:%secondary%";
             double protAdd = UtilCalculator.getFlagSum(this, ItemFlag.PROT_ADD);
             if(protAdd!=0) {
@@ -133,14 +168,6 @@ public class UtilItemStack {
 
         }
         return lore;
-    }
-
-    public List<String> getUpdatedLoreForPlayer(Player player) {
-        return getUpdatedLoreForPlayer(itemStack,player);
-    }
-
-    public List<String> getUpdatedLore() {
-        return getUpdatedLore(itemStack);
     }
 
     public ItemStack enchantItem(ItemStack giver) {
@@ -192,8 +219,9 @@ public class UtilItemStack {
             }
         }
         receiverMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
-        receiver.setItemMeta(receiverMeta);
-        receiverMeta.setLore(getUpdatedLore(receiver));
+        //receiver.setItemMeta(receiverMeta);
+        UtilItemStack utilItemStack = new UtilItemStack(plugin, receiver, item);
+        receiverMeta.setLore(utilItemStack.getUpdatedLore());
         receiver.setItemMeta(receiverMeta);
         return receiver;
     }
@@ -209,9 +237,10 @@ public class UtilItemStack {
         HashSet<Enchant> result=new HashSet<>();
         itemStack.getItemMeta().getEnchants().keySet()
                 .forEach(enchantment -> {
-                    Enchant customEnchant = plugin.getItemManager().getEnchantManager().asCustomEnchant(enchantment);
-                    if(customEnchant!=null) {
-                        result.add(customEnchant);
+                    net.minecraft.world.item.enchantment.Enchantment nmsEnchant = CraftEnchantment.bukkitToMinecraft(enchantment);
+                    Enchant enchant = plugin.getItemManager().getEnchantManager().getEnchant(nmsEnchant.description().getString());
+                    if(enchant!=null) {
+                        result.add(enchant);
                     }
                 });
         return result;
@@ -219,24 +248,27 @@ public class UtilItemStack {
 
     public HashSet<Flag<ItemFlag, Double>> getFlags() {
         HashSet<Flag<ItemFlag, Double>> result = new HashSet<>();
-        Item item = plugin.getItemManager().getItemFromStack(itemStack);
         if(item!=null) {
             result.addAll(item.getFlags());
         }
         for(Enchant enchant : getCustomEnchants()) {
-            result.addAll(enchant.getFlags(getEnchantLevel(enchant)));
+            result.addAll(enchant.getFlags(getEnchantLevel(enchant.getEnchantment())));
         }
         return result;
     }
 
-    public int getEnchantLevel(Enchant enchant) {
+    public int getEnchantLevel(net.minecraft.world.item.enchantment.Enchantment enchantment) {
+        return getEnchantLevel(CraftEnchantment.minecraftToBukkit(enchantment));
+    }
+
+    public int getEnchantLevel(Enchantment enchant) {
         if(!itemStack.hasItemMeta()) {
             return -1;
         }
-        /*if(!(getCustomEnchants().contains(enchant))) {
+        if(!itemStack.getItemMeta().hasEnchant(enchant)) {
             return -1;
-        }*/
-        return itemStack.getItemMeta().getEnchantLevel(CraftEnchantment.minecraftToBukkit(enchant));
+        }
+        return itemStack.getItemMeta().getEnchantLevel(enchant);
     }
 
 }

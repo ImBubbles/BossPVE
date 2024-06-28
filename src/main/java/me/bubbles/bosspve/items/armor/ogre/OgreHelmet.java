@@ -22,7 +22,7 @@ public class OgreHelmet extends me.bubbles.bosspve.items.manager.bases.armor.Arm
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&3&lOgre's Helmet"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

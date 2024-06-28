@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -100,10 +100,15 @@ public class Volcono extends MagmaCube implements IEntity {
     @Override
     public HashSet<Flag<EntityFlag, Double>> getFlags() {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 30D, false));
+        /*result.add(new Flag<>(EntityFlag.MAX_HEALTH, 30D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 15D, false));
         result.add(new Flag<>(EntityFlag.XP, 10D, false));
-        result.add(new Flag<>(EntityFlag.DAMAGE, 30D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 60D, false));*/
+
+        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 50D, false));
+        result.add(new Flag<>(EntityFlag.MONEY, 40D, false));
+        result.add(new Flag<>(EntityFlag.XP, 10D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 35D, false));
         return result;
     }
 

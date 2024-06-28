@@ -23,6 +23,9 @@ public class GuiClickCommand extends GuiClickIndex {
         if(!(event instanceof InventoryClickEvent)) {
             return;
         }
+        if(!cont()) {
+            return;
+        }
         if(isIndex()) {
             Bukkit.getServer().dispatchCommand(commandSender, command);
         }

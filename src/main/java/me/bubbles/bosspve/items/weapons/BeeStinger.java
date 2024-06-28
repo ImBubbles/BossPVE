@@ -21,7 +21,7 @@ public class BeeStinger extends Item {
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&e&lBee Stinger"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

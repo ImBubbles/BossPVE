@@ -7,6 +7,8 @@ import me.bubbles.bosspve.ticker.Timer;
 import net.minecraft.world.entity.Entity;
 import org.bukkit.Location;
 
+import java.util.logging.Level;
+
 public class StageEntity extends Timer {
 
     private Stage stage;

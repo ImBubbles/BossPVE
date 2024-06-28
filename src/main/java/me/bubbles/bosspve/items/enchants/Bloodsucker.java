@@ -19,7 +19,7 @@ import java.util.Arrays;
 public class Bloodsucker extends Enchant {
 
     public Bloodsucker(BossPVE plugin) {
-        super(plugin, Rarity.RARE, "Bloodsucker", Material.PRISMARINE_SHARD, 5);
+        super(plugin, "Bloodsucker", Material.PRISMARINE_SHARD, 5);
         getEnchantItem().setDisplayName("&cBloodsucker");
         allowedTypes.addAll(
                 Arrays.asList(
@@ -41,7 +41,7 @@ public class Bloodsucker extends Enchant {
                 return;
             }
             //int level = main.getItemMeta().getEnchantLevel(this);
-            int level = new UtilItemStack(plugin, main).getEnchantLevel(this);
+            int level = new UtilItemStack(plugin, main).getEnchantLevel(getEnchantment());
             GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
             gamePlayer.healPercent(0.05*level);
             PreparedMessages.onProc(gamePlayer, this);

@@ -3,7 +3,10 @@ package me.bubbles.bosspve.utility;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.database.databases.XpDB;
 import me.bubbles.bosspve.game.GamePlayer;
+import me.bubbles.bosspve.settings.Settings;
+import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.ticker.Timer;
+import me.bubbles.bosspve.utility.string.UtilString;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -24,7 +27,18 @@ public class UpdateXP extends Timer {
             int xp = gamePlayer.getCache().getXp();
             int level = UtilNumber.xpToLevel(xp);
             if(player.getLevel()<level) {
-                player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+                Stage stage = plugin.getStageManager().getStage(level);
+                if(stage!=null) {
+                    if((Boolean) Settings.NEXTSTAGE_MESSAGES.getOption(gamePlayer.getCache().getOrDefault(Settings.NEXTSTAGE_MESSAGES))) {
+                        player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+                        player.sendTitle(UtilString.colorFillPlaceholders("&a&lStage Unlocked"), UtilString.colorFillPlaceholders("&aStage "+stage.getLevelRequirement()+" unlocked"), 5, 60, 5);
+                    }
+                } else {
+                    if((Boolean) Settings.LEVELUP_MESSAGES.getOption(gamePlayer.getCache().getOrDefault(Settings.LEVELUP_MESSAGES))) {
+                        player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
+                        player.sendTitle(UtilString.colorFillPlaceholders("&a&lLevel Up"), UtilString.colorFillPlaceholders("&aLevel "+level), 5, 40, 5);
+                    }
+                }
             }
             player.setLevel(level);
             float result = getPercentComplete(xp, level);

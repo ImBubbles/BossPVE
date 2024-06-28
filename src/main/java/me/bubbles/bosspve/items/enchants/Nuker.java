@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class Nuker extends Enchant {
 
     public Nuker(BossPVE plugin) {
-        super(plugin, Rarity.VERY_RARE, "Nuker", Material.TNT, 10);
+        super(plugin, "Nuker", Material.TNT, 10);
         getEnchantItem().setDisplayName("&c&lNuker");
         allowedTypes.addAll(
                 Arrays.asList(

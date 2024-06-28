@@ -12,6 +12,7 @@ public class GuiClick extends Event {
 
     private Inventory inventory;
     private final boolean allow;
+    private boolean cont;
 
     public GuiClick(BossPVE plugin, Inventory inventory, boolean allow) {
         super(plugin, Arrays.asList(InventoryClickEvent.class, InventoryCloseEvent.class));
@@ -23,26 +24,31 @@ public class GuiClick extends Event {
     public void onEvent(org.bukkit.event.Event event) {
         if(event instanceof InventoryClickEvent) {
             InventoryClickEvent e = (InventoryClickEvent) event;
-            /*if(e.getAction().equals(InventoryAction.PICKUP_ALL)) {
-                click(e);
-            }*/
-            //click(e);
+            cont=false;
             if(e.getClickedInventory()==null) {
                 return;
             }
             if(e.getClickedInventory().getHolder()==null) {
                 return;
             }
+            if(!(e.getWhoClicked().equals((Player) inventory.getHolder()))) {
+                return;
+            }
             if(e.getClickedInventory().getHolder().equals(inventory.getHolder())) {
                 e.setCancelled(!allow);
+                cont=true;
             }
         }
         if(event instanceof InventoryCloseEvent) {
             InventoryCloseEvent e = (InventoryCloseEvent) event;
-            if(e.getPlayer().equals(inventory.getHolder())) {
+            if(e.getPlayer().equals((Player) inventory.getHolder())) {
                 plugin.getEventManager().removeEvent(this);
             }
         }
+    }
+
+    protected boolean cont() {
+        return cont;
     }
 
     /*private void click(InventoryClickEvent event) {

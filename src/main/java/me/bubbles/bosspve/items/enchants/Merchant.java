@@ -10,14 +10,14 @@ import org.bukkit.Material;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class Resistance extends Enchant {
+public class Merchant extends Enchant {
 
-    public Resistance(BossPVE plugin) {
-        super(plugin, "Resistance", Material.CONDUIT, 15);
-        getEnchantItem().setDisplayName("&4Resistance");
+    public Merchant(BossPVE plugin) {
+        super(plugin, "Merchant", Material.EMERALD, 20);
+        getEnchantItem().setDisplayName("&eMerchant");
         allowedTypes.addAll(
                 Arrays.asList(
-                        Item.Type.ARMOR
+                        Item.Type.WEAPON
                 )
         );
     }
@@ -25,13 +25,14 @@ public class Resistance extends Enchant {
     @Override
     public HashSet<Flag<ItemFlag, Double>> getFlags(int level) {
         HashSet<Flag<ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(ItemFlag.PROT_ADD, 3D*(level), false));
+        result.add(new Flag<>(ItemFlag.XP_ADD, 5D*(level), false));
         return result;
     }
 
     @Override
     public String getDescription() {
-        return "Protects you from attacks";
+        return "Get more XP out of your kills";
     }
+
 
 }

@@ -26,7 +26,7 @@ public class Extracted extends Item {
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&5&k|&5&lEXTRACTED&5&k|"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

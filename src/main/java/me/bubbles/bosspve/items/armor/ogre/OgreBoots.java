@@ -23,7 +23,7 @@ public class OgreBoots extends Armor {
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&3&lOgre's Boots"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

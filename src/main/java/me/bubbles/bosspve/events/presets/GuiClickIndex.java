@@ -22,6 +22,9 @@ public class GuiClickIndex extends GuiClick {
         if(!(event instanceof InventoryClickEvent)) {
             return;
         }
+        if(!cont()) {
+            return;
+        }
         InventoryClickEvent e = (InventoryClickEvent) event;
         // CHECK ACTION
         if(!e.getAction().equals(InventoryAction.PICKUP_ALL)) {

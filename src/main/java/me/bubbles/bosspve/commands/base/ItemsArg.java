@@ -4,11 +4,13 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.events.presets.GuiClickCommand;
 import me.bubbles.bosspve.events.presets.GuiClickIndex;
+import me.bubbles.bosspve.events.presets.GuiClickRunnable;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.utility.UtilUserData;
 import me.bubbles.bosspve.utility.guis.GUI;
 import me.bubbles.bosspve.utility.guis.command.ClickGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -61,7 +63,16 @@ public class ItemsArg extends Argument {
 
             @Override
             public GuiClickIndex getGuiClick(Item object, int index) {
-                return new GuiClickIndex(plugin, inventory, index, false);
+
+                Runnable runnable = () -> {
+                    if(!utilSender.hasPermission("bosspve.admin")) {
+                        return;
+                    }
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bpve giveitem "+utilSender.getPlayer().getName()+" "+object.getNBTIdentifier());
+                };
+
+                return new GuiClickRunnable(plugin, inventory, index, runnable);
+                //return new GuiClickIndex(plugin, inventory, index, false);
             }
 
             @Override
@@ -69,7 +80,7 @@ public class ItemsArg extends Argument {
                 ItemStack backButton = new ItemStack(Material.ARROW);
                 ItemMeta itemMeta = backButton.getItemMeta();
                 itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                        "&fPage " + (page-1)
+                        "&fPage " + (page)
                 ));
                 backButton.setItemMeta(itemMeta);
                 return backButton;
@@ -80,7 +91,7 @@ public class ItemsArg extends Argument {
                 ItemStack nextButton = new ItemStack(Material.FEATHER);
                 ItemMeta itemMeta = nextButton.getItemMeta();
                 itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                        "&fPage " + (page+1)
+                        "&fPage " + (page+2)
                 ));
                 nextButton.setItemMeta(itemMeta);
                 return nextButton;

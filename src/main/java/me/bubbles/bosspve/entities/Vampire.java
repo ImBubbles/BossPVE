@@ -22,8 +22,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class Vampire extends Stray implements IEntity {
 
-    private final String customName = ChatColor.translateAlternateColorCodes('&',"&c&lVampire");
+    private final String customName = ChatColor.translateAlternateColorCodes('&',"&4&lVampire");
     private BossPVE plugin;
     private UtilEntity utilEntity;
 
@@ -99,6 +99,9 @@ public class Vampire extends Stray implements IEntity {
         List<ItemStack> result=new ArrayList<>();
         if(UtilNumber.rollTheDice(1,800,1)) {
             result.add(plugin.getItemManager().getItemByName("bloodsuckerEnch").nmsAsItemStack());
+        }
+        if(UtilNumber.rollTheDice(1,300,1)) {
+            result.add(plugin.getItemManager().getItemByName("vampireeyefragment").nmsAsItemStack());
         }
         // BEE SET
         if(UtilNumber.rollTheDice(1,600,1)) {

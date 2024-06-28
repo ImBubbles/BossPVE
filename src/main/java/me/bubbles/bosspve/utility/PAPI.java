@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.utility;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.game.GamePlayer;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -40,11 +41,27 @@ public class PAPI extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, String params) {
         UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+        if(params.equalsIgnoreCase("health")) {
+            GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player.getUniqueId());
+            if(gamePlayer==null) {
+                return "0";
+            } else {
+                return String.valueOf(gamePlayer.getHealth());
+            }
+        }
+        if(params.equalsIgnoreCase("maxHealth")) {
+            GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player.getUniqueId());
+            if(gamePlayer==null) {
+                return "0";
+            } else {
+                return String.valueOf(gamePlayer.getMaxHealth());
+            }
+        }
         if(params.equalsIgnoreCase("xp")){
-            return String.valueOf(uud.getXp());
+            return UtilNumber.formatWhole(uud.getXp());
         }
         if(params.equalsIgnoreCase("level")) {
-            return String.valueOf(uud.getLevel());
+            return UtilNumber.formatWhole(uud.getLevel());
         }
         if(params.startsWith("player_position_")) {
             int pos;
@@ -72,7 +89,7 @@ public class PAPI extends PlaceholderExpansion {
                 return "0";
             }
             OfflinePlayer xpPlayer = Bukkit.getOfflinePlayer(list.get(pos-1));
-            return String.valueOf(UtilDatabase.getXpDB().getValue(xpPlayer.getUniqueId()));
+            return UtilNumber.formatWhole(UtilDatabase.getXpDB().getValue(xpPlayer.getUniqueId()));
         }
         if(params.equalsIgnoreCase("position")) {
             return String.valueOf(UtilDatabase.getXpDB().getPosition(player.getUniqueId()));

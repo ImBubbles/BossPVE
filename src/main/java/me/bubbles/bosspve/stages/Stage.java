@@ -6,15 +6,17 @@ import me.bubbles.bosspve.game.GameEntity;
 import me.bubbles.bosspve.ticker.Timer;
 import me.bubbles.bosspve.utility.UtilLocation;
 import me.bubbles.bosspve.utility.UtilUserData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -103,24 +105,29 @@ public class Stage extends Timer {
     }
 
     public void onKill(Entity entity) {
-        //spawnedEntities.remove(entity);
-        Iterator<Entity> iterator = spawnedEntities.iterator();
+        spawnedEntities.remove(entity);
+        /*Iterator<Entity> iterator = spawnedEntities.iterator();
         while (iterator.hasNext()) {
             Entity spawned = iterator.next();
             if(spawned.getUUID().equals(entity.getUUID())) {
                 iterator.remove();
                 return;
             }
-        }
+        }*/
     }
 
     public void killAll() {
-        for(Entity entity : spawnedEntities) {
-            if(entity.isAlive()) {
-                LivingEntity livingEntity = (LivingEntity) entity;
-                plugin.getGameManager().delete(plugin.getGameManager().getGameEntity(entity));
-                livingEntity.remove(Entity.RemovalReason.DISCARDED);
-            }
+        HashSet<Entity> copy = new HashSet<>(spawnedEntities);
+        for(Entity entity : copy) {
+            /*spawnedEntities.remove(entity);
+            plugin.getGameManager().delete(plugin.getGameManager().getGameEntity(entity));*/
+            entity.kill();
+        }
+    }
+
+    public void removeAll() {
+        for(Entity entity : new HashSet<>(spawnedEntities)) {
+            entity.remove(Entity.RemovalReason.DISCARDED);
         }
         spawnedEntities=new HashSet<>();
     }
@@ -270,12 +277,15 @@ public class Stage extends Timer {
     }
 
     public boolean allowSpawn() {
-        spawnedEntities=spawnedEntities.stream().filter(Entity::isAlive).collect(Collectors.toCollection(HashSet::new));
-        return spawnedEntities.size()<maxEntities;
+        return maxEntities>spawnedEntities.size();
     }
 
     public ConfigurationSection getConfigurationSection() {
         return section;
+    }
+
+    public HashSet<Entity> getSpawned() {
+        return spawnedEntities;
     }
 
 }

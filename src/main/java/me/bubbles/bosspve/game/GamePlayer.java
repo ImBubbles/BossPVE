@@ -33,6 +33,11 @@ public class GamePlayer extends GameBase {
             return;
         }
         player.setHealth(20*percent);
+        /*ClientboundSetActionBarTextPacket packet = new ClientboundSetActionBarTextPacket(utc.getTextComponent());
+        player.spigot().sendMessage();
+        player.
+        ((CraftPlayer) player).getHandle().connection.send();*/
+
     }
 
     @Override

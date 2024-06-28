@@ -15,6 +15,7 @@ public class JustInCase extends Timer {
     @Override
     public void onComplete() {
         plugin.saveUserData();
+        plugin.getGameManager().clearDead();
         restart();
     }
 

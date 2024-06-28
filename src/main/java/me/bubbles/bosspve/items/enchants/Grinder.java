@@ -19,7 +19,7 @@ import java.util.Arrays;
 public class Grinder extends Enchant {
 
     public Grinder(BossPVE plugin) {
-        super(plugin, Rarity.VERY_RARE, "Grinder", Material.EMERALD, 20);
+        super(plugin, "Grinder", Material.EMERALD, 20);
         getEnchantItem().setDisplayName("&e&lGrinder");
         allowedTypes.addAll(
                 Arrays.asList(
@@ -40,7 +40,7 @@ public class Grinder extends Enchant {
             if(!containsEnchant(main)) {
                 return;
             }
-            int level = new UtilItemStack(plugin, main).getEnchantLevel(this);
+            int level = new UtilItemStack(plugin, main).getEnchantLevel(getEnchantment());
             double addition = level-1*(.5);
             if(UtilNumber.rollTheDice(1,1000,3+addition)) {
                 GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);

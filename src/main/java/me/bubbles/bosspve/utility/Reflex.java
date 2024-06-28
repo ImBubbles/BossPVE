@@ -1,37 +1,49 @@
 package me.bubbles.bosspve.utility;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
 public class Reflex {
 
-    // this class is basically completely stolen and not mine lmao
-    public static Field getField(@NotNull Class<?> clazz, @NotNull String fieldName) {
+    public static Field getField(Class<?> source, String name) {
         try {
-            return clazz.getDeclaredField(fieldName);
+            return source.getDeclaredField(name);
         }
-        catch (NoSuchFieldException e) {
-            Class<?> superClass = clazz.getSuperclass();
-            return superClass == null ? null : getField(superClass, fieldName);
+        catch (NoSuchFieldException exception) {
+            Class<?> superClass = source.getSuperclass();
+            return superClass == null ? null : getField(superClass, name);
         }
     }
 
-    public static boolean setFieldValue(@NotNull Object of, @NotNull String fieldName, @Nullable Object value) {
+    public static Object getFieldValue(Object source, String name) {
         try {
-            boolean isStatic = of instanceof Class;
-            Class<?> clazz = isStatic ? (Class<?>) of : of.getClass();
+            Class<?> clazz = source instanceof Class<?> ? (Class<?>) source : source.getClass();
+            Field field = getField(clazz, name);
+            if (field == null) return null;
 
-            Field field = getField(clazz, fieldName);
+            field.setAccessible(true);
+            return field.get(source);
+        }
+        catch (IllegalAccessException exception) {
+            exception.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean setFieldValue(Object source, String name, @Nullable Object value) {
+        try {
+            boolean isStatic = source instanceof Class;
+            Class<?> clazz = isStatic ? (Class<?>) source : source.getClass();
+
+            Field field = getField(clazz, name);
             if (field == null) return false;
 
             field.setAccessible(true);
-            field.set(isStatic ? null : of, value);
+            field.set(isStatic ? null : source, value);
             return true;
         }
-        catch (IllegalAccessException e) {
-            e.printStackTrace();
+        catch (IllegalAccessException exception) {
+            exception.printStackTrace();
         }
         return false;
     }

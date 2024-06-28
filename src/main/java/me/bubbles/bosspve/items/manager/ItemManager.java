@@ -14,6 +14,8 @@ import me.bubbles.bosspve.items.weapons.BeeStinger;
 import me.bubbles.bosspve.items.weapons.NinjaDagger;
 import me.bubbles.bosspve.items.weapons.SkeletonSword;
 import me.bubbles.bosspve.items.weapons.VolcanicTear;
+import me.bubbles.bosspve.items.weapons.vampire.VampireEye;
+import me.bubbles.bosspve.items.weapons.vampire.VampireEyeFragment;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -40,6 +42,8 @@ public class ItemManager {
                 new VolcanicTear(plugin),
                 new NinjaDagger(plugin),
                 new BeeStinger(plugin),
+                new VampireEyeFragment(plugin),
+                new VampireEye(plugin, this),
                 new EnchantExtractor(plugin),
                 new Extracted(plugin)
         );
@@ -55,6 +59,7 @@ public class ItemManager {
 
     public void initEnchants() {
         enchantManager=new EnchantManager(this);
+        enchantManager.registerEnchants();
     }
 
     public EnchantManager getEnchantManager() {

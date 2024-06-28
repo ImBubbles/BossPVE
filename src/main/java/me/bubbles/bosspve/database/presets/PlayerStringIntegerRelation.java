@@ -24,16 +24,15 @@ public abstract class PlayerStringIntegerRelation extends Database {
 
     public HashMap<String, Integer> getEntries(UUID player) {
         HashMap<String, Integer> result = new HashMap<>();
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM " + tableName + " WHERE uuid=?");
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT * FROM " + tableName + " WHERE uuid=?");) {
             statement.setString(1, player.toString());
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 result.put(rs.getString("str"),rs.getInt("val"));
             }
             rs.close();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
         }
@@ -42,9 +41,9 @@ public abstract class PlayerStringIntegerRelation extends Database {
 
     public int getEntry(UUID player, String str) {
         int result = -1;
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM " + tableName + " WHERE uuid=? AND val=?");
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     "SELECT * FROM " + tableName + " WHERE uuid=? AND val=?");) {
             statement.setString(1, player.toString());
             statement.setString(2, str);
             ResultSet rs = statement.executeQuery();
@@ -52,7 +51,6 @@ public abstract class PlayerStringIntegerRelation extends Database {
                 result = rs.getInt("val");
             }
             rs.close();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
         }
@@ -61,15 +59,12 @@ public abstract class PlayerStringIntegerRelation extends Database {
 
     public boolean setRelation(UUID player, String string, int value) {
         removeRelation(player, string);
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + " " +
-                    "(uuid, str, val) VALUES (?, ?, ?)");
-
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("INSERT INTO " + tableName + " " +
+                "(uuid, str, val) VALUES (?, ?, ?)");) {
             statement.setString(1, player.toString());
             statement.setString(2, string);
             statement.setInt(3, value);
             statement.execute();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
             return false;
@@ -78,12 +73,10 @@ public abstract class PlayerStringIntegerRelation extends Database {
     }
 
     public boolean removeRelation(UUID player, String string) {
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE uuid=? AND str=?");
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE uuid=? AND str=?");) {
             statement.setString(1, player.toString());
             statement.setString(2, string);
             statement.execute();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
             return false;
@@ -93,15 +86,13 @@ public abstract class PlayerStringIntegerRelation extends Database {
 
     public boolean hasValue(UUID player, String string) {
         boolean result = false;
-        try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM " + tableName + " WHERE uuid=? AND str=?");
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(
+                "SELECT * FROM " + tableName + " WHERE uuid=? AND str=?");) {
             statement.setString(1, player.toString());
             statement.setString(2, string);
             ResultSet rs = statement.executeQuery();
             result = rs.next();
             rs.close();
-            statement.close();
         } catch (Exception exc) {
             exc.printStackTrace();
         }

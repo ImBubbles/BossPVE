@@ -17,10 +17,10 @@ import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.craftbukkit.v1_20_R3.damage.CraftDamageSource;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.damage.CraftDamageSource;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -53,16 +53,12 @@ public class UtilCustomEvents {
         if(!entity.hasSameTagAs(e.getEntity())) {
             return;
         }
-        GameEntity gameEntity = plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId());
-        if(gameEntity!=null) {
-            plugin.getGameManager().delete(gameEntity);
-        }
-        Stage stage = plugin.getStageManager().getStage(e.getEntity().getLocation());
+        /*Stage stage = plugin.getStageManager().getStage(e.getEntity().getLocation());
         if(stage!=null) {
             stage.onKill(((CraftEntity) e.getEntity()).getHandle());
         } else {
             plugin.getLogger().log(Level.SEVERE, "STAGE NOT FOUND");
-        }
+        }*/
         if(e.getEntity().getKiller()==null) {
             e.getDrops().clear();
             return;
@@ -130,15 +126,9 @@ public class UtilCustomEvents {
                 }
             }
         }
-        /*GameEntity gameEntity = plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId());
-        plugin.getGameManager().delete(gameEntity);*/
         int xp=(int) UtilCalculator.getXp(player, entity);
         double money=UtilCalculator.getMoney(player, entity);
         gamePlayer.give(xp, money, entity, true);
-        /*UtilUserData uud = gamePlayer.getCache();
-        uud.setXp(uud.getXp()+xp);
-        plugin.getEconomy().depositPlayer(player,money);
-        PreparedMessages.kill(plugin.getGameManager().getGamePlayer(player), entity, xp, money);*/
     }
 
     public void customEntityDamageByEntityEvent(IEntity entity) { // mob v player
@@ -160,16 +150,10 @@ public class UtilCustomEvents {
         if(player==null) {
             return;
         }
-        //result=UtilNumber.clampBorder(result, 0, result-UtilCalculator.getProtection(player));
         double protection = UtilCalculator.getProtection(player);
         result=UtilNumber.clampBorder(result, 0, (result/(protection*protection)));
         GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
-        //player.setHealth(20);
         e.setDamage(0);
-        //gamePlayer.updateHealthBar();
-        /*if(player.getHealth()-e.getFinalDamage()<=0) {
-            e.setCancelled(true);
-        }*/
         if(!gamePlayer.damage(result)) {
             Stage stage = plugin.getStageManager().getStage(player.getLocation());
             if(stage==null) {
@@ -177,11 +161,13 @@ public class UtilCustomEvents {
                 return;
             }
             if(stage.isAllowed(player)) {
-                //player.setHealth(20);
-                //player.damage(0, e.getEntity());
                 gamePlayer.setHealth(gamePlayer.getMaxHealth());
                 e.setCancelled(true);
-                player.teleport(stage.getSpawn());
+                Location location = stage.getSpawn();
+                Location playerLoc = player.getLocation();
+                location.setPitch(playerLoc.getPitch());
+                location.setYaw(playerLoc.getYaw());
+                player.teleport(location);
                 player.playSound(player, Sound.ENTITY_VILLAGER_HURT, 1, 1);
             }
         }

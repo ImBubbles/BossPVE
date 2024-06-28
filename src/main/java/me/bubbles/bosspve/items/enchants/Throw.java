@@ -9,8 +9,8 @@ import me.bubbles.bosspve.utility.UtilItemStack;
 import me.bubbles.bosspve.utility.UtilNumber;
 import me.bubbles.bosspve.utility.messages.PreparedMessages;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 public class Throw extends Enchant {
 
     public Throw(BossPVE plugin) {
-        super(plugin, Rarity.RARE, "Throw", Material.LIGHTNING_ROD, 10);
+        super(plugin, "Throw", Material.LIGHTNING_ROD, 10);
         getEnchantItem().setDisplayName("&c&lThrow");
         allowedTypes.addAll(
                 Arrays.asList(
@@ -52,7 +52,7 @@ public class Throw extends Enchant {
                 }
             }
             UtilItemStack uis = new UtilItemStack(plugin, main);
-            int level = uis.getEnchantLevel(this);
+            int level = uis.getEnchantLevel(getEnchantment());
             double addition = level-1*(.25);
             if(!UtilNumber.rollTheDice(1,100,3+addition)) {
                 return;

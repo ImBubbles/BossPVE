@@ -10,9 +10,9 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R3.damage.CraftDamageType;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_20_R3.util.CraftLocation;
+import org.bukkit.craftbukkit.v1_21_R1.damage.CraftDamageType;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_21_R1.util.CraftLocation;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -145,6 +145,10 @@ public class UtilCalculator {
 
     public static HashSet<Flag<ItemFlag, Double>> getActiveFlags(Player player) {
         HashSet<Flag<ItemFlag, Double>> flags = new HashSet<>();
+
+        if(player==null) {
+            return flags;
+        }
 
         // ADD ALL PASSIVE
 

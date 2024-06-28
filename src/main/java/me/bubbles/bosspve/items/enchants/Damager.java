@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class Damager extends Enchant {
 
     public Damager(BossPVE plugin) {
-        super(plugin, Rarity.VERY_RARE, "Damager", Material.CONDUIT, 10);
+        super(plugin, "Damager", Material.CONDUIT, 10);
         getEnchantItem().setDisplayName("&cDamager");
         allowedTypes.addAll(
                 Arrays.asList(

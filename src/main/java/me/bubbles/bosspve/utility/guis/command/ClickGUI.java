@@ -31,7 +31,7 @@ public abstract class ClickGUI<T> extends GUI implements IClickGUI<T> {
     }
 
     public void setPage(int page) {
-        this.page=(int) UtilNumber.clampBorder(gridifier.getTotalPages(), 0, page);
+        this.page=(int) UtilNumber.clampBorder(gridifier.getTotalPages()-1, 0, page);
         buildPage();
     }
 

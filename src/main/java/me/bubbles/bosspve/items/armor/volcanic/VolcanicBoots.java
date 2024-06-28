@@ -23,7 +23,7 @@ public class VolcanicBoots extends Armor {
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&6&lVolcanic Boots"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

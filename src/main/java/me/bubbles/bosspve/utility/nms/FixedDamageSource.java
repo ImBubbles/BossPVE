@@ -45,11 +45,6 @@ public class FixedDamageSource extends DamageSource {
     }
 
     @Override
-    public boolean isIndirect() {
-        return false;
-    }
-
-    @Override
     public boolean isMelting() {
         return false;
     }

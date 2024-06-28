@@ -3,11 +3,13 @@ package me.bubbles.bosspve.events;
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.manager.Event;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
+import me.bubbles.bosspve.utility.UtilItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class AnvilGetItem extends Event {
 

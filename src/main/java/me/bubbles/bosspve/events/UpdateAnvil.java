@@ -7,6 +7,9 @@ import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
 import me.bubbles.bosspve.utility.UtilItemStack;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.logging.Level;
 
 public class UpdateAnvil extends Event {
 
@@ -51,10 +54,10 @@ public class UpdateAnvil extends Event {
         if(!(firstSlot.getType().equals(secondSlot.getType()))) {
             return;
         }
-        UtilItemStack uiu = new UtilItemStack(plugin,firstSlot);
+        UtilItemStack uiu = new UtilItemStack(plugin, firstSlot);
         ItemStack result = uiu.enchantItem(secondSlot);
-        e.getInventory().setItem(2,result);
         result.setAmount(1);
+        e.getInventory().setItem(2,result);
         e.setResult(result);
     }
 

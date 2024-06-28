@@ -23,8 +23,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -53,6 +53,7 @@ public class Goblin extends Piglin implements IEntity {
             return;
         }
         setCustomNameVisible(true);
+        setImmuneToZombification(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
         setHealth((float) utilEntity.getMaxHealth());
@@ -96,16 +97,24 @@ public class Goblin extends Piglin implements IEntity {
         if(UtilNumber.rollTheDice(1,200,3)) {
                 result.add(((EnchantItem) plugin.getItemManager().getItemByName("keyfinderEnch")).getAtLevel(1));
         }
+        if(UtilNumber.rollTheDice(1,300,1)) {
+            result.add(plugin.getItemManager().getItemByName("merchantEnch").nmsAsItemStack());
+        }
         return result;
     }
 
     @Override
     public HashSet<Flag<EntityFlag, Double>> getFlags() {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 50D, false));
+        /*result.add(new Flag<>(EntityFlag.MAX_HEALTH, 50D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 40D, false));
         result.add(new Flag<>(EntityFlag.XP, 10D, false));
-        result.add(new Flag<>(EntityFlag.DAMAGE, 35D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 35D, false));*/
+
+        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 30D, false));
+        result.add(new Flag<>(EntityFlag.MONEY, 15D, false));
+        result.add(new Flag<>(EntityFlag.XP, 10D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 60D, false));
         return result;
     }
 

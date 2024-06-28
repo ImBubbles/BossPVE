@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldLoadEvent;
 
 public class Listeners implements Listener {
@@ -108,6 +109,11 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onWorldLoad(WorldLoadEvent e) {
+        eventManager.onEvent(e);
+    }
+
+    @EventHandler
+    public void onEntityDespawn(EntityRemoveEvent e) {
         eventManager.onEvent(e);
     }
 
