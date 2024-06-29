@@ -1,7 +1,6 @@
 package me.bubbles.bosspve.events.presets;
 
 import me.bubbles.bosspve.BossPVE;
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 

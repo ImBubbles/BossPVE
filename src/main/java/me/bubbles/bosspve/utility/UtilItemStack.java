@@ -94,6 +94,11 @@ public class UtilItemStack {
             }*/
         }
         if(item!=null) {
+
+            if(!this.getFlags().isEmpty()) {
+                lore.add("");
+            }
+
             String damage = "%primary%Damage:%secondary%";
             double dmgAdd = UtilCalculator.getFlagSum(this, ItemFlag.DAMAGE_ADD);
             if(dmgAdd!=0) {

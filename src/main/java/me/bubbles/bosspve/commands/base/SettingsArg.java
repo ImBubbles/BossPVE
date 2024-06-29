@@ -8,11 +8,8 @@ import me.bubbles.bosspve.events.presets.GuiClickIndex;
 import me.bubbles.bosspve.events.presets.GuiClickRunnable;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.settings.Settings;
-import me.bubbles.bosspve.utility.UtilDatabase;
-import me.bubbles.bosspve.utility.UtilNumber;
 import me.bubbles.bosspve.utility.UtilUserData;
-import me.bubbles.bosspve.utility.guis.command.ClickGUI;
-import me.bubbles.bosspve.utility.pagifier.Gridifier;
+import me.bubbles.bosspve.utility.gui.command.ClickGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -58,7 +55,7 @@ public class SettingsArg extends Argument {
         GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId());
         UtilUserData uud = gamePlayer.getCache();
 
-        ClickGUI<Settings> gui = new ClickGUI<Settings>(plugin, utilSender.getPlayer(), Settings.class, Settings.values(), pageNum, false) {
+        ClickGUI<Settings> gui = new ClickGUI<Settings>(plugin, utilSender.getPlayer(), 3, Settings.class, Settings.values(), pageNum) {
             @Override
             public ItemStack getItemStack(Settings object) {
                 int index = SettingsDB.getValue(uud, object);
@@ -110,12 +107,12 @@ public class SettingsArg extends Argument {
             }
 
             @Override
-            public GuiClickIndex getBackCommand(int index) {
+            public GuiClickIndex getBackClick(int index) {
                 return new GuiClickCommand(plugin, inventory, index, "settings "+(page-1), utilSender.getPlayer());
             }
 
             @Override
-            public GuiClickIndex getForwardCommand(int index) {
+            public GuiClickIndex getForwardClick(int index) {
                 return new GuiClickCommand(plugin, inventory, index, "settings "+(page+1), utilSender.getPlayer());
             }
 

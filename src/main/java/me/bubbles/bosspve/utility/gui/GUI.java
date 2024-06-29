@@ -1,14 +1,13 @@
-package me.bubbles.bosspve.utility.guis;
+package me.bubbles.bosspve.utility.gui;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.events.presets.GuiClick;
+import me.bubbles.bosspve.utility.UtilNumber;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
@@ -19,8 +18,12 @@ public abstract class GUI implements IGUI {
     protected BossPVE plugin;
     private HashSet<GuiClick> queue;
 
-    public GUI(BossPVE plugin, InventoryHolder holder, InventoryType inventoryType) {
-        this(plugin, Bukkit.createInventory(holder, inventoryType));
+    public GUI(BossPVE plugin, InventoryHolder holder, int rows) {
+        this(plugin, Bukkit.createInventory(holder, (int) UtilNumber.clampBorder(54, 9, rows*9), "Chest"));
+    }
+
+    public GUI(BossPVE plugin, InventoryHolder holder, int rows, String title) {
+        this(plugin, Bukkit.createInventory(holder, (int) UtilNumber.clampBorder(54, 9, rows*9), title));
     }
 
     public GUI(BossPVE plugin, Inventory inventory) {

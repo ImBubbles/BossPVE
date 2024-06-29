@@ -16,6 +16,10 @@ public class Generic3DArray<T> {
 
     public void set(int i, int j, T[] value) {
         for(int k = 0; k<value.length; k++) {
+            /*System.out.println("i: "+i);
+            System.out.println("j: "+j);
+            System.out.println("k: "+k);
+            System.out.println("val k: "+value[k]);*/
             array[i][j][k]=value[k];
         }
     }

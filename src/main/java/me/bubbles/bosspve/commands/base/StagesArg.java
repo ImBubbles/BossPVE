@@ -2,25 +2,17 @@ package me.bubbles.bosspve.commands.base;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
-import me.bubbles.bosspve.database.databases.SettingsDB;
 import me.bubbles.bosspve.events.presets.GuiClickCommand;
 import me.bubbles.bosspve.events.presets.GuiClickIndex;
-import me.bubbles.bosspve.events.presets.GuiClickRunnable;
 import me.bubbles.bosspve.game.GamePlayer;
-import me.bubbles.bosspve.settings.Settings;
 import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.stages.StageManager;
-import me.bubbles.bosspve.utility.UtilDatabase;
-import me.bubbles.bosspve.utility.UtilNumber;
 import me.bubbles.bosspve.utility.UtilUserData;
-import me.bubbles.bosspve.utility.guis.command.ClickGUI;
-import me.bubbles.bosspve.utility.pagifier.Gridifier;
+import me.bubbles.bosspve.utility.gui.command.ClickGUI;
 import me.bubbles.bosspve.utility.string.UtilString;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -65,7 +57,7 @@ public class StagesArg extends Argument {
         GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId());
         UtilUserData uud = gamePlayer.getCache();
 
-        ClickGUI<Stage> gui = new ClickGUI<Stage>(plugin, utilSender.getPlayer(), Stage.class, getAllStages(), pageNum, false) {
+        ClickGUI<Stage> gui = new ClickGUI<Stage>(plugin, utilSender.getPlayer(), 3, Stage.class, getAllStages(), pageNum) {
             @Override
             public ItemStack getItemStack(Stage object) {
                 int stageNum = object.getLevelRequirement();
@@ -116,12 +108,12 @@ public class StagesArg extends Argument {
             }
 
             @Override
-            public GuiClickIndex getBackCommand(int index) {
+            public GuiClickIndex getBackClick(int index) {
                 return new GuiClickCommand(plugin, inventory, index, "stages "+(page-1), utilSender.getPlayer());
             }
 
             @Override
-            public GuiClickIndex getForwardCommand(int index) {
+            public GuiClickIndex getForwardClick(int index) {
                 return new GuiClickCommand(plugin, inventory, index, "stages "+(page+1), utilSender.getPlayer());
             }
 

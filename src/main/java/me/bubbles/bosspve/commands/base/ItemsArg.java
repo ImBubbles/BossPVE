@@ -5,11 +5,8 @@ import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.events.presets.GuiClickCommand;
 import me.bubbles.bosspve.events.presets.GuiClickIndex;
 import me.bubbles.bosspve.events.presets.GuiClickRunnable;
-import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
-import me.bubbles.bosspve.utility.UtilUserData;
-import me.bubbles.bosspve.utility.guis.GUI;
-import me.bubbles.bosspve.utility.guis.command.ClickGUI;
+import me.bubbles.bosspve.utility.gui.command.ClickGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -55,7 +52,7 @@ public class ItemsArg extends Argument {
 
     private Inventory generateGUI(int pageNum) {
 
-        ClickGUI<Item> gui = new ClickGUI<Item>(plugin, utilSender.getPlayer(), Item.class, noEnchants(), pageNum, false) {
+        ClickGUI<Item> gui = new ClickGUI<Item>(plugin, utilSender.getPlayer(), 6, Item.class, noEnchants(), pageNum) {
             @Override
             public ItemStack getItemStack(Item object) {
                 return object.nmsAsItemStack();
@@ -98,12 +95,12 @@ public class ItemsArg extends Argument {
             }
 
             @Override
-            public GuiClickIndex getBackCommand(int index) {
+            public GuiClickIndex getBackClick(int index) {
                 return new GuiClickCommand(plugin, inventory, index, "items "+(page-1), utilSender.getPlayer());
             }
 
             @Override
-            public GuiClickIndex getForwardCommand(int index) {
+            public GuiClickIndex getForwardClick(int index) {
                 return new GuiClickCommand(plugin, inventory, index, "items "+(page+1), utilSender.getPlayer());
             }
 

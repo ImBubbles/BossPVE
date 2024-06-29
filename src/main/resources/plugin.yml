@@ -3,6 +3,7 @@ version: '${project.version}'
 main: me.bubbles.bosspve.BossPVE
 api-version: '1.21'
 load: STARTUP
+author: Bubbles
 commands:
   bosspve:
     usage: /<command>
@@ -36,3 +37,7 @@ commands:
     usage: /<command>
   debug:
     usage: /<command>
+  enchants:
+    usage: /<command>
+    description: List of enchants
+    aliases: [enchantments]

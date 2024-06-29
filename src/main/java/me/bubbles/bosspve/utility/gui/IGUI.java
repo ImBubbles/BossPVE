@@ -1,4 +1,4 @@
-package me.bubbles.bosspve.utility.guis;
+package me.bubbles.bosspve.utility.gui;
 
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;

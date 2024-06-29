@@ -55,7 +55,7 @@ public class KeyFinder extends Enchant {
     }
 
     private void giveKey(Player player, String key, int amt) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"cc give v "+key+" "+amt+" "+player.getName());
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(),"crate give v "+key+" "+amt+" "+player.getName());
     }
 
     @Override

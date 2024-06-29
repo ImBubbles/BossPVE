@@ -57,7 +57,12 @@ public class EnchantExtractor extends Item {
                 return;
             }
             UtilItemStack uis = new UtilItemStack(plugin, new Extracted(plugin).nmsAsItemStack());
-            e.setResult(uis.enchantItem(firstSlot));
+            ItemStack result = uis.enchantItem(firstSlot);
+            ItemMeta itemMeta = result.getItemMeta();
+            uis = new UtilItemStack(plugin, result);
+            itemMeta.setLore(uis.getUpdatedLore());
+            result.setItemMeta(itemMeta);
+            e.setResult(result);
         }
         if(event instanceof InventoryClickEvent) {
             InventoryClickEvent e = (InventoryClickEvent) event;

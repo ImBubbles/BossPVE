@@ -69,6 +69,12 @@ public class Extracted extends Item {
             ItemStack result = uis.enchantItem(secondSlot);
             e.getInventory().setItem(2,result);
             result.setAmount(1);
+
+            UtilItemStack ris = new UtilItemStack(plugin, result);
+            ItemMeta itemMeta = result.getItemMeta();
+            itemMeta.setLore(ris.getUpdatedLore());
+            result.setItemMeta(itemMeta);
+
             e.setResult(result);
         }
         if(event instanceof PlayerInteractEvent) {

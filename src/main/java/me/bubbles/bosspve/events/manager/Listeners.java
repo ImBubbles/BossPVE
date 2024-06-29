@@ -1,5 +1,8 @@
 package me.bubbles.bosspve.events.manager;
 
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.DisconnectionDetails;
+import net.minecraft.network.ServerboundPacketListener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -118,3 +121,4 @@ public class Listeners implements Listener {
     }
 
 }
+

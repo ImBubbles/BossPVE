@@ -22,7 +22,8 @@ public class BaseCommand extends Command {
                 new StagesArg(plugin, index),
                 new SettingsArg(plugin, index),
                 new ItemsArg(plugin, index),
-                new DebugArg(plugin, index)
+                new DebugArg(plugin, index),
+                new EnchantsArg(plugin, index)
         );
     }
 
