@@ -14,7 +14,6 @@ public class Argument implements CommandExecutor {
 
     public int relativeIndex;
     private int index;
-    public BossPVE plugin;
     public UtilSender utilSender;
     private ArrayList<Argument> arguments = new ArrayList<>();
     public String no_perms;
@@ -24,20 +23,19 @@ public class Argument implements CommandExecutor {
     private String alias;
 
     // CONSTRUCTORS
-    public Argument(BossPVE plugin, String arg, String display, int index) {
-        this.plugin=plugin;
+    public Argument(String arg, String display, int index) {
         this.index=index+1;
         this.arg=arg;
         this.display=display;
     }
 
-    public Argument(BossPVE plugin, String arg, int index) {
-        this(plugin,arg,arg,index);
+    public Argument(String arg, int index) {
+        this(arg,arg,index);
     }
 
     // ON RUN
     public void run(CommandSender sender, String[] args, boolean alias) {
-        this.utilSender=new UtilSender(plugin,sender);
+        this.utilSender=new UtilSender(sender);
         if(alias) {
             relativeIndex=0;
         }else{
@@ -84,9 +82,9 @@ public class Argument implements CommandExecutor {
 
     // PERMISSION
     public void setPermission(String permission) {
-        String node = plugin.getName().toLowerCase() + "." + permission;
+        String node = BossPVE.getInstance().getName().toLowerCase() + "." + permission;
         this.permission=node;
-        this.no_perms=plugin.getConfigManager().getConfig("config.yml").getFileConfiguration().getString("placeholders.no_perms").replace("%node%",node);
+        this.no_perms=BossPVE.getInstance().getConfigManager().getConfig("config.yml").getFileConfiguration().getString("placeholders.no_perms").replace("%node%",node);
     }
 
     public boolean permissionCheck() {

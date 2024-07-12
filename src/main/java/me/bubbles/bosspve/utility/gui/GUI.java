@@ -15,20 +15,18 @@ import java.util.HashSet;
 public abstract class GUI implements IGUI {
 
     protected Inventory inventory;
-    protected BossPVE plugin;
     private HashSet<GuiClick> queue;
 
-    public GUI(BossPVE plugin, InventoryHolder holder, int rows) {
-        this(plugin, Bukkit.createInventory(holder, (int) UtilNumber.clampBorder(54, 9, rows*9), "Chest"));
+    public GUI(InventoryHolder holder, int rows) {
+        this(Bukkit.createInventory(holder, (int) UtilNumber.clampBorder(54, 18, rows*9), "Chest"));
     }
 
-    public GUI(BossPVE plugin, InventoryHolder holder, int rows, String title) {
-        this(plugin, Bukkit.createInventory(holder, (int) UtilNumber.clampBorder(54, 9, rows*9), title));
+    public GUI(InventoryHolder holder, int rows, String title) {
+        this(Bukkit.createInventory(holder, (int) UtilNumber.clampBorder(54, 18, rows*9), title));
     }
 
-    public GUI(BossPVE plugin, Inventory inventory) {
+    public GUI(Inventory inventory) {
         this.inventory=inventory;
-        this.plugin=plugin;
         this.queue=new HashSet<>();
     }
 
@@ -59,7 +57,7 @@ public abstract class GUI implements IGUI {
         fillBackground();
         for(GuiClick guiClick : queue) {
             guiClick.setInventory(inventory);
-            plugin.getEventManager().addEvent(guiClick);
+            BossPVE.getInstance().getEventManager().addEvent(guiClick);
         }
         return inventory;
     }

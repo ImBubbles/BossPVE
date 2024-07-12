@@ -12,8 +12,8 @@ import java.util.HashSet;
 
 public class Damager extends Enchant {
 
-    public Damager(BossPVE plugin) {
-        super(plugin, "Damager", Material.CONDUIT, 10);
+    public Damager() {
+        super("Damager", Material.CONDUIT, 10);
         getEnchantItem().setDisplayName("&cDamager");
         allowedTypes.addAll(
                 Arrays.asList(
@@ -25,14 +25,14 @@ public class Damager extends Enchant {
     @Override
     public HashSet<Flag<ItemFlag, Double>> getFlags(int level) {
         HashSet<Flag<ItemFlag, Double>> result = new HashSet<>();
-        double val = 1+(0.2D*level);
-        result.add(new Flag<>(ItemFlag.DAMAGE_MULT, val, false));
+        double val = 3*level;
+        result.add(new Flag<>(ItemFlag.DAMAGE_ADD, val, false));
         return result;
     }
 
     @Override
     public String getDescription() {
-        return "Increases damage";
+        return "Adds damage";
     }
 
 }

@@ -10,13 +10,16 @@ import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.flags.ItemFlag;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
+import me.bubbles.bosspve.items.manager.bases.enchants.ProcEnchant;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
+import me.bubbles.bosspve.utility.UtilItemStack;
 import me.bubbles.bosspve.utility.gui.command.ClickGUI;
 import me.bubbles.bosspve.utility.string.UtilString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,8 +32,8 @@ public class EnchantsArg extends Argument {
 
     //private HashMap<UUID, Enchant> map;
 
-    public EnchantsArg(BossPVE plugin, int index) {
-        super(plugin, "enchants", "enchants", index);
+    public EnchantsArg(int index) {
+        super("enchants", "enchants", index);
         setPermission("enchants");
         setAlias("enchants");
         //map=new HashMap<>();
@@ -56,12 +59,12 @@ public class EnchantsArg extends Argument {
         }
 
         utilSender.getPlayer().closeInventory();
-        utilSender.getPlayer().openInventory(enchantGUI(page));
+        utilSender.getPlayer().openInventory(enchantGUI(utilSender.getPlayer(), page));
     }
 
-    private Inventory enchantGUI(int pageNum) {
+    private Inventory enchantGUI(Player player, int pageNum) {
 
-        ClickGUI<Item> gui = new ClickGUI<Item>(plugin, utilSender.getPlayer(), 5, Item.class, onlyEnchants(), pageNum) {
+        ClickGUI<Item> gui = new ClickGUI<Item>(player, 5, Item.class, onlyEnchants(), pageNum) {
             @Override
             public ItemStack getItemStack(Item object) {
 
@@ -92,6 +95,11 @@ public class EnchantsArg extends Argument {
                     }
                 }
 
+                if(enchant instanceof ProcEnchant) {
+                    lore.add("");
+                    lore.add(UtilString.colorFillPlaceholders("&e&oClick me to see chances"));
+                }
+
                 ItemMeta itemMeta = (itemStack.hasItemMeta()) ? itemStack.getItemMeta() : Bukkit.getItemFactory().getItemMeta(itemStack.getType());
                 itemMeta.setLore(lore);
                 itemStack.setItemMeta(itemMeta);
@@ -105,14 +113,14 @@ public class EnchantsArg extends Argument {
                 Enchant enchant = ((EnchantItem) object).getEnchant();
 
                 Runnable runnable = () -> {
-                    if(!utilSender.hasPermission("bosspve.admin")) {
+                    /*if(!utilSender.hasPermission("bosspve.admin")) {
                         return;
-                    }
-                    utilSender.getPlayer().closeInventory();
-                    utilSender.getPlayer().openInventory(levelGUI(0, enchant));
+                    }*/
+                    player.closeInventory();
+                    player.openInventory(levelGUI(player, 0, enchant));
                 };
 
-                return new GuiClickRunnable(plugin, inventory, index, runnable);
+                return new GuiClickRunnable(inventory, index, runnable);
                 //return new GuiClickIndex(plugin, inventory, index, false);
             }
 
@@ -140,12 +148,12 @@ public class EnchantsArg extends Argument {
 
             @Override
             public GuiClickIndex getBackClick(int index) {
-                return new GuiClickCommand(plugin, inventory, index, "enchants "+(page-1), utilSender.getPlayer());
+                return new GuiClickCommand(inventory, index, "enchants "+(page-1), player);
             }
 
             @Override
             public GuiClickIndex getForwardClick(int index) {
-                return new GuiClickCommand(plugin, inventory, index, "enchants "+(page+1), utilSender.getPlayer());
+                return new GuiClickCommand(inventory, index, "enchants "+(page+1), player);
             }
 
             @Override
@@ -168,14 +176,14 @@ public class EnchantsArg extends Argument {
     }
 
     private Item[] onlyEnchants() {
-        List<Item> items = new ArrayList<>(plugin.getItemManager().getItems());
+        List<Item> items = new ArrayList<>(BossPVE.getInstance().getItemManager().getItems());
         return items.stream().filter(item -> {
             return (item instanceof EnchantItem);
         }).toArray(Item[]::new);
     }
 
-    private Inventory levelGUI(int pageNum, Enchant enchant) {
-        ClickGUI<Integer> gui = new ClickGUI<Integer>(plugin, utilSender.getPlayer(), 3, Integer.class, getLevels(enchant), pageNum) {
+    private Inventory levelGUI(Player player, int pageNum, Enchant enchant) {
+        ClickGUI<Integer> gui = new ClickGUI<Integer>(player, 3, Integer.class, getLevels(enchant), pageNum) {
 
 
             @Override
@@ -183,6 +191,19 @@ public class EnchantsArg extends Argument {
 
                 EnchantItem enchantItem = enchant.getEnchantItem();
                 ItemStack result = enchantItem.nmsAsItemStack();
+                ItemMeta itemMeta = result.getItemMeta();
+                itemMeta.setDisplayName(itemMeta.getDisplayName()+" "+object);
+
+                if(enchant instanceof ProcEnchant) {
+                    List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
+                    if(lore.isEmpty()) {
+                        lore.add("");
+                    }
+                    lore.add(UtilString.colorFillPlaceholders("%primary%Chance: %secondary%"+roundNumber(((ProcEnchant) enchant).getActivation(object).getPercentChance())+"%"));
+                    itemMeta.setLore(lore);
+                }
+
+                result.setItemMeta(itemMeta);
                 result.setAmount(object);
 
                 return result;
@@ -193,10 +214,14 @@ public class EnchantsArg extends Argument {
             public GuiClickIndex getGuiClick(Integer object, int index) {
 
                 Runnable runnable = () -> {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bpve giveitem "+utilSender.getPlayer().getName()+" "+enchant.getKey()+"Ench "+object);
+                    if(!player.hasPermission("bosspve.admin")) {
+                        return;
+                    }
+                    UtilItemStack.giveItem(player, enchant.getEnchantItem().getAtLevel(object));
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bpve giveitem "+utilSender.getPlayer().getName()+" "+enchant.getKey()+"Ench "+object);
                 };
 
-                return new GuiClickRunnable(plugin, inventory, index, runnable);
+                return new GuiClickRunnable(inventory, index, runnable);
 
             }
 
@@ -227,10 +252,10 @@ public class EnchantsArg extends Argument {
 
                 Runnable runnable = () -> {
                     utilSender.getPlayer().closeInventory();
-                    utilSender.getPlayer().openInventory(levelGUI(page-1, enchant));
+                    utilSender.getPlayer().openInventory(levelGUI(player, page-1, enchant));
                 };
 
-                return new GuiClickRunnable(plugin, inventory, index, runnable);
+                return new GuiClickRunnable(inventory, index, runnable);
 
             }
 
@@ -239,10 +264,10 @@ public class EnchantsArg extends Argument {
 
                 Runnable runnable = () -> {
                     utilSender.getPlayer().closeInventory();
-                    utilSender.getPlayer().openInventory(levelGUI(page+1, enchant));
+                    utilSender.getPlayer().openInventory(levelGUI(player, page+1, enchant));
                 };
 
-                return new GuiClickRunnable(plugin, inventory, index, runnable);
+                return new GuiClickRunnable(inventory, index, runnable);
 
             }
 
@@ -270,11 +295,11 @@ public class EnchantsArg extends Argument {
                 backButton.setItemMeta(itemMeta);
 
                 Runnable runnable = () -> {
-                    utilSender.getPlayer().closeInventory();
-                    utilSender.getPlayer().openInventory(enchantGUI(0));
+                    player.closeInventory();
+                    player.openInventory(enchantGUI(player, 0));
                 };
 
-                set(22, backButton, new GuiClickRunnable(plugin, inventory, 22, runnable));
+                set(22, backButton, new GuiClickRunnable(inventory, 22, runnable));
 
                 return super.build();
 
@@ -282,6 +307,10 @@ public class EnchantsArg extends Argument {
 
         };
         return gui.build();
+    }
+
+    private double roundNumber(double num) {
+        return (double) Math.round(num * 10.0) / 10;
     }
 
     private Integer[] getLevels(Enchant enchant) {

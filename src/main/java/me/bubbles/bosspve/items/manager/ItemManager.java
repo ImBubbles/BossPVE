@@ -1,6 +1,5 @@
 package me.bubbles.bosspve.items.manager;
 
-import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.armor.bee.BeeSet;
 import me.bubbles.bosspve.items.armor.ninja.NinjaSet;
 import me.bubbles.bosspve.items.armor.ogre.OgreSet;
@@ -10,10 +9,7 @@ import me.bubbles.bosspve.items.manager.bases.armor.ArmorSet;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.items.util.EnchantExtractor;
 import me.bubbles.bosspve.items.util.Extracted;
-import me.bubbles.bosspve.items.weapons.BeeStinger;
-import me.bubbles.bosspve.items.weapons.NinjaDagger;
-import me.bubbles.bosspve.items.weapons.SkeletonSword;
-import me.bubbles.bosspve.items.weapons.VolcanicTear;
+import me.bubbles.bosspve.items.weapons.*;
 import me.bubbles.bosspve.items.weapons.vampire.VampireEye;
 import me.bubbles.bosspve.items.weapons.vampire.VampireEyeFragment;
 import org.bukkit.Bukkit;
@@ -28,32 +24,31 @@ import java.util.stream.Collectors;
 
 public class ItemManager {
 
-    public BossPVE plugin;
     private List<Item> items;
     private HashSet<ArmorSet> armorSets;
     private EnchantManager enchantManager;
 
-    public ItemManager(BossPVE plugin) {
-        this.plugin = plugin;
+    public ItemManager() {
         items=new ArrayList<>();
         armorSets=new HashSet<>();
         registerItem(
-                new SkeletonSword(plugin),
-                new VolcanicTear(plugin),
-                new NinjaDagger(plugin),
-                new BeeStinger(plugin),
-                new VampireEyeFragment(plugin),
-                new VampireEye(plugin, this),
-                new EnchantExtractor(plugin),
-                new Extracted(plugin)
+                new SkeletonSword(),
+                new VolcanicTear(),
+                new NinjaDagger(),
+                new BeeStinger(),
+                new VampireEyeFragment(),
+                new VampireEye(this),
+                new EnchantExtractor(),
+                new Extracted(),
+                new BlackenedAxe()
         );
         // REGISTER ARMOR
         registerArmorSet(
-                new OgreSet(plugin),
-                new VolcanicSet(plugin),
-                new NinjaSet(plugin),
-                new BeeSet(plugin),
-                new VampireSet(plugin)
+                new OgreSet(),
+                new VolcanicSet(),
+                new NinjaSet(),
+                new BeeSet(),
+                new VampireSet()
         );
     }
 

@@ -13,10 +13,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class VampireSet extends ArmorSet {
 
-    public VampireSet(BossPVE plugin) {
-        super(plugin);
-    }
-
     @Override
     public void onEvent(Event event) {
         if(event instanceof EntityDamageByEntityEvent) {
@@ -38,29 +34,29 @@ public class VampireSet extends ArmorSet {
             if(entity.isDead()) {
                 return;
             }
-            GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+            GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
             gamePlayer.healPercent(1);
         }
     }
 
     @Override
     public Armor getBoots() {
-        return new VampireBoots(plugin);
+        return new VampireBoots();
     }
 
     @Override
     public Armor getPants() {
-        return new VampirePants(plugin);
+        return new VampirePants();
     }
 
     @Override
     public Armor getChestplate() {
-        return new VampireChestplate(plugin);
+        return new VampireChestplate();
     }
 
     @Override
     public Armor getHelmet() {
-        return new VampireHelmet(plugin);
+        return new VampireHelmet();
     }
 
 }

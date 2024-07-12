@@ -9,17 +9,17 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class Respawn extends Event {
 
-    public Respawn(BossPVE plugin) {
-        super(plugin, PlayerRespawnEvent.class);
+    public Respawn() {
+        super(PlayerRespawnEvent.class);
     }
 
     @Override
     public void onEvent(org.bukkit.event.Event event) {
         PlayerRespawnEvent e = (PlayerRespawnEvent) event;
         Player player = e.getPlayer();
-        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
         gamePlayer.setHealth(gamePlayer.getMaxHealth());
-        Stage stage = plugin.getStageManager().getStage(player.getLocation());
+        Stage stage = BossPVE.getInstance().getStageManager().getStage(player.getLocation());
         if(stage!=null) {
             e.setRespawnLocation(stage.getSpawn());
         }

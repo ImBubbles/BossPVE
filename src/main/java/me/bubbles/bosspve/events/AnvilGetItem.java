@@ -13,8 +13,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class AnvilGetItem extends Event {
 
-    public AnvilGetItem(BossPVE plugin) {
-        super(plugin, InventoryClickEvent.class);
+    public AnvilGetItem() {
+        super(InventoryClickEvent.class);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class AnvilGetItem extends Event {
         if(firstSlot==null||secondSlot==null||thirdSlot==null) {
             return;
         }
-        Item item = plugin.getItemManager().getItemFromStack(secondSlot);
+        Item item = BossPVE.getInstance().getItemManager().getItemFromStack(secondSlot);
         if(item!=null) {
             if(item.getType().equals(Item.Type.ENCHANT)) {
                 return;

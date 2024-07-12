@@ -6,7 +6,7 @@ import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
 import me.bubbles.bosspve.utility.UtilEntity;
-import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -26,6 +26,7 @@ import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,16 +35,14 @@ import java.util.List;
 public class Ferrum extends IronGolem implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&f&lFerrum");
-    private BossPVE plugin;
     private UtilEntity utilEntity;
 
-    public Ferrum(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
+    public Ferrum() {
+        this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Ferrum(BossPVE plugin, Level level, Location location) {
+    public Ferrum(Level level, Location location) {
         super(EntityType.IRON_GOLEM, level);
-        this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
@@ -69,33 +68,26 @@ public class Ferrum extends IronGolem implements IEntity {
         goalSelector.addGoal(4, new RandomLookAroundGoal(
                 this
         ));
-        if(getDrops()!=null) {
+        if(rollDrops()!=null) {
             drops.clear();
-            drops.addAll(getDrops());
+            drops.addAll(rollDrops());
         }
         addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Ferrum(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Ferrum(((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
 
     @Override
-    public List<ItemStack> getDrops() {
-        List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,300,2)) {
-                result.add(((EnchantItem) plugin.getItemManager().getItemByName("resistanceEnch")).getAtLevel(2));
-        }
-        if(UtilNumber.rollTheDice(1,250,4)) {
-            EnchantItem throwEnch = ((EnchantItem) plugin.getItemManager().getItemByName("throwEnch"));
-            result.add(throwEnch.getAtLevel(1));
-        }
-        if(UtilNumber.rollTheDice(1,300,2)) {
-            result.add(((EnchantItem) plugin.getItemManager().getItemByName("keyfinderEnch")).getAtLevel(3));
-        }
+    public List<Drop> getDrops() {
+        List<Drop> result=new ArrayList<>();
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("resistanceEnch")).getAtLevel(2), 1, 300, 2));
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("nukerEnch")).getAtLevel(1), 1, 250, 4));
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("keyfinderEnch")).getAtLevel(3), 1, 300, 2));
         return result;
     }
 
@@ -112,6 +104,11 @@ public class Ferrum extends IronGolem implements IEntity {
         result.add(new Flag<>(EntityFlag.XP, 50D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 50D, false));
         return result;
+    }
+
+    @Override
+    public @NotNull Material getShowMaterial() {
+        return Material.IRON_INGOT;
     }
 
     @Override

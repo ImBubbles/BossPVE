@@ -10,8 +10,8 @@ public class GuiClickIndex extends GuiClick {
     private int index;
     private boolean isIndex;
 
-    public GuiClickIndex(BossPVE plugin, Inventory inventory, int index, boolean allow) {
-        super(plugin, inventory, allow);
+    public GuiClickIndex(Inventory inventory, int index, boolean allow) {
+        super(inventory, allow);
         this.index=index;
         this.isIndex=false;
     }

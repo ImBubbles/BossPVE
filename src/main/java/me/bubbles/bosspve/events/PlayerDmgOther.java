@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class PlayerDmgOther extends Event {
 
-    public PlayerDmgOther(BossPVE plugin) {
-        super(plugin, EntityDamageByEntityEvent.class);
+    public PlayerDmgOther() {
+        super(EntityDamageByEntityEvent.class);
     }
 
     @Override
@@ -18,7 +18,7 @@ public class PlayerDmgOther extends Event {
         if(!(e.getEntity() instanceof LivingEntity)) {
             return;
         }
-        new UtilCustomEvents(plugin,event).customEntityDamageByEntityEvent();
+        new UtilCustomEvents(event).customEntityDamageByEntityEvent();
     }
 
 }

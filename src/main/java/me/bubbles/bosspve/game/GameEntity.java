@@ -15,13 +15,11 @@ public class GameEntity extends GameBase {
 
     private Entity entity;
     private IEntity iEntity;
-    private GameManager gameManager;
 
-    public GameEntity(GameManager gameManager, IEntity iEntity, Entity entity) {
+    public GameEntity(IEntity iEntity, Entity entity) {
         super(
                 iEntity.getUtilEntity().getMaxHealth()
         );
-        this.gameManager=gameManager;
         this.entity=entity;
         this.iEntity=iEntity;
     }

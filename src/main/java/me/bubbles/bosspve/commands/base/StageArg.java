@@ -13,8 +13,8 @@ import java.util.List;
 
 public class StageArg extends Argument {
 
-    public StageArg(BossPVE plugin, int index) {
-        super(plugin, "stage", "stage <number>", index);
+    public StageArg(int index) {
+        super("stage", "stage <number>", index);
         setPermission("stage");
         setAlias("stage");
     }
@@ -31,7 +31,7 @@ public class StageArg extends Argument {
         }
         Player player = utilSender.getPlayer();
         if(args.length!=relativeIndex+1) {
-            Stage stage = plugin.getStageManager().getHighestAllowedStage(player);
+            Stage stage = BossPVE.getInstance().getStageManager().getHighestAllowedStage(player);
             player.teleport(stage.getSpawn());
             return;
         }
@@ -42,7 +42,7 @@ public class StageArg extends Argument {
             utilSender.sendMessage("%prefix% %primary%Could not find stage!"+"\n%primary%Your stages: "+getAvailableStages());
             return;
         }
-        Stage stage = plugin.getStageManager().getStage(stageNum);
+        Stage stage = BossPVE.getInstance().getStageManager().getStage(stageNum);
         if(stage==null) {
             utilSender.sendMessage("%prefix% %primary%Could not find stage!"+"\n%primary%Your stages: "+getAvailableStages());
             return;
@@ -57,13 +57,13 @@ public class StageArg extends Argument {
         location.setPitch(playerLoc.getPitch());
         location.setYaw(playerLoc.getYaw());*/
         utilSender.getPlayer().teleport(stage.getSpawn());
-        plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).healPercent(1);
+        BossPVE.getInstance().getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).healPercent(1);
     }
 
     private String getAvailableStages() {
-        int playerLevel = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache().getLevel();
+        int playerLevel = BossPVE.getInstance().getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache().getLevel();
         List<Integer> allowedStages = new ArrayList<>();
-        plugin.getStageManager().getStages().stream()
+        BossPVE.getInstance().getStageManager().getStages().stream()
                 .filter(stage -> playerLevel>=stage.getLevelRequirement())
                 .forEach(stage -> allowedStages.add(stage.getLevelRequirement())
                 );

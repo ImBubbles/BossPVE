@@ -19,14 +19,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class Extracted extends Item {
 
-    public Extracted(BossPVE plugin) {
-        super(plugin, Material.KNOWLEDGE_BOOK, "extracted");
+    public Extracted() {
+        super(Material.KNOWLEDGE_BOOK, "extracted");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&5&k|&5&lEXTRACTED&5&k|"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -56,8 +56,8 @@ public class Extracted extends Item {
             if(secondSlot.getAmount()>1) {
                 return;
             }
-            UtilItemStack uis = new UtilItemStack(plugin,firstSlot);
-            Item customFirst = plugin.getItemManager().getItemFromStack(firstSlot);
+            UtilItemStack uis = new UtilItemStack(firstSlot);
+            Item customFirst = BossPVE.getInstance().getItemManager().getItemFromStack(firstSlot);
             if(customFirst!=null) {
                 uis.getCustomEnchants().forEach(enchant ->{
                     if(!enchant.allowedTypes.contains(customFirst.getType())) {
@@ -70,7 +70,7 @@ public class Extracted extends Item {
             e.getInventory().setItem(2,result);
             result.setAmount(1);
 
-            UtilItemStack ris = new UtilItemStack(plugin, result);
+            UtilItemStack ris = new UtilItemStack(result);
             ItemMeta itemMeta = result.getItemMeta();
             itemMeta.setLore(ris.getUpdatedLore());
             result.setItemMeta(itemMeta);

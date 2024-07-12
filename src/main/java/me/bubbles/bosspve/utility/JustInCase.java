@@ -2,20 +2,20 @@ package me.bubbles.bosspve.utility;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.ticker.Timer;
+import me.bubbles.bosspve.utility.string.UtilString;
+import org.bukkit.Bukkit;
 
 public class JustInCase extends Timer {
 
-    private BossPVE plugin;
-
-    public JustInCase(BossPVE plugin) {
-        super(plugin,144000); // update every 2 seconds
-        this.plugin=plugin;
+    public JustInCase() {
+        super(144000); // update every 2 seconds
     }
 
     @Override
     public void onComplete() {
-        plugin.saveUserData();
-        plugin.getGameManager().clearDead();
+        Bukkit.broadcastMessage(UtilString.colorFillPlaceholders("%prefix% %primary%Saving cached player data, server may lag."));
+        BossPVE.getInstance().saveUserData();
+        BossPVE.getInstance().getGameManager().clearDead();
         restart();
     }
 

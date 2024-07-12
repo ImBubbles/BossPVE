@@ -33,6 +33,7 @@ commands:
   spawn:
     usage: /<command>
     description: Teleport to spawn
+    aliases: [ hub, lobby, home, leave ]
   items:
     usage: /<command>
   debug:
@@ -40,4 +41,12 @@ commands:
   enchants:
     usage: /<command>
     description: List of enchants
-    aliases: [enchantments]
+    aliases: [ enchantments ]
+  mobs:
+    usage: /<command>
+    description: List of mobs
+    aliases: [ entities, enemies, drops ]
+  vote:
+    usage: /<command>
+    description: Vote for the server
+    aliases: [ votifier, like ]

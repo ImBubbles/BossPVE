@@ -6,42 +6,27 @@ import me.bubbles.bosspve.game.GameEntity;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.utility.messages.PreparedMessages;
-import me.bubbles.bosspve.utility.nms.FixedDamageSource;
-import net.minecraft.Util;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.craftbukkit.v1_21_R1.damage.CraftDamageSource;
-import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_21_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
-import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public class UtilCustomEvents {
 
     private Event event;
-    private BossPVE plugin;
 
-    public UtilCustomEvents(BossPVE plugin, Event event) {
-        this.plugin=plugin;
+    public UtilCustomEvents(Event event) {
         this.event=event;
     }
 
@@ -71,15 +56,15 @@ public class UtilCustomEvents {
         e.getDrops().clear();
         e.setDroppedExp(0);
         ItemStack itemStack = player.getInventory().getItemInMainHand();
-        UtilItemStack uis = new UtilItemStack(plugin,itemStack);
-        List<ItemStack> drops = entity.getDrops();
+        UtilItemStack uis = new UtilItemStack(itemStack);
+        List<ItemStack> drops = entity.rollDrops();
         List<Item> dropped = new ArrayList<>();
-        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
         if(!drops.isEmpty()) {
             //e.getDrops().addAll(drops);
             boolean telepathy = false;
             if(itemStack.hasItemMeta()) {
-                telepathy = uis.getCustomEnchants().contains(plugin.getItemManager().getEnchantManager().getEnchant("telepathy"));
+                telepathy = uis.getCustomEnchants().contains(BossPVE.getInstance().getItemManager().getEnchantManager().getEnchant("telepathy"));
             }
             if(telepathy) {
                 //int i = 0;
@@ -121,7 +106,7 @@ public class UtilCustomEvents {
             for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 for(Item item : dropped) {
                     if(onlinePlayer!=player) {
-                        onlinePlayer.hideEntity(plugin, item);
+                        onlinePlayer.hideEntity(BossPVE.getInstance(), item);
                     }
                 }
             }
@@ -150,12 +135,12 @@ public class UtilCustomEvents {
         if(player==null) {
             return;
         }
-        double protection = UtilCalculator.getProtection(player);
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
+        double protection = gamePlayer.getProtection();
         result=UtilNumber.clampBorder(result, 0, (result/(protection*protection)));
-        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
         e.setDamage(0);
         if(!gamePlayer.damage(result)) {
-            Stage stage = plugin.getStageManager().getStage(player.getLocation());
+            Stage stage = BossPVE.getInstance().getStageManager().getStage(player.getLocation());
             if(stage==null) {
                 player.setHealth(0);
                 return;
@@ -185,7 +170,8 @@ public class UtilCustomEvents {
         if(player==null) {
             return;
         }
-        double result = UtilCalculator.getDamage(player);
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
+        double result = gamePlayer.getDamage();
         if(e.getEntity() instanceof Player) { // If attacking a player
             /*result=UtilNumber.clampBorder(result, 0, result-UtilCalculator.getProtection((Player) e.getEntity()));
             Player player2 = ((Player) e.getEntity());
@@ -197,7 +183,7 @@ public class UtilCustomEvents {
             }*/
             e.setCancelled(true);
         } else { // If attacking a mob
-            GameEntity gameEntity = plugin.getGameManager().getGameEntity(e.getEntity().getUniqueId());
+            GameEntity gameEntity = BossPVE.getInstance().getGameManager().getGameEntity(e.getEntity().getUniqueId());
             if(gameEntity!=null) {
                 gameEntity.damage(result);
             }

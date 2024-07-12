@@ -25,6 +25,9 @@ import java.util.logging.Level;
 
 public final class BossPVE extends JavaPlugin {
 
+    // INSTANCE
+    private static BossPVE INSTANCE;
+
     // TIMER & TICKER
     private TimerManager timerManager;
     private Ticker ticker;
@@ -42,11 +45,17 @@ public final class BossPVE extends JavaPlugin {
     private Economy economy;
     private MultiverseCore multiverseCore;
 
+    public static BossPVE getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public void onEnable() {
 
+        INSTANCE=this;
+
         // Config
-        configManager=new ConfigManager(this);
+        configManager=new ConfigManager();
         getConfig().options().copyDefaults();
         saveDefaultConfig();
         configManager.addConfig(
@@ -54,10 +63,8 @@ public final class BossPVE extends JavaPlugin {
                 "stages.yml"
         );
 
-        // PREP UTILITY
-        new UtilDatabase(this);
-        new UtilString(this);
-        new UtilCalculator(this);
+        // PREPARE UTIL
+        new UtilDatabase();
 
         // MANAGERS
         // THIS ORDER IS VERY IMPORTANT, SWAPPING THINGS AROUND WILL CAUSE VALUES TO BE RETURNED AS NULL
@@ -75,22 +82,22 @@ public final class BossPVE extends JavaPlugin {
         }
 
         timerManager=new TimerManager();
-        itemManager=new ItemManager(this);
+        itemManager=new ItemManager();
         itemManager.initEnchants();
-        entityManager=new EntityManager(this);
-        gameManager=new GameManager(this);
-        eventManager=new EventManager(this);
+        entityManager=new EntityManager();
+        gameManager=new GameManager();
+        eventManager=new EventManager();
         // Moved to ServerLoadEvent VVVV
         // initStageManager();
-        commandManager=new CommandManager(this);
+        commandManager=new CommandManager();
 
         // Ticker
-        ticker=new Ticker(this);
-        ticker.setEnabled(true);
+        ticker=new Ticker(this::onTick, true);
 
         // XP Bar
-        timerManager.addTimer(new UpdateXP(this));
-        timerManager.addTimer(new JustInCase(this));
+        timerManager.addTimer(new UpdateXP());
+        // CACHE
+        timerManager.addTimer(new JustInCase());
     }
 
     @Override
@@ -106,14 +113,13 @@ public final class BossPVE extends JavaPlugin {
                     world.save();
                 }
             });
-            //stageManager.getStages().forEach(Stage::killAll);
         }
     }
 
     public void saveUserData() {
         for(Player player : Bukkit.getOnlinePlayers()) {
             UtilUserData uud = getGameManager().getGamePlayer(player.getUniqueId()).getCache();
-            UtilUserData.save(this, uud);
+            UtilUserData.saveSync(uud);
         }
     }
 
@@ -126,8 +132,8 @@ public final class BossPVE extends JavaPlugin {
     // RELOAD CFG
     public void reload() {
         getStageManager().setSpawningAll(false);
-        initStageManager();
         getConfigManager().reloadAll();
+        initStageManager();
     }
 
     // STAGE MANAGER
@@ -136,7 +142,7 @@ public final class BossPVE extends JavaPlugin {
             stageManager.getStages().forEach(stage -> stage.setEnabled(false));
             stageManager.getStages().forEach(Stage::killAll);
         }
-        stageManager=new StageManager(this,configManager.getConfig("stages.yml"));
+        stageManager=new StageManager(configManager.getConfig("stages.yml"));
     }
 
     // VAULT
@@ -167,7 +173,7 @@ public final class BossPVE extends JavaPlugin {
     // PlaceholderAPI
     private boolean setupPAPI() {
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new PAPI(this).register();
+            new PAPI().register();
             return true;
         }
         return false;

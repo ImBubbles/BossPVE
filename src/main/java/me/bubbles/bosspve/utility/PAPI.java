@@ -12,12 +12,6 @@ import java.util.UUID;
 
 public class PAPI extends PlaceholderExpansion {
 
-    private BossPVE plugin;
-
-    public PAPI(BossPVE plugin) {
-        this.plugin=plugin;
-    }
-
     @Override
     public @NotNull String getIdentifier() {
         return "BossPVE";
@@ -40,9 +34,9 @@ public class PAPI extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, String params) {
-        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+        UtilUserData uud = BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         if(params.equalsIgnoreCase("health")) {
-            GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player.getUniqueId());
+            GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId());
             if(gamePlayer==null) {
                 return "0";
             } else {
@@ -50,7 +44,7 @@ public class PAPI extends PlaceholderExpansion {
             }
         }
         if(params.equalsIgnoreCase("maxHealth")) {
-            GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player.getUniqueId());
+            GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId());
             if(gamePlayer==null) {
                 return "0";
             } else {

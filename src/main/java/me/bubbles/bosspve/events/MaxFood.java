@@ -7,8 +7,8 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 public class MaxFood extends Event {
 
-    public MaxFood(BossPVE plugin) {
-        super(plugin, FoodLevelChangeEvent.class);
+    public MaxFood() {
+        super(FoodLevelChangeEvent.class);
     }
 
     @Override

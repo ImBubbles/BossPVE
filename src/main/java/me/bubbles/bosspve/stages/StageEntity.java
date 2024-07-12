@@ -12,15 +12,13 @@ import java.util.logging.Level;
 public class StageEntity extends Timer {
 
     private Stage stage;
-    private BossPVE plugin;
     private IEntity iEntity;
     private Location location;
     private GameEntity gameEntity;
 
     public StageEntity(Stage stage, IEntity iEntity, Location location, int ticks) {
-        super(stage.plugin,ticks);
+        super(ticks);
         this.stage=stage;
-        this.plugin=stage.plugin;
         this.iEntity=iEntity;
         this.location=location;
     }
@@ -34,20 +32,20 @@ public class StageEntity extends Timer {
         if(stage.allowSpawn()) {
             Entity entity = iEntity.spawn(location);
             stage.spawnEntity(entity);
-            gameEntity=new GameEntity(plugin.getGameManager(), iEntity, entity);
-            plugin.getGameManager().register(gameEntity);
+            gameEntity=new GameEntity(iEntity, entity);
+            BossPVE.getInstance().getGameManager().register(gameEntity);
         }
         restart();
     }
 
     public StageEntity setEnabled(boolean bool) {
-        if(plugin.getTimerManager().containsTimer(this)==bool) {
+        if(BossPVE.getInstance().getTimerManager().containsTimer(this)==bool) {
             return this;
         }
         if(bool) {
-            plugin.getTimerManager().addTimer(this);
+            BossPVE.getInstance().getTimerManager().addTimer(this);
         } else {
-            plugin.getTimerManager().removeTimer(this);
+            BossPVE.getInstance().getTimerManager().removeTimer(this);
         }
         return this;
     }

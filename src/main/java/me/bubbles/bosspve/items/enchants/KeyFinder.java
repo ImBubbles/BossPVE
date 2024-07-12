@@ -2,10 +2,12 @@ package me.bubbles.bosspve.items.enchants;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
+import me.bubbles.bosspve.items.manager.bases.enchants.ProcEnchant;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.utility.UtilCalculator;
 import me.bubbles.bosspve.utility.UtilItemStack;
 import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.chance.Activation;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,10 +17,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 
-public class KeyFinder extends Enchant {
+public class KeyFinder extends ProcEnchant {
 
-    public KeyFinder(BossPVE plugin) {
-        super(plugin, "Key Finder", Material.TRIPWIRE_HOOK, 20);
+    public KeyFinder() {
+        super("Key Finder", Material.TRIPWIRE_HOOK, 20);
         getEnchantItem().setDisplayName("&dKey Finder");
         allowedTypes.addAll(
                 Arrays.asList(
@@ -40,9 +42,31 @@ public class KeyFinder extends Enchant {
                 return;
             }
             //int level = main.getItemMeta().getEnchantLevel(this);
-            int level = new UtilItemStack(plugin, main).getEnchantLevel(getEnchantment());
-            double addition = level-1*(.25);
-            if(UtilNumber.rollTheDice(1,1000,3+addition)) {
+            int level = new UtilItemStack(main).getEnchantLevel(getEnchantment());
+            //double addition = level-1*(.25);
+            if(shouldActivate(level)) {
+                double random = UtilNumber.getRandom(1, 100);
+                if(random>=25) {
+                    giveKey(player,"Stage",level);
+                }
+                if(random>=75) {
+                    giveKey(player,"Enchant",level);
+                }
+                if(random>=99) {
+                    giveKey(player,"Rank",1);
+                }
+                /*if(UtilNumber.rollTheDice(1,1000,3+addition)) {
+                    giveKey(player,"Stage",level);
+                }
+                if(UtilNumber.rollTheDice(1,2000,1+addition)) {
+                    giveKey(player,"Enchant",level);
+                }
+                if(UtilNumber.rollTheDice(1,10000,1+addition)) {
+                    giveKey(player,"Rank",1);
+                }*/
+            }
+            //double addition = level-1*(.25);
+            /*if(UtilNumber.rollTheDice(1,1000,3+addition)) {
                 giveKey(player,"Stage",level);
             }
             if(UtilNumber.rollTheDice(1,2000,1+addition)) {
@@ -50,7 +74,7 @@ public class KeyFinder extends Enchant {
             }
             if(UtilNumber.rollTheDice(1,10000,1+addition)) {
                 giveKey(player,"Rank",1);
-            }
+            }*/
         }
     }
 
@@ -61,6 +85,12 @@ public class KeyFinder extends Enchant {
     @Override
     public String getDescription() {
         return "Chance of getting keys when killing mobs";
+    }
+
+    @Override
+    public Activation getActivation(int level) {
+        double addition = level-1*(.25);
+        return new Activation(1, 1000, 3+addition);
     }
 
 }

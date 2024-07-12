@@ -16,14 +16,14 @@ import java.util.HashSet;
 
 public class OgrePants extends Armor {
 
-    public OgrePants(BossPVE plugin) {
-        super(plugin, Material.LEATHER_LEGGINGS, "ogrePants");
+    public OgrePants() {
+        super(Material.LEATHER_LEGGINGS, "ogrePants");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&3&lOgre's Pants"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);
@@ -42,7 +42,8 @@ public class OgrePants extends Armor {
     @Override
     public HashSet<Flag<ItemFlag, Double>> getFlags() {
         HashSet<Flag<ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<ItemFlag, Double>(ItemFlag.PROT_ADD, 2D, false));
+        result.add(new Flag<ItemFlag, Double>(ItemFlag.HEALTH_ADD, 2D, false));
+        result.add(new Flag<ItemFlag, Double>(ItemFlag.PROT_ADD, 1D, false));
         result.add(new Flag<ItemFlag, Double>(ItemFlag.DAMAGE_ADD, 1D, false));
         return result;
     }

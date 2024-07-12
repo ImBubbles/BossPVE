@@ -12,17 +12,14 @@ public class Config {
     private File file;
     private String name;
     private FileConfiguration fileConfiguration;
-    private BossPVE plugin;
 
-    public Config(BossPVE plugin, String name) {
-        this(plugin,new File(plugin.getDataFolder(),name));
+    public Config(String name) {
+        this(new File(BossPVE.getInstance().getDataFolder(),name));
     }
 
-    public Config(BossPVE plugin, File file) {
+    public Config(File file) {
 
-        this.plugin=plugin;
-
-        plugin.saveResource(file.getName(),false);
+        BossPVE.getInstance().saveResource(file.getName(),false);
 
         fileConfiguration = YamlConfiguration.loadConfiguration(file);
         try {
@@ -48,6 +45,7 @@ public class Config {
 
     public void reload() {
         this.file=new File(file.getPath());
+        this.fileConfiguration=YamlConfiguration.loadConfiguration(file);
     }
 
     public void save() {

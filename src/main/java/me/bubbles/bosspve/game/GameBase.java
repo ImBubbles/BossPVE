@@ -10,11 +10,13 @@ public abstract class GameBase implements IGameEntity {
     public GameBase(double maxHealth, double health) {
         this.maxHealth=maxHealth>0 ? maxHealth : 10;
         this.health=health;
+        //setHealth(health);
     }
 
     public GameBase(double maxHealth) {
         this.maxHealth=maxHealth>0 ? maxHealth : 10;
         this.health=maxHealth;
+        //setHealth(maxHealth);
     }
 
     @Override

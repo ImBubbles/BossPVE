@@ -5,7 +5,12 @@ import java.text.DecimalFormat;
 public class UtilNumber {
 
     public static boolean rollTheDice(double min, double max, double below) {
-        return Math.random() * (max - min)<=below;
+        //return Math.random() * (max - min)<=below;
+        return getRandom(min,max)<=below;
+    }
+
+    public static double getRandom(double min, double max) {
+        return Math.random() * (max - min);
     }
 
     public static int xpToLevel(double xp) {

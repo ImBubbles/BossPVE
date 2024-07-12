@@ -14,14 +14,14 @@ import java.util.HashSet;
 
 public class NinjaDagger extends Item {
 
-    public NinjaDagger(BossPVE plugin) {
-        super(plugin, Material.SHEARS, "ninjaDagger");
+    public NinjaDagger() {
+        super(Material.SHEARS, "ninjaDagger");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&8&lNinja's Dagger"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore(null));
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore(null));
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

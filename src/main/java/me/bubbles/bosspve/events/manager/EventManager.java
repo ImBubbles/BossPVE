@@ -8,33 +8,32 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 public class EventManager {
-
-    private BossPVE plugin;
     private HashSet<Event> events = new HashSet<>();
 
-    public EventManager(BossPVE plugin) {
-        this.plugin=plugin;
+    public EventManager() {
         registerListener(); // REGISTER EVENT LISTENERS
         Collections.addAll(this.events, // REGISTER EVENT HANDLERS
-                new Join(plugin),
-                new Leave(plugin),
-                new AnvilGetItem(plugin),
-                new UpdateAnvil(plugin),
-                new PlayerDmgOther(plugin),
-                new UpdateLore(plugin),
-                new PreventSpawning(plugin),
-                new MaxFood(plugin),
+                new Join(),
+                new Leave(),
+                new AnvilGetItem(),
+                new UpdateAnvil(),
+                new PlayerDmgOther(),
+                new PreventSpawning(),
+                new MaxFood(),
                 //new Respawn(plugin),
-                new AnvilNameChange(plugin),
+                new AnvilNameChange(),
                 //new AntiDeathRespawn(plugin),
-                new WorldLoad(plugin),
-                new UpdateHealthBar(plugin),
-                new Respawn(plugin),
-                new ServerLoad(plugin),
-                new ArmorPutOn(plugin),
-                new ArmorClickOn(plugin),
-                new EntityDeath(plugin),
-                new EntityRemove(plugin)
+                new WorldLoad(),
+                new UpdateHealthBar(),
+                new Respawn(),
+                new ServerLoad(),
+                //new ArmorPutOn(plugin),
+                //new ArmorClickOn(plugin),
+                //new UpdateLore(plugin),
+                new EntityDeath(),
+                new EntityRemove(),
+                new UpdateStats(),
+                new BlockPlace()
         );
     }
 
@@ -49,10 +48,10 @@ public class EventManager {
     }
 
     public void onEvent(org.bukkit.event.Event event) {
-        if(plugin.getStageManager()!=null) {
-            plugin.getEntityManager().onEvent(event);
+        if(BossPVE.getInstance().getStageManager()!=null) {
+            BossPVE.getInstance().getEntityManager().onEvent(event);
         }
-        plugin.getItemManager().onEvent(event);
+        BossPVE.getInstance().getItemManager().onEvent(event);
         events.stream()
                 .filter(eventObj -> eventObj.getEvents().contains(event.getClass()))
                 .collect(Collectors.toList())
@@ -64,7 +63,7 @@ public class EventManager {
     }
 
     public void registerListener() {
-        plugin.getServer().getPluginManager().registerEvents(new Listeners(this),plugin);
+        BossPVE.getInstance().getServer().getPluginManager().registerEvents(new Listeners(this), BossPVE.getInstance());
     }
 
 }

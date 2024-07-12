@@ -4,8 +4,9 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
 import me.bubbles.bosspve.utility.UtilEntity;
-import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -25,6 +26,7 @@ import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,16 +35,14 @@ import java.util.List;
 public class AngryBee extends Bee implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&e&lAngry Bee");
-    private BossPVE plugin;
     private UtilEntity utilEntity;
 
-    public AngryBee(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
+    public AngryBee() {
+        this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public AngryBee(BossPVE plugin, Level level, Location location) {
+    public AngryBee(Level level, Location location) {
         super(EntityType.BEE, level);
-        this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
@@ -69,9 +69,9 @@ public class AngryBee extends Bee implements IEntity {
                 this
         ));
         setAggressive(true);
-        if(getDrops()!=null) {
+        if(rollDrops()!=null) {
             drops.clear();
-            drops.addAll(getDrops());
+            drops.addAll(rollDrops());
         }
         addTag(getNBTIdentifier());
     }
@@ -79,7 +79,7 @@ public class AngryBee extends Bee implements IEntity {
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new AngryBee(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new AngryBee(((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
@@ -90,27 +90,14 @@ public class AngryBee extends Bee implements IEntity {
     }
 
     @Override
-    public List<ItemStack> getDrops() {
-        List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,800,1)) {
-            result.add(plugin.getItemManager().getItemByName("damagerEnch").nmsAsItemStack());
-        }
-        // BEE SET
-        if(UtilNumber.rollTheDice(1,900,1)) {
-            result.add(plugin.getItemManager().getItemByName("beeStinger").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,500,1)) {
-            result.add(plugin.getItemManager().getItemByName("beeHelmet").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,700,1)) {
-            result.add(plugin.getItemManager().getItemByName("beeChestplate").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,650,1)) {
-            result.add(plugin.getItemManager().getItemByName("beePants").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,500,1)) {
-            result.add(plugin.getItemManager().getItemByName("beeBoots").nmsAsItemStack());
-        }
+    public List<Drop> getDrops() {
+        List<Drop> result=new ArrayList<>();
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("sharpEnch")).getAtLevel(1), 1, 800, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beeStinger").nmsAsItemStack(), 1, 900, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beeHelmet").nmsAsItemStack(), 1, 500, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beeChestplate").nmsAsItemStack(), 1, 700, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beePants").nmsAsItemStack(), 1, 650, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beeBoots").nmsAsItemStack(), 1, 500, 1));
         return result;
     }
 
@@ -122,6 +109,11 @@ public class AngryBee extends Bee implements IEntity {
         result.add(new Flag<>(EntityFlag.XP, 13D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 40D, false));
         return result;
+    }
+
+    @Override
+    public @NotNull Material getShowMaterial() {
+        return Material.BEE_NEST;
     }
 
     @Override

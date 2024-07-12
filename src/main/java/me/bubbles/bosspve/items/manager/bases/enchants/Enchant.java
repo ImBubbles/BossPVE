@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class Enchant implements IEnchant {
-
-    public BossPVE plugin;
     private PlayerTimerManager timerManager;
     private String name;
     private int maxLevel;
@@ -32,19 +30,18 @@ public abstract class Enchant implements IEnchant {
     private NamespacedKey namespacedKey;
     private Enchantment enchantment;
 
-    public Enchant(BossPVE plugin, String name, Material material, int maxLevel) {
-        this(plugin, name, material, maxLevel,0);
+    public Enchant(String name, Material material, int maxLevel) {
+        this(name, material, maxLevel,0);
     }
 
-    public Enchant(BossPVE plugin, String name, Material material, int maxLevel, int coolDown) {
+    public Enchant(String name, Material material, int maxLevel, int coolDown) {
         this.name=name;
-        this.plugin=plugin;
         this.coolDown=coolDown;
-        timerManager=new PlayerTimerManager(plugin);
+        timerManager=new PlayerTimerManager();
         this.maxLevel=maxLevel;
         this.material=material;
         this.allowedTypes=new HashSet<>();
-        this.namespacedKey=new NamespacedKey(plugin, name.toLowerCase().replace(" ",""));
+        this.namespacedKey=new NamespacedKey(BossPVE.getInstance(), name.toLowerCase().replace(" ",""));
         register();
     }
 
@@ -137,7 +134,7 @@ public abstract class Enchant implements IEnchant {
             return false;
         }
         if(!timerManager.contains(player)) {
-            timerManager.addTimer(player,new Timer(plugin,coolDown));
+            timerManager.addTimer(player,new Timer(coolDown));
             return false;
         }
         return timerManager.isTimerActive(player);
@@ -148,7 +145,7 @@ public abstract class Enchant implements IEnchant {
             return;
         }
         if(!timerManager.contains(player)) {
-            timerManager.addTimer(player, new Timer(plugin,coolDown));
+            timerManager.addTimer(player, new Timer(coolDown));
             return;
         }
         timerManager.restartTimer(player);
@@ -169,7 +166,7 @@ public abstract class Enchant implements IEnchant {
 
     public EnchantItem getEnchantItem() {
         return enchantItem==null ?
-                enchantItem=new EnchantItem(plugin, material, this, name)
+                enchantItem=new EnchantItem(material, this, name)
                 :
                 enchantItem;
     }
@@ -186,7 +183,7 @@ public abstract class Enchant implements IEnchant {
         if(getLevelRequirement()<=0) {
             return true;
         }
-        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+        UtilUserData uud = BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         return uud.getLevel()>=getLevelRequirement();
     }
 

@@ -13,6 +13,7 @@ import me.bubbles.bosspve.utility.string.UtilString;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -23,8 +24,8 @@ import java.util.List;
 
 public class StagesArg extends Argument {
 
-    public StagesArg(BossPVE plugin, int index) {
-        super(plugin, "stages", "stages", index);
+    public StagesArg(int index) {
+        super("stages", "stages", index);
         setPermission("stages");
         setAlias("stages");
     }
@@ -48,16 +49,16 @@ public class StagesArg extends Argument {
             page = 0;
         }
 
-        utilSender.getPlayer().openInventory(generateGUI(page));
+        utilSender.getPlayer().openInventory(generateGUI(utilSender.getPlayer(), page));
 
     }
 
-    private Inventory generateGUI(int pageNum) {
+    private Inventory generateGUI(Player player, int pageNum) {
 
-        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId());
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId());
         UtilUserData uud = gamePlayer.getCache();
 
-        ClickGUI<Stage> gui = new ClickGUI<Stage>(plugin, utilSender.getPlayer(), 3, Stage.class, getAllStages(), pageNum) {
+        ClickGUI<Stage> gui = new ClickGUI<Stage>(player, 3, Stage.class, getAllStages(), pageNum) {
             @Override
             public ItemStack getItemStack(Stage object) {
                 int stageNum = object.getLevelRequirement();
@@ -67,7 +68,7 @@ public class StagesArg extends Argument {
                         "%secondary%&lStage " + stageNum
                 ));
                 List<String> lore = new ArrayList<>();
-                Stage stage = plugin.getStageManager().getStage(stageNum);
+                Stage stage = BossPVE.getInstance().getStageManager().getStage(stageNum);
                 lore.add(UtilString.colorFillPlaceholders(
                         "%primary%Money Multiplier: %secondary%"+stage.getMoneyMultiplier())+"x");
                 lore.add(UtilString.colorFillPlaceholders(
@@ -82,7 +83,7 @@ public class StagesArg extends Argument {
             @Override
             public GuiClickIndex getGuiClick(Stage object, int index) {
                 int stageNum = object.getLevelRequirement();
-                return new GuiClickCommand(plugin, inventory, index, "stage "+stageNum, utilSender.getPlayer());
+                return new GuiClickCommand(inventory, index, "stage "+stageNum, player);
             }
 
             @Override
@@ -109,12 +110,12 @@ public class StagesArg extends Argument {
 
             @Override
             public GuiClickIndex getBackClick(int index) {
-                return new GuiClickCommand(plugin, inventory, index, "stages "+(page-1), utilSender.getPlayer());
+                return new GuiClickCommand(inventory, index, "stages "+(page-1), player);
             }
 
             @Override
             public GuiClickIndex getForwardClick(int index) {
-                return new GuiClickCommand(plugin, inventory, index, "stages "+(page+1), utilSender.getPlayer());
+                return new GuiClickCommand(inventory, index, "stages "+(page+1), player);
             }
 
             @Override
@@ -131,7 +132,7 @@ public class StagesArg extends Argument {
     }
 
     private Stage[] getAllStages() {
-        StageManager stageManager = plugin.getStageManager();
+        StageManager stageManager = BossPVE.getInstance().getStageManager();
         List<Integer> stages = new ArrayList<>();
         stageManager.getStages().forEach(stage -> {
             stages.add(stage.getLevelRequirement());

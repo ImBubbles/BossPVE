@@ -12,10 +12,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class NinjaSet extends ArmorSet {
 
-    public NinjaSet(BossPVE plugin) {
-        super(plugin);
-    }
-
     @Override
     public void onEvent(Event event) {
         if(event instanceof EntityDamageByEntityEvent) {
@@ -43,22 +39,22 @@ public class NinjaSet extends ArmorSet {
 
     @Override
     public Armor getBoots() {
-        return new NinjaBoots(plugin);
+        return new NinjaBoots();
     }
 
     @Override
     public Armor getPants() {
-        return new NinjaPants(plugin);
+        return new NinjaPants();
     }
 
     @Override
     public Armor getChestplate() {
-        return new NinjaChestplate(plugin);
+        return new NinjaChestplate();
     }
 
     @Override
     public Armor getHelmet() {
-        return new NinjaHelmet(plugin);
+        return new NinjaHelmet();
     }
 
 }

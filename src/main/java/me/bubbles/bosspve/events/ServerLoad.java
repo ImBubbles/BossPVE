@@ -8,13 +8,13 @@ import org.bukkit.event.server.ServerLoadEvent;
 
 public class ServerLoad extends Event {
 
-    public ServerLoad(BossPVE plugin) {
-        super(plugin, ServerLoadEvent.class);
+    public ServerLoad() {
+        super(ServerLoadEvent.class);
     }
 
     @Override
     public void onEvent(org.bukkit.event.Event event) {
-        plugin.initStageManager();
+        BossPVE.getInstance().initStageManager();
     }
 
 }

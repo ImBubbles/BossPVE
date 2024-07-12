@@ -11,6 +11,8 @@ public enum ItemFlag {
     MONEY_ADD,
     MONEY_MULT,
     XP_ADD,
-    XP_MULT
+    XP_MULT,
+    SPEED_ADD,
+    SPEED_MULT
 
 }

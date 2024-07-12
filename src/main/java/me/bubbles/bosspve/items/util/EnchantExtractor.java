@@ -17,14 +17,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class EnchantExtractor extends Item {
 
-    public EnchantExtractor(BossPVE plugin) {
-        super(plugin, Material.BRUSH, "enchantExtractor");
+    public EnchantExtractor() {
+        super(Material.BRUSH, "enchantExtractor");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&5&lENCHANT EXTRACTOR"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -56,10 +56,10 @@ public class EnchantExtractor extends Item {
             if(secondSlot.getAmount()!=1) {
                 return;
             }
-            UtilItemStack uis = new UtilItemStack(plugin, new Extracted(plugin).nmsAsItemStack());
+            UtilItemStack uis = new UtilItemStack(new Extracted().nmsAsItemStack());
             ItemStack result = uis.enchantItem(firstSlot);
             ItemMeta itemMeta = result.getItemMeta();
-            uis = new UtilItemStack(plugin, result);
+            uis = new UtilItemStack(result);
             itemMeta.setLore(uis.getUpdatedLore());
             result.setItemMeta(itemMeta);
             e.setResult(result);

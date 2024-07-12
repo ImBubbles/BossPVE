@@ -14,10 +14,9 @@ public class VolcanicSet extends ArmorSet {
 
     private Timer timer;
 
-    public VolcanicSet(BossPVE plugin) {
-        super(plugin);
-        timer=new Timer(plugin,20);
-        plugin.getTimerManager().addTimer(timer);
+    public VolcanicSet() {
+        timer=new Timer(20);
+        BossPVE.getInstance().getTimerManager().addTimer(timer);
     }
 
     @Override
@@ -35,22 +34,22 @@ public class VolcanicSet extends ArmorSet {
 
     @Override
     public Armor getBoots() {
-        return new VolcanicBoots(plugin);
+        return new VolcanicBoots();
     }
 
     @Override
     public Armor getPants() {
-        return new VolcanicPants(plugin);
+        return new VolcanicPants();
     }
 
     @Override
     public Armor getChestplate() {
-        return new VolcanicChestplate(plugin);
+        return new VolcanicChestplate();
     }
 
     @Override
     public Armor getHelmet() {
-        return new VolcanicHelmet(plugin);
+        return new VolcanicHelmet();
     }
 
 }

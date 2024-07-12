@@ -4,8 +4,9 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
 import me.bubbles.bosspve.utility.UtilEntity;
-import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -23,6 +24,7 @@ import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,16 +33,14 @@ import java.util.List;
 public class Simpleton extends Skeleton implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&7&lSimpleton");
-    private BossPVE plugin;
     private UtilEntity utilEntity;
 
-    public Simpleton(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
+    public Simpleton() {
+        this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Simpleton(BossPVE plugin, Level level, Location location) {
+    public Simpleton(Level level, Location location) {
         super(EntityType.SKELETON, level);
-        this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
@@ -67,19 +67,19 @@ public class Simpleton extends Skeleton implements IEntity {
         goalSelector.addGoal(3, new RandomLookAroundGoal(
                 this
         ));
-        setItemInHand(InteractionHand.MAIN_HAND,plugin.getItemManager().getItemByName("SkeletonSword").getNMSStack());
+        setItemInHand(InteractionHand.MAIN_HAND,BossPVE.getInstance().getItemManager().getItemByName("SkeletonSword").getNMSStack());
         setItemSlot(EquipmentSlot.HEAD, CraftItemStack.asNMSCopy(new ItemStack(Material.LEATHER_HELMET)));
         //getAttribute(Attributes.ARMOR).setBaseValue(0D);
-        if(getDrops()!=null) {
+        if(rollDrops()!=null) {
             drops.clear();
-            drops.addAll(getDrops());
+            drops.addAll(rollDrops());
         }
         addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Simpleton(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Simpleton(((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
@@ -90,17 +90,11 @@ public class Simpleton extends Skeleton implements IEntity {
     }
 
     @Override
-    public List<ItemStack> getDrops() {
-        List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,200,1)) {
-            result.add(plugin.getItemManager().getItemByName("telepathyEnch").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,200,1)) {
-            result.add(plugin.getItemManager().getItemByName("speedEnch").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,200,1)) {
-            result.add(plugin.getItemManager().getItemByName("skeletonSword").nmsAsItemStack());
-        }
+    public List<Drop> getDrops() {
+        List<Drop> result=new ArrayList<>();
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("telepathyEnch")).getAtLevel(1), 1, 200, 1));
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("speedEnch")).getAtLevel(1), 1, 200, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("skeletonSword").nmsAsItemStack(), 1, 200, 1));
         return result;
     }
 
@@ -112,6 +106,11 @@ public class Simpleton extends Skeleton implements IEntity {
         result.add(new Flag<>(EntityFlag.XP, 1D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 1D, false));
         return result;
+    }
+
+    @Override
+    public @NotNull Material getShowMaterial() {
+        return Material.SKELETON_SKULL;
     }
 
     @Override

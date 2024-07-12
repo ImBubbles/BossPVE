@@ -13,8 +13,8 @@ import org.bukkit.event.world.WorldLoadEvent;
 
 public class WorldLoad extends Event {
 
-    public WorldLoad(BossPVE plugin) {
-        super(plugin, WorldLoadEvent.class);
+    public WorldLoad() {
+        super(WorldLoadEvent.class);
     }
 
     @Override

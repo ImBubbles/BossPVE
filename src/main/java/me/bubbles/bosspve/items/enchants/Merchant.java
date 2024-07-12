@@ -12,8 +12,8 @@ import java.util.HashSet;
 
 public class Merchant extends Enchant {
 
-    public Merchant(BossPVE plugin) {
-        super(plugin, "Merchant", Material.EMERALD, 20);
+    public Merchant() {
+        super("Merchant", Material.EMERALD, 20);
         getEnchantItem().setDisplayName("&eMerchant");
         allowedTypes.addAll(
                 Arrays.asList(

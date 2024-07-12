@@ -55,7 +55,7 @@ public class PreparedMessages {
         UtilUserData uud = gamePlayer.getCache();
         int level=uud.getLevel();
         if(xp>0) {
-            uud.setXp(uud.getXp()+xp);
+            gamePlayer.setXp(uud.getXp()+xp);
             levelUp=uud.getLevel()!=level;
         }
         if(xp>0&&money>0) {
@@ -84,7 +84,7 @@ public class PreparedMessages {
         UtilUserData uud = gamePlayer.getCache();
         int level=uud.getLevel();
         if(xp>0) {
-            uud.setXp(uud.getXp()+xp);
+            gamePlayer.setXp(uud.getXp()+xp);
             levelUp=uud.getLevel()!=level;
         }
         if(xp>0&&money>0) {

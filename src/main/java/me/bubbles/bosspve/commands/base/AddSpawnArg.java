@@ -4,17 +4,16 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.stages.Stage;
-import me.bubbles.bosspve.utility.UtilLocation;
+import me.bubbles.bosspve.utility.location.UtilLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class AddSpawnArg extends Argument {
 
-    public AddSpawnArg(BossPVE plugin, int index) {
-        super(plugin, "addspawn", "addspawn <entity> <interval>", index);
+    public AddSpawnArg(int index) {
+        super("addspawn", "addspawn <entity> <interval>", index);
         setPermission("mapcreator");
     }
 
@@ -33,12 +32,12 @@ public class AddSpawnArg extends Argument {
             return;
         }
         Player player = utilSender.getPlayer();
-        Stage stage = plugin.getStageManager().getStage(player.getLocation());
+        Stage stage = BossPVE.getInstance().getStageManager().getStage(player.getLocation());
         if(stage==null) {
             utilSender.sendMessage("%prefix% %primary%Must be inside a stage to do this!");
             return;
         }
-        IEntity iEntity = plugin.getEntityManager().getEntityByName(args[relativeIndex]);
+        IEntity iEntity = BossPVE.getInstance().getEntityManager().getEntityByName(args[relativeIndex]);
         if(iEntity ==null) {
             utilSender.sendMessage(getEntitiesList());
             utilSender.sendMessage(getArgsMessage());
@@ -64,15 +63,14 @@ public class AddSpawnArg extends Argument {
         newEntry.set("entity", args[relativeIndex]);
         newEntry.set("pos",UtilLocation.asLocationString(player.getLocation()));
         newEntry.set("interval",interval);
-        plugin.getConfigManager().saveAll();
-        plugin.initStageManager();
-        utilSender.sendMessage("%prefix% %primary%Entry added.");
+        BossPVE.getInstance().getConfigManager().getConfig("stages.yml").save();
+        utilSender.sendMessage("%prefix% %primary%Entry added, reload to take effect.");
     }
 
     private String getEntitiesList() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("%prefix% %primary%Entities:");
-        for(IEntity entity : plugin.getEntityManager().getEntities()) {
+        for(IEntity entity : BossPVE.getInstance().getEntityManager().getEntities()) {
             stringBuilder.append("\n").append("%primary%").append("- ").append("%secondary%").append(ChatColor.stripColor(entity.getUncoloredName()).replaceAll(" ","_"));
         }
         return stringBuilder.toString();

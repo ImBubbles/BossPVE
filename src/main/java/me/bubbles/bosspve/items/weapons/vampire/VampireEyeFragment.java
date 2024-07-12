@@ -14,14 +14,14 @@ import java.util.HashSet;
 
 public class VampireEyeFragment extends Item {
 
-    public VampireEyeFragment(BossPVE plugin) {
-        super(plugin, Material.SPIDER_EYE, "vampireEyeFragment");
+    public VampireEyeFragment() {
+        super(Material.SPIDER_EYE, "vampireEyeFragment");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&4Vampire Eye Fragment"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

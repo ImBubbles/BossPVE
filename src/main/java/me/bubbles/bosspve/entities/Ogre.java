@@ -5,7 +5,7 @@ import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.utility.UtilEntity;
-import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -20,9 +20,10 @@ import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,16 +32,14 @@ import java.util.List;
 public class Ogre extends ZombieVillager implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&2&lOgre");
-    private BossPVE plugin;
     private UtilEntity utilEntity;
 
-    public Ogre(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
+    public Ogre() {
+        this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Ogre(BossPVE plugin, Level level, Location location) {
+    public Ogre(Level level, Location location) {
         super(EntityType.ZOMBIE_VILLAGER, level);
-        this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
@@ -66,20 +65,20 @@ public class Ogre extends ZombieVillager implements IEntity {
                 this
         ));
         // AMOR
-        setItemSlot(EquipmentSlot.FEET, plugin.getItemManager().getItemByName("ogreBoots").getNMSStack());
-        setItemSlot(EquipmentSlot.LEGS, plugin.getItemManager().getItemByName("ogrePants").getNMSStack());
-        setItemSlot(EquipmentSlot.CHEST, plugin.getItemManager().getItemByName("ogreChestplate").getNMSStack());
-        setItemSlot(EquipmentSlot.HEAD, plugin.getItemManager().getItemByName("ogreHelmet").getNMSStack());
-        if(getDrops()!=null) {
+        setItemSlot(EquipmentSlot.FEET, BossPVE.getInstance().getItemManager().getItemByName("ogreBoots").getNMSStack());
+        setItemSlot(EquipmentSlot.LEGS, BossPVE.getInstance().getItemManager().getItemByName("ogrePants").getNMSStack());
+        setItemSlot(EquipmentSlot.CHEST, BossPVE.getInstance().getItemManager().getItemByName("ogreChestplate").getNMSStack());
+        setItemSlot(EquipmentSlot.HEAD, BossPVE.getInstance().getItemManager().getItemByName("ogreHelmet").getNMSStack());
+        if(rollDrops()!=null) {
             drops.clear();
-            drops.addAll(getDrops());
+            drops.addAll(rollDrops());
         }
         addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Ogre(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Ogre(((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
@@ -90,20 +89,12 @@ public class Ogre extends ZombieVillager implements IEntity {
     }
 
     @Override
-    public List<ItemStack> getDrops() {
-        List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,350,1)) {
-            result.add(plugin.getItemManager().getItemByName("ogreBoots").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,350,1)) {
-            result.add(plugin.getItemManager().getItemByName("ogrePants").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,350,1)) {
-            result.add(plugin.getItemManager().getItemByName("ogreChestplate").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,350,1)) {
-            result.add(plugin.getItemManager().getItemByName("ogreHelmet").nmsAsItemStack());
-        }
+    public List<Drop> getDrops() {
+        List<Drop> result=new ArrayList<>();
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("ogreBoots").nmsAsItemStack(), 1, 350, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("ogrePants").nmsAsItemStack(), 1, 350, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("ogreChestplate").nmsAsItemStack(), 1, 350, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("ogreHelmet").nmsAsItemStack(), 1, 350, 1));
         return result;
     }
 
@@ -115,6 +106,11 @@ public class Ogre extends ZombieVillager implements IEntity {
         result.add(new Flag<>(EntityFlag.XP, 2D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 3D, false));
         return result;
+    }
+
+    @Override
+    public @NotNull Material getShowMaterial() {
+        return Material.ROTTEN_FLESH;
     }
 
     @Override

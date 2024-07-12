@@ -15,13 +15,13 @@ public abstract class ClickGUI<T> extends GUI implements IClickGUI<T> {
     protected int page;
     private Gridifier<T> gridifier;
 
-    public ClickGUI(BossPVE plugin, InventoryHolder holder, int rows, Class<T> clazz, T[] array, int page) {
-        super(plugin, holder, rows);
+    public ClickGUI(InventoryHolder holder, int rows, Class<T> clazz, T[] array, int page) {
+        super(holder, rows);
         this.array = array;
-        rows = (int) UtilNumber.clampBorder(6, 1, rows);
+        rows = (int) UtilNumber.clampBorder(6, 2, rows);
         //rows = fullSize ? 5 : 2;
-        this.gridifier = new Gridifier<>(clazz, array, rows, 9);
-        this.indexCap = (int) UtilNumber.clampBorder(54, 9, rows*9);
+        this.gridifier = new Gridifier<>(clazz, array, (rows-1), 9);
+        this.indexCap = (int) UtilNumber.clampBorder(53, 17, (rows*9)-1);
         setPage(page);
     }
 
@@ -36,47 +36,44 @@ public abstract class ClickGUI<T> extends GUI implements IClickGUI<T> {
 
     private void buildPage() {
 
-        for(int i=0; i<indexCap; i++) {
+        for(int i=0; i<indexCap-8; i++) {
 
-            int completeIndex = ((indexCap)*page+i)+1;
+            int longIndex = i+((indexCap-8)*(page));
 
-            if(array.length<completeIndex) {
+            if(array.length==longIndex) {
                 break;
             }
 
-            set(i, getItemStack(array[completeIndex-1]), getGuiClick(array[completeIndex-1], i));
-
+            set(i, getItemStack(array[longIndex]), getGuiClick(array[longIndex], i));
         }
 
-        if(getBackItemStack()!=null&& getBackClick(0)!=null) {
+        if(getBackItemStack()!=null&&getBackClick(0)!=null) {
             //int index = fullSize ? 44 : 18;
-            int index = indexCap-9;
+            int index = indexCap-8;
             if(page>0) {
                 set(index, getBackItemStack(), getBackClick(index));
             } else if(getBottomItemStack()!=null) {
-                set(index, getBottomItemStack(), new GuiClickIndex(plugin, inventory, index, false));
+                set(index, getBottomItemStack(), new GuiClickIndex(inventory, index, false));
             }
         }
 
-        if(getForwardItemStack()!=null&& getForwardClick(0)!=null) {
-            int index = indexCap-1;
+        if(getForwardItemStack()!=null&&getForwardClick(0)!=null) {
+            int index = indexCap;
             //int index = fullSize ? 53 : 26;
             if(page<(gridifier.getTotalPages()-1)) {
                 set(index, getForwardItemStack(), getForwardClick(index));
             } else if(getBottomItemStack()!=null) {
-                set(index, getBottomItemStack(), new GuiClickIndex(plugin, inventory, index, false));
+                set(index, getBottomItemStack(), new GuiClickIndex(inventory, index, false));
             }
         }
 
         if(getBottomItemStack()!=null) {
 
-            int indexBot = indexCap-8;
-            int indexTop = indexCap-1;
+            int indexBot = indexCap-7;
+            int indexTop = indexCap;
 
-            //int indexBot = fullSize ? 45 : 19;
-            //int indexTop = fullSize ? 52 : 25;
             for(int i=indexBot; i<indexTop; i++) {
-                set(i, getBottomItemStack(), new GuiClickIndex(plugin, inventory, i, false));
+                set(i, getBottomItemStack(), new GuiClickIndex(inventory, i, false));
             }
         }
 

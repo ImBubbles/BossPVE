@@ -4,8 +4,9 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
 import me.bubbles.bosspve.utility.UtilEntity;
-import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -26,6 +27,7 @@ import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,16 +36,14 @@ import java.util.List;
 public class Vampire extends Stray implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&4&lVampire");
-    private BossPVE plugin;
     private UtilEntity utilEntity;
 
-    public Vampire(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
+    public Vampire() {
+        this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Vampire(BossPVE plugin, Level level, Location location) {
+    public Vampire(Level level, Location location) {
         super(EntityType.STRAY, level);
-        this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
@@ -70,13 +70,13 @@ public class Vampire extends Stray implements IEntity {
                 this
         ));
         // AMOR
-        setItemSlot(EquipmentSlot.FEET, plugin.getItemManager().getItemByName("vampireBoots").getNMSStack());
-        setItemSlot(EquipmentSlot.LEGS, plugin.getItemManager().getItemByName("vampirePants").getNMSStack());
-        setItemSlot(EquipmentSlot.CHEST, plugin.getItemManager().getItemByName("vampireChestplate").getNMSStack());
-        setItemSlot(EquipmentSlot.HEAD, plugin.getItemManager().getItemByName("vampireHelmet").getNMSStack());
-        if(getDrops()!=null) {
+        setItemSlot(EquipmentSlot.FEET, BossPVE.getInstance().getItemManager().getItemByName("vampireBoots").getNMSStack());
+        setItemSlot(EquipmentSlot.LEGS, BossPVE.getInstance().getItemManager().getItemByName("vampirePants").getNMSStack());
+        setItemSlot(EquipmentSlot.CHEST, BossPVE.getInstance().getItemManager().getItemByName("vampireChestplate").getNMSStack());
+        setItemSlot(EquipmentSlot.HEAD, BossPVE.getInstance().getItemManager().getItemByName("vampireHelmet").getNMSStack());
+        if(rollDrops()!=null) {
             drops.clear();
-            drops.addAll(getDrops());
+            drops.addAll(rollDrops());
         }
         addTag(getNBTIdentifier());
     }
@@ -84,7 +84,7 @@ public class Vampire extends Stray implements IEntity {
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Vampire(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Vampire(((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
@@ -95,27 +95,14 @@ public class Vampire extends Stray implements IEntity {
     }
 
     @Override
-    public List<ItemStack> getDrops() {
-        List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,800,1)) {
-            result.add(plugin.getItemManager().getItemByName("bloodsuckerEnch").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,300,1)) {
-            result.add(plugin.getItemManager().getItemByName("vampireeyefragment").nmsAsItemStack());
-        }
-        // BEE SET
-        if(UtilNumber.rollTheDice(1,600,1)) {
-            result.add(plugin.getItemManager().getItemByName("vampireHelmet").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,800,1)) {
-            result.add(plugin.getItemManager().getItemByName("vampireChestplate").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,750,1)) {
-            result.add(plugin.getItemManager().getItemByName("vampirePants").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,600,1)) {
-            result.add(plugin.getItemManager().getItemByName("vampireBoots").nmsAsItemStack());
-        }
+    public List<Drop> getDrops() {
+        List<Drop> result=new ArrayList<>();
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("bloodsuckerEnch")).getAtLevel(1), 1, 800, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("vampireeyefragment").nmsAsItemStack(), 1, 300, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("vampireHelmet").nmsAsItemStack(), 1, 600, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("vampireChestplate").nmsAsItemStack(), 1, 800, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("vampirePants").nmsAsItemStack(), 1, 750, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("vampireBoots").nmsAsItemStack(), 1, 600, 1));
         return result;
     }
 
@@ -127,6 +114,11 @@ public class Vampire extends Stray implements IEntity {
         result.add(new Flag<>(EntityFlag.XP, 15D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 80D, false));
         return result;
+    }
+
+    @Override
+    public @NotNull Material getShowMaterial() {
+        return Material.FERMENTED_SPIDER_EYE;
     }
 
     @Override

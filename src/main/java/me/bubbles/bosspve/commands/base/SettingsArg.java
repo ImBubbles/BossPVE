@@ -21,8 +21,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class SettingsArg extends Argument {
 
-    public SettingsArg(BossPVE plugin, int index) {
-        super(plugin, "settings", "settings", index);
+    public SettingsArg(int index) {
+        super("settings", "settings", index);
         setPermission("settings");
         setAlias("settings");
     }
@@ -46,16 +46,16 @@ public class SettingsArg extends Argument {
             page = 0;
         }
 
-        utilSender.getPlayer().openInventory(generateGUI(page));
+        utilSender.getPlayer().openInventory(generateGUI(utilSender.getPlayer(), page));
 
     }
 
-    private Inventory generateGUI(int pageNum) {
+    private Inventory generateGUI(Player player, int pageNum) {
 
-        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId());
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId());
         UtilUserData uud = gamePlayer.getCache();
 
-        ClickGUI<Settings> gui = new ClickGUI<Settings>(plugin, utilSender.getPlayer(), 3, Settings.class, Settings.values(), pageNum) {
+        ClickGUI<Settings> gui = new ClickGUI<Settings>(player, 3, Settings.class, Settings.values(), pageNum) {
             @Override
             public ItemStack getItemStack(Settings object) {
                 int index = SettingsDB.getValue(uud, object);
@@ -77,11 +77,10 @@ public class SettingsArg extends Argument {
                     //UtilDatabase.SettingsDB().setRelation(gamePlayer.getUuid(), object.toString(), object.getIndex(next));
                     uud.setSetting(object.toString(), object.getIndex(next));
                     //gamePlayer.updateCache();
-                    Player player = utilSender.getPlayer();
                     player.closeInventory();
                     Bukkit.getServer().dispatchCommand(player, "settings");
                 };
-                return new GuiClickRunnable(plugin, inventory, index, runnable);
+                return new GuiClickRunnable(inventory, index, runnable);
             }
 
             @Override
@@ -108,12 +107,12 @@ public class SettingsArg extends Argument {
 
             @Override
             public GuiClickIndex getBackClick(int index) {
-                return new GuiClickCommand(plugin, inventory, index, "settings "+(page-1), utilSender.getPlayer());
+                return new GuiClickCommand(inventory, index, "settings "+(page-1), player);
             }
 
             @Override
             public GuiClickIndex getForwardClick(int index) {
-                return new GuiClickCommand(plugin, inventory, index, "settings "+(page+1), utilSender.getPlayer());
+                return new GuiClickCommand(inventory, index, "settings "+(page+1), player);
             }
 
             @Override

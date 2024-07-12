@@ -10,12 +10,6 @@ import java.util.HashSet;
 
 public abstract class ArmorSet implements IArmorSet {
 
-    public BossPVE plugin;
-
-    public ArmorSet(BossPVE plugin) {
-        this.plugin=plugin;
-    }
-
     public boolean wearingFullSet(Player player, boolean permissionCheck) {
         PlayerInventory inventory = player.getInventory();
         ItemStack boots=inventory.getBoots();

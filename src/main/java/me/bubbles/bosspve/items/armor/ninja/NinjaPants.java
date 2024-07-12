@@ -16,14 +16,14 @@ import java.util.HashSet;
 
 public class NinjaPants extends Armor {
 
-    public NinjaPants(BossPVE plugin) {
-        super(plugin, Material.LEATHER_LEGGINGS, "ninjaPants");
+    public NinjaPants() {
+        super(Material.LEATHER_LEGGINGS, "ninjaPants");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&8&lNinja Pants"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -37,7 +37,8 @@ public class NinjaPants extends Armor {
     @Override
     public HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> getFlags() {
         HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 5D, false));
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 3D, false));
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.HEALTH_ADD, 5D, false));
         result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 2D, false));
         return result;
     }

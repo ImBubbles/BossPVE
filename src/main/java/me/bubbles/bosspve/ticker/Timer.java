@@ -1,19 +1,18 @@
 package me.bubbles.bosspve.ticker;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.utility.UtilTime;
 
 public class Timer {
 
     private int cap;
     private int ticks;
     private long lastCall;
-    public BossPVE plugin;
 
-    public Timer(BossPVE plugin, int cap) {
+    public Timer(int cap) {
         this.cap=cap;
         this.ticks=0;
-        this.plugin=plugin;
-        this.lastCall=plugin.getEpochTimestamp();
+        this.lastCall=UtilTime.getEpochTimestamp();
     }
 
     public void onTick() {
@@ -28,22 +27,22 @@ public class Timer {
     }
 
     public int getTicks() {
-        lastCall=plugin.getEpochTimestamp();
+        lastCall=UtilTime.getEpochTimestamp();
         return ticks;
     }
 
     public void restart() {
-        lastCall=plugin.getEpochTimestamp();
+        lastCall=UtilTime.getEpochTimestamp();
         this.ticks=0;
     }
 
     public int getRemainingTicks() {
-        lastCall=plugin.getEpochTimestamp();
+        lastCall=UtilTime.getEpochTimestamp();
         return cap-ticks;
     }
 
     public boolean isActive() {
-        lastCall=plugin.getEpochTimestamp();
+        lastCall=UtilTime.getEpochTimestamp();
         return ticks != cap;
     }
 

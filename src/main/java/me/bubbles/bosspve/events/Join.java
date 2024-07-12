@@ -13,8 +13,8 @@ import java.util.UUID;
 
 public class Join extends Event {
 
-    public Join(BossPVE plugin) {
-        super(plugin, PlayerJoinEvent.class);
+    public Join() {
+        super(PlayerJoinEvent.class);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Join extends Event {
             /*SettingsDB settingsDB = UtilDatabase.SettingsDB();
             settingsDB.getValue(uuid, Settings.KILL_MESSAGES);
             settingsDB.getValue(uuid, Settings.PROCC_MESSAGES);*/
-            UtilUserData.save(plugin, new UtilUserData(uuid,0));
+            UtilUserData.save(new UtilUserData(uuid,0));
         }
     }
 

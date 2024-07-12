@@ -15,12 +15,10 @@ import java.util.Optional;
 public class EnchantManager {
 
     private HashSet<Enchant> enchants;
-    private BossPVE plugin;
     private static boolean REGISTERED = false;
 
     public EnchantManager(ItemManager itemManager) {
         this.enchants=new HashSet<>();
-        this.plugin=itemManager.plugin;
     }
 
     public void registerEnchants() {
@@ -29,19 +27,19 @@ public class EnchantManager {
         }
         UtilEnchant.unfreezeRegistry();
         addEnchant(
-                new Speed(plugin),
-                new Telepathy(plugin),
-                new Resistance(plugin),
-                new Damager(plugin),
-                new KeyFinder(plugin),
-                new Banker(plugin),
-                new Grinder(plugin),
-                new Throw(plugin),
-                new Nuker(plugin),
-                new Bloodsucker(plugin),
-                new Essence(plugin),
-                new Soulful(plugin),
-                new Merchant(plugin)
+                new Speed(),
+                new Telepathy(),
+                new Resistance(),
+                new Damager(),
+                new KeyFinder(),
+                new Banker(),
+                new Grinder(),
+                new Nuker(),
+                new Bloodsucker(),
+                new Essence(),
+                new Soulful(),
+                new Merchant(),
+                new Sharp()
         );
         UtilEnchant.freezeRegistry();
         registerEnchantItems();
@@ -57,7 +55,7 @@ public class EnchantManager {
 
     private void registerEnchantItems() {
         enchants.forEach(enchant -> {
-            this.plugin.getItemManager().registerItem(enchant.getEnchantItem());
+            BossPVE.getInstance().getItemManager().registerItem(enchant.getEnchantItem());
         });
     }
 

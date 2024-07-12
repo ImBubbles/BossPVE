@@ -8,18 +8,18 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class Leave extends Event {
 
-    public Leave(BossPVE plugin) {
-        super(plugin, PlayerQuitEvent.class);
+    public Leave() {
+        super(PlayerQuitEvent.class);
     }
 
     @Override
     public void onEvent(org.bukkit.event.Event event) {
         PlayerQuitEvent e = (PlayerQuitEvent) event;
         e.setQuitMessage("");
-        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(e.getPlayer().getUniqueId());
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(e.getPlayer().getUniqueId());
         UtilUserData uud = gamePlayer.getCache();
-        UtilUserData.save(plugin, uud);
-        plugin.getGameManager().delete(gamePlayer);
+        UtilUserData.save(uud);
+        BossPVE.getInstance().getGameManager().delete(gamePlayer);
     }
 
 }

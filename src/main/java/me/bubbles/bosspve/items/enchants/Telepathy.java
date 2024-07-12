@@ -9,8 +9,8 @@ import java.util.Arrays;
 
 public class Telepathy extends Enchant {
 
-    public Telepathy(BossPVE plugin) {
-        super(plugin, "Telepathy", Material.BOOK, 1);
+    public Telepathy() {
+        super("Telepathy", Material.BOOK, 1);
         getEnchantItem().setDisplayName("&5Telepathy");
         allowedTypes.addAll(
                 Arrays.asList(

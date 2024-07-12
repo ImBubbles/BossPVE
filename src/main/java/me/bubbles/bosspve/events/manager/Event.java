@@ -8,16 +8,13 @@ import java.util.List;
 
 public class Event implements Listener {
 
-    public BossPVE plugin;
     private List<Class> event;
 
-    public Event(BossPVE plugin, List<Class> event) {
-        this.plugin=plugin;
+    public Event(List<Class> event) {
         this.event=event;
     }
 
-    public Event(BossPVE plugin, Class event) {
-        this.plugin=plugin;
+    public Event(Class event) {
         List<Class> classes = new ArrayList<>();
         classes.add(event);
         this.event=classes;

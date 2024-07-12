@@ -28,4 +28,8 @@ public interface IItem {
 
     default HashSet<Flag<ItemFlag, Double>> getFlags() {return new HashSet<>();};
 
+    default boolean allowPlace() {
+        return false;
+    }
+
 }

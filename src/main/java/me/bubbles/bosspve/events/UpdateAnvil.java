@@ -13,8 +13,8 @@ import java.util.logging.Level;
 
 public class UpdateAnvil extends Event {
 
-    public UpdateAnvil(BossPVE plugin) {
-        super(plugin, PrepareAnvilEvent.class);
+    public UpdateAnvil() {
+        super(PrepareAnvilEvent.class);
     }
 
     @Override
@@ -34,8 +34,8 @@ public class UpdateAnvil extends Event {
         if(secondSlot.getAmount()>1) {
             return;
         }
-        Item firstItem = plugin.getItemManager().getItemFromStack(firstSlot);
-        Item secondItem = plugin.getItemManager().getItemFromStack(secondSlot);
+        Item firstItem = BossPVE.getInstance().getItemManager().getItemFromStack(firstSlot);
+        Item secondItem = BossPVE.getInstance().getItemManager().getItemFromStack(secondSlot);
         if(firstItem!=null) {
             if(firstItem instanceof EnchantItem) {
                 return;
@@ -54,7 +54,7 @@ public class UpdateAnvil extends Event {
         if(!(firstSlot.getType().equals(secondSlot.getType()))) {
             return;
         }
-        UtilItemStack uiu = new UtilItemStack(plugin, firstSlot);
+        UtilItemStack uiu = new UtilItemStack(firstSlot);
         ItemStack result = uiu.enchantItem(secondSlot);
         result.setAmount(1);
         e.getInventory().setItem(2,result);

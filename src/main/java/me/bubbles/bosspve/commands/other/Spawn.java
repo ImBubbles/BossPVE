@@ -2,13 +2,13 @@ package me.bubbles.bosspve.commands.other;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Command;
-import me.bubbles.bosspve.utility.UtilLocation;
+import me.bubbles.bosspve.utility.location.UtilLocation;
 import org.bukkit.command.CommandSender;
 
 public class Spawn extends Command {
 
-    public Spawn(BossPVE plugin) {
-        super(plugin, "spawn");
+    public Spawn() {
+        super("spawn");
         setPermission("spawn");
     }
 
@@ -25,15 +25,15 @@ public class Spawn extends Command {
         if(args.length==index+1) { // 1 arg
             if(utilSender.hasPermission("setspawn")) {
                 if(args[index].equalsIgnoreCase("set")) {
-                    plugin.getConfigManager().getConfig("config.yml").getFileConfiguration().set("spawn",UtilLocation.asLocationString(utilSender.getPlayer().getLocation()));
+                    BossPVE.getInstance().getConfigManager().getConfig("config.yml").getFileConfiguration().set("spawn",UtilLocation.asLocationString(utilSender.getPlayer().getLocation()));
                     utilSender.sendMessage("%prefix% %primary%Spawn has been set.");
-                    plugin.getConfigManager().saveAll();
+                    BossPVE.getInstance().getConfigManager().saveAll();
                     return;
                 }
             }
         }
         utilSender.sendMessage("%prefix% %primary%Teleporting to spawn.");
-        utilSender.getPlayer().teleport(UtilLocation.toLocation(plugin,plugin.getConfigManager().getConfig("config.yml").getFileConfiguration().getString("spawn")));
+        utilSender.getPlayer().teleport(UtilLocation.toLocation(BossPVE.getInstance().getConfigManager().getConfig("config.yml").getFileConfiguration().getString("spawn")));
     }
 
 }

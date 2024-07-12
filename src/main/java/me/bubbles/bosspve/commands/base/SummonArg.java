@@ -8,9 +8,9 @@ import org.bukkit.command.CommandSender;
 
 public class SummonArg extends Argument {
 
-    public SummonArg(BossPVE plugin, int index) {
-        super(plugin, "summon", "summon <entity>", index);
-        setPermission("summon");
+    public SummonArg(int index) {
+        super("summon", "summon <entity>", index);
+        setPermission("admin");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class SummonArg extends Argument {
             utilSender.sendMessage("%prefix% %primary%You must be in game to do this.");
             return;
         }
-        IEntity base = plugin.getEntityManager().getEntityByName(args[relativeIndex]);
+        IEntity base = BossPVE.getInstance().getEntityManager().getEntityByName(args[relativeIndex]);
         if(base==null) {
             utilSender.sendMessage("%prefix% %primary%Entity %secondary%"+args[relativeIndex]+"%primary% does not exist.");
             return;
@@ -39,7 +39,7 @@ public class SummonArg extends Argument {
     private String getEntitiesList() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("%prefix% %primary%Entities:");
-        for(IEntity entity : plugin.getEntityManager().getEntities()) {
+        for(IEntity entity : BossPVE.getInstance().getEntityManager().getEntities()) {
             stringBuilder.append("\n").append("%primary%").append("- ").append("%secondary%").append(ChatColor.stripColor(entity.getUncoloredName()).replaceAll(" ","_"));
         }
         return stringBuilder.toString();

@@ -48,20 +48,6 @@ public class UtilEnchant {
 
     public static void unfreezeRegistry() {
 
-        /*MappedRegistry<Enchantment> mappedRegistry = (MappedRegistry<Enchantment>) BuiltInRegistries.ENCHANTMENT;
-        try {
-            Field frozen = mappedRegistry.getClass().getField("frozen");
-            frozen.setAccessible(true);
-            frozen.set(BuiltInRegistries.ENCHANTMENT, false);
-            Field unregisteredIntrusiveHolders = mappedRegistry.getClass().getField("unregisteredIntrusiveHolders");
-            unregisteredIntrusiveHolders.setAccessible(true);
-            unregisteredIntrusiveHolders.set(BuiltInRegistries.ENCHANTMENT, new IdentityHashMap<>());
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }*/
-        //Reflex.setFieldValue(BuiltInRegistries.ENCHANTMENT, "frozen", false);
-        //Reflex.setFieldValue(BuiltInRegistries.ENCHANTMENT, "unregisteredIntrusiveHolders", new IdentityHashMap<>());
-
         Reflex.setFieldValue(ENCHANTMENT_REGISTRY, "l", false);             // MappedRegistry#frozen
         Reflex.setFieldValue(ENCHANTMENT_REGISTRY, "m", new IdentityHashMap<>()); // MappedRegistry#unregisteredIntrusiveHolders
         
@@ -82,9 +68,7 @@ public class UtilEnchant {
 
         Enchantment enchantment = new Enchantment(component, definition, EXCLUSIVE_SET, EFFECTS);
 
-        // You must create a holder, otherwise enchantment won't be registered.
         Holder.Reference<Enchantment> reference = ENCHANTMENT_REGISTRY.createIntrusiveHolder(enchantment);
-        // Actual register code.
         Registry.register(ENCHANTMENT_REGISTRY, key, enchantment);
 
         boolean isCurse = false;
@@ -113,9 +97,6 @@ public class UtilEnchant {
         }
 
         enchant.setEnchantment(enchantment);
-
-        /*ResourceLocation nmsKey = new ResourceLocation(key.getNamespace(), key.getKey());
-        Registry.register(BuiltInRegistries.ENCHANTMENT, nmsKey, enchant);*/
 
     }
 
@@ -151,9 +132,6 @@ public class UtilEnchant {
             Holder.Reference<Item> holder = items.getHolder(location).orElse(null);
             if (holder == null) return;
 
-            // We must reassign the 'tags' field value because of the HolderSet#contains(Holder<T> holder) behavior.
-            // It checks if Holder.Reference.is(this.key) -> Holder.Reference.tags.contains(key). Where 'key' is our custom key created above.
-            // So, even if our HolderSet content is filled with items, we have to include their tag to the actual items in registry.
             Set<TagKey<Item>> holderTags = new HashSet<>((Set<TagKey<Item>>) Reflex.getFieldValue(holder, HOLDER_REFERENCE_TAGS_FIELD));
             holderTags.add(customKey);
             Reflex.setFieldValue(holder, HOLDER_REFERENCE_TAGS_FIELD, holderTags);

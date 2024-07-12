@@ -7,23 +7,24 @@ import org.bukkit.command.CommandSender;
 public class BaseCommand extends Command {
     private final int index=0;
 
-    public BaseCommand(BossPVE plugin) {
-        super(plugin, "bosspve");
+    public BaseCommand() {
+        super("bosspve");
         addArguments(
-                new StageArg(plugin, index),
-                new LevelArg(plugin, index),
-                new XpArg(plugin, index),
-                new GiveXpArg(plugin, index),
-                new BalanceArg(plugin, index),
-                new ItemArg(plugin, index),
-                new SummonArg(plugin, index),
-                new AddSpawnArg(plugin, index),
-                new ReloadArg(plugin, index),
-                new StagesArg(plugin, index),
-                new SettingsArg(plugin, index),
-                new ItemsArg(plugin, index),
-                new DebugArg(plugin, index),
-                new EnchantsArg(plugin, index)
+                new StageArg(index),
+                new LevelArg(index),
+                new XpArg(index),
+                new GiveXpArg(index),
+                new BalanceArg(index),
+                new ItemArg(index),
+                new SummonArg(index),
+                new AddSpawnArg(index),
+                new ReloadArg(index),
+                new StagesArg(index),
+                new SettingsArg(index),
+                new ItemsArg(index),
+                new DebugArg(index),
+                new EnchantsArg(index),
+                new MobsArg(index)
         );
     }
 

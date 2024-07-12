@@ -35,8 +35,12 @@ public class Gridifier<T> {
             /*System.out.println("page: "+page);
             System.out.println("y: "+page);*/
             result.set(page, y, pagifier.getPage(i));
+            //System.out.println("i="+i);
             y++;
+            //System.out.println("y="+y);
             if(y==rows) {
+                /*System.out.println("y=rows");
+                System.out.println("page="+page);*/
                 y=0;
                 page++;
             }

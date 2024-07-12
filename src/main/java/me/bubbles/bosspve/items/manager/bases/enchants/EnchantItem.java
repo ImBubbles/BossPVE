@@ -23,8 +23,8 @@ public class EnchantItem extends Item {
 
     private Enchant enchant;
 
-    public EnchantItem(BossPVE plugin, Material material, Enchant enchant, String nbtIdentifier) {
-        super(plugin, material, nbtIdentifier.replace(" ", "").toLowerCase()+"Ench");
+    public EnchantItem(Material material, Enchant enchant, String nbtIdentifier) {
+        super(material, nbtIdentifier.replace(" ", "").toLowerCase()+"Ench");
         this.enchant=enchant;
         ItemStack itemStack = nmsAsItemStack();
         //itemStack.addUnsafeEnchantment(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()),1);
@@ -43,7 +43,7 @@ public class EnchantItem extends Item {
 
         itemMeta = itemStack.getItemMeta();
 
-        itemMeta.setLore(new UtilItemStack(plugin,itemStack).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack).getUpdatedLore());
         itemStack.setItemMeta(itemMeta);
 
         setNMSStack(itemStack);
@@ -105,10 +105,10 @@ public class EnchantItem extends Item {
             if(secondSlot.getAmount()>1) {
                 return;
             }
-            UtilItemStack uis = new UtilItemStack(plugin,firstSlot);
-            UtilItemStack uis2 = new UtilItemStack(plugin,secondSlot);
-            Item customFirst = plugin.getItemManager().getItemFromStack(firstSlot);
-            Item customSecond = plugin.getItemManager().getItemFromStack(secondSlot);
+            UtilItemStack uis = new UtilItemStack(firstSlot);
+            UtilItemStack uis2 = new UtilItemStack(secondSlot);
+            Item customFirst = BossPVE.getInstance().getItemManager().getItemFromStack(firstSlot);
+            Item customSecond = BossPVE.getInstance().getItemManager().getItemFromStack(secondSlot);
             HashSet<Enchant> firstCustomEnchants=uis.getCustomEnchants();
             HashSet<Enchant> secondCustomEnchants=uis2.getCustomEnchants();
             if(customFirst!=null) {
@@ -133,7 +133,7 @@ public class EnchantItem extends Item {
                 }
             }
             ItemStack result = uis.enchantItem(secondSlot);
-            UtilItemStack utilResult = new UtilItemStack(plugin, result, customFirst);
+            UtilItemStack utilResult = new UtilItemStack(result, customFirst);
             ItemMeta resultMeta = result.getItemMeta();
             resultMeta.setLore(utilResult.getUpdatedLore());
             result.setItemMeta(resultMeta);
@@ -179,7 +179,7 @@ public class EnchantItem extends Item {
         itemMeta.removeEnchant(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()));
         itemMeta.addEnchant(CraftEnchantment.minecraftToBukkit(enchant.getEnchantment()), level, true);
         result.setItemMeta(itemMeta);
-        itemMeta.setLore(new UtilItemStack(plugin,result).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(result).getUpdatedLore());
         result.setItemMeta(itemMeta);
         return result;
     }

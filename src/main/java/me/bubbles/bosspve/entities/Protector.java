@@ -6,7 +6,7 @@ import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
 import me.bubbles.bosspve.utility.UtilEntity;
-import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -18,9 +18,10 @@ import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,16 +31,14 @@ public class Protector extends Ravager implements IEntity {
 
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&8&lProtector");
-    private BossPVE plugin;
     private UtilEntity utilEntity;
 
-    public Protector(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
+    public Protector() {
+        this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Protector(BossPVE plugin, Level level, Location location) {
+    public Protector(Level level, Location location) {
         super(EntityType.RAVAGER, level);
-        this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
@@ -57,29 +56,25 @@ public class Protector extends Ravager implements IEntity {
         goalSelector.addGoal(1, new RandomLookAroundGoal(
                 this
         ));
-        if(getDrops()!=null) {
+        if(rollDrops()!=null) {
             drops.clear();
-            drops.addAll(getDrops());
+            drops.addAll(rollDrops());
         }
         addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Protector(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Protector(((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
 
     @Override
-    public List<ItemStack> getDrops() {
-        List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,100,1)) {
-            result.add(((EnchantItem) plugin.getItemManager().getItemByName("damagerEnch")).getAtLevel(2));
-        }
-        if(UtilNumber.rollTheDice(1,250,1)) {
-            result.add(((EnchantItem) plugin.getItemManager().getItemByName("resistanceEnch")).getAtLevel(3));
-        }
+    public List<Drop> getDrops() {
+        List<Drop> result=new ArrayList<>();
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("damagerEnch")).getAtLevel(2), 1, 100, 1));
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("resistanceEnch")).getAtLevel(3), 1, 250, 1));
         return result;
     }
 
@@ -91,6 +86,11 @@ public class Protector extends Ravager implements IEntity {
         result.add(new Flag<>(EntityFlag.XP, 100D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 30D, false));
         return result;
+    }
+
+    @Override
+    public @NotNull Material getShowMaterial() {
+        return Material.SHIELD;
     }
 
     @Override

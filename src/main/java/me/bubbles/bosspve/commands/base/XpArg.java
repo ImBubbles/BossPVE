@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 
 public class XpArg extends Argument {
 
-    public XpArg(BossPVE plugin, int index) {
-        super(plugin, "xp", "xp <player>", index);
+    public XpArg(int index) {
+        super("xp", "xp <player>", index);
         setPermission("xp");
         setAlias("xp");
     }
@@ -30,7 +30,7 @@ public class XpArg extends Argument {
             }
         }
         if(args.length==relativeIndex) { // no args
-            UtilUserData uud = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache();
+            UtilUserData uud = BossPVE.getInstance().getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache();
             utilSender.sendMessage("%prefix% %primary%Your xp is %secondary%"+uud.getXp()+"%primary%.");
             return;
         }
@@ -46,7 +46,7 @@ public class XpArg extends Argument {
         Player onlinePlayer = player.getPlayer();
         UtilUserData uud;
         if(onlinePlayer!=null) {
-            uud=plugin.getGameManager().getGamePlayer(onlinePlayer).getCache();
+            uud=BossPVE.getInstance().getGameManager().getGamePlayer(onlinePlayer).getCache();
         } else {
             uud=UtilUserData.getUtilUserData(player.getUniqueId());
         }

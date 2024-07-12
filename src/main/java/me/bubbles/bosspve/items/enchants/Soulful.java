@@ -12,8 +12,8 @@ import java.util.HashSet;
 
 public class Soulful extends Enchant {
 
-    public Soulful(BossPVE plugin) {
-        super(plugin, "Soulful", Material.REDSTONE, 15);
+    public Soulful() {
+        super("Soulful", Material.HONEYCOMB, 15);
         getEnchantItem().setDisplayName("&eSoulful");
         allowedTypes.addAll(
                 Arrays.asList(

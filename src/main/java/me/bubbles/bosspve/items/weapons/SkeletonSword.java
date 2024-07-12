@@ -14,14 +14,14 @@ import java.util.HashSet;
 
 public class SkeletonSword extends Item {
 
-    public SkeletonSword(BossPVE plugin) {
-        super(plugin, Material.IRON_SWORD, "skeletonSword");
+    public SkeletonSword() {
+        super(Material.IRON_SWORD, "skeletonSword");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&7&lSimpleton's Sword"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ATTRIBUTES);

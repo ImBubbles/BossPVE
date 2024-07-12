@@ -15,9 +15,9 @@ public class UtilDatabase {
     private static String PASSWORD;
     private static boolean initialized = false;
 
-    public UtilDatabase(BossPVE plugin) {
+    public UtilDatabase() {
         if (initialized) throw new IllegalStateException("Already initialized");
-        final ConfigManager configManager = plugin.getConfigManager();
+        final ConfigManager configManager = BossPVE.getInstance().getConfigManager();
         Config config = configManager.getConfig("config.yml");
         FileConfiguration fileConfig = config.getFileConfiguration();
         ADDRESS = fileConfig.getString("database.address");

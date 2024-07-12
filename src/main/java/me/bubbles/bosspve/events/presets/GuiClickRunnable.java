@@ -8,8 +8,8 @@ public class GuiClickRunnable extends GuiClickIndex {
 
     private Runnable run;
 
-    public GuiClickRunnable(BossPVE plugin, Inventory inventory, int index, Runnable run) {
-        super(plugin, inventory, index, false);
+    public GuiClickRunnable(Inventory inventory, int index, Runnable run) {
+        super(inventory, index, false);
         this.run=run;
     }
 

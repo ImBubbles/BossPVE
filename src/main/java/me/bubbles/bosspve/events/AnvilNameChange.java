@@ -7,8 +7,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class AnvilNameChange extends Event {
 
-    public AnvilNameChange(BossPVE plugin) {
-        super(plugin, PrepareAnvilEvent.class);
+    public AnvilNameChange() {
+        super(PrepareAnvilEvent.class);
     }
 
     @Override

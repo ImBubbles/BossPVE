@@ -14,8 +14,8 @@ public class GuiClick extends Event {
     private final boolean allow;
     private boolean cont;
 
-    public GuiClick(BossPVE plugin, Inventory inventory, boolean allow) {
-        super(plugin, Arrays.asList(InventoryClickEvent.class, InventoryCloseEvent.class));
+    public GuiClick(Inventory inventory, boolean allow) {
+        super(Arrays.asList(InventoryClickEvent.class, InventoryCloseEvent.class));
         this.inventory=inventory;
         this.allow=allow;
     }
@@ -42,7 +42,7 @@ public class GuiClick extends Event {
         if(event instanceof InventoryCloseEvent) {
             InventoryCloseEvent e = (InventoryCloseEvent) event;
             if(e.getPlayer().equals((Player) inventory.getHolder())) {
-                plugin.getEventManager().removeEvent(this);
+                BossPVE.getInstance().getEventManager().removeEvent(this);
             }
         }
     }
@@ -69,7 +69,7 @@ public class GuiClick extends Event {
     }
 
     public void unregister() {
-        plugin.getEventManager().removeEvent(this);
+        BossPVE.getInstance().getEventManager().removeEvent(this);
     }
 
 }

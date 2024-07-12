@@ -13,12 +13,10 @@ import java.util.logging.Level;
 
 public class StageManager {
 
-    private BossPVE plugin;
     private HashSet<Stage> stageList;
     private Config config;
 
-    public StageManager(BossPVE plugin, Config config) {
-        this.plugin=plugin;
+    public StageManager(Config config) {
         this.config=config;
         this.stageList=new HashSet<>();
         loadStages();
@@ -26,16 +24,15 @@ public class StageManager {
 
     private void loadStages() {
         if(config.getFileConfiguration().getKeys(false).isEmpty()) {
-            plugin.getLogger().log(Level.WARNING, "No not find any stages.");
+            BossPVE.getInstance().getLogger().log(Level.WARNING, "No not find any stages.");
             return;
         }
         for(String stageKey : config.getFileConfiguration().getKeys(false)) {
-            Stage stage = new Stage(plugin, config.getFileConfiguration().getConfigurationSection(stageKey)).getStage();
-            if(stage!=null) {
-                stageList.add(stage);
-            }else{
-                plugin.getLogger().log(Level.SEVERE, "A stage is null!");
+            Stage stage = new Stage(config.getFileConfiguration().getConfigurationSection(stageKey));
+            if(!stage.isValid()) {
+                BossPVE.getInstance().getLogger().log(Level.SEVERE, "Stage "+stage.getLevelRequirement()+" is not valid and will not be available");
             }
+            stageList.add(stage);
         }
         setSpawningAll(true);
     }
@@ -50,7 +47,8 @@ public class StageManager {
     }
 
     public void setSpawningAll(boolean bool) {
-        stageList.forEach(stage -> stage.setEnabled(bool));
+        stageList.stream().filter(Stage::isValid).forEach(stage -> stage.setEnabled(bool));
+        //stageList.forEach(stage -> stage.setEnabled(bool));
     }
 
     public Stage getStage(Location location) {

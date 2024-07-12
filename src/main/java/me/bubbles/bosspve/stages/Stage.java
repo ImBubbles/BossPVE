@@ -2,35 +2,25 @@ package me.bubbles.bosspve.stages;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.manager.IEntity;
-import me.bubbles.bosspve.game.GameEntity;
 import me.bubbles.bosspve.ticker.Timer;
-import me.bubbles.bosspve.utility.UtilLocation;
+import me.bubbles.bosspve.utility.location.UtilLocation;
 import me.bubbles.bosspve.utility.UtilUserData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.v1_21_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_21_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 public class Stage extends Timer {
 
-    public BossPVE plugin;
     private Location pos1;
     private Location pos2;
     private Location spawn;
@@ -58,44 +48,43 @@ public class Stage extends Timer {
                     "interval"
             );
 
-    public Stage(BossPVE plugin, ConfigurationSection section) {
-        super(plugin,section.getInt("killAll"));
-        this.plugin=plugin;
+    public Stage(ConfigurationSection section) {
+        super(section.getInt("killAll"));
         this.section=section;
         for(String key : requiredStageKeys) {
             if(!section.contains(key)) {
                 valid=false;
-                plugin.getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+key);
+                BossPVE.getInstance().getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+key);
                 return;
             }
         }
         this.entityList=new HashSet<>();
         this.spawnedEntities=new HashSet<>();
-        this.spawn=UtilLocation.toLocation(plugin,section.getString("spawn"));
+        this.spawn=UtilLocation.toLocation(section.getString("spawn"));
         if(spawn==null) {
             valid=false;
-            plugin.getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+ "could not generate spawn point");
+            BossPVE.getInstance().getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+ "could not generate spawn point");
             return;
         }
-        this.pos1=UtilLocation.toLocation(plugin,section.getString("pos1"));
+        this.pos1=UtilLocation.toLocation(section.getString("pos1"));
         if(pos1==null) {
             valid=false;
-            plugin.getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+ "could not generate spawn pos1");
+            BossPVE.getInstance().getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+ "could not generate spawn pos1");
             return;
         }
-        this.pos2=UtilLocation.toLocation(plugin,section.getString("pos2"));
+        this.pos2=UtilLocation.toLocation(section.getString("pos2"));
         if(pos2==null) {
             valid=false;
-            plugin.getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+ "could not generate spawn pos2");
+            BossPVE.getInstance().getLogger().log(Level.SEVERE,"Could not load stage: " + getLevelRequirement() +" @ "+ "could not generate spawn pos2");
             return;
         }
         this.xpMultiplier=section.getDouble("xpMultiplier");
         this.moneyMultiplier=section.getDouble("moneyMultiplier");
         this.maxEntities=section.getInt("maxEntities");
         valid=loadEntities();
-        if(valid) {
+        /*if(valid) {
             setEnabled(true);
-        }
+        }*/
     }
 
     @Override
@@ -148,6 +137,7 @@ public class Stage extends Timer {
                     }
                 }
                 iterator.remove();
+                livingEntity.addTag("nuked");
                 livingEntity.setLastHurtByPlayer(serverPlayer);
                 livingEntity.kill();
                 //plugin.getGameManager().delete(plugin.getGameManager().getGameEntity(entity));
@@ -164,16 +154,16 @@ public class Stage extends Timer {
         boolean result=false;
         for(String entityID : entities.getKeys(false)) {
             String entityKey = entities.getConfigurationSection(entityID).getString("entity");
-            IEntity entityBase = plugin.getEntityManager().getEntityByName(entityKey);
+            IEntity entityBase = BossPVE.getInstance().getEntityManager().getEntityByName(entityKey);
             if(entityBase==null) {
-                plugin.getLogger().log(Level.WARNING, "Could not load entity: "+entityKey+" @ "+getLevelRequirement());
+                BossPVE.getInstance().getLogger().log(Level.WARNING, "Could not load entity: "+entityKey+" @ "+getLevelRequirement());
                 continue;
             }
             ConfigurationSection entitySection = entities.getConfigurationSection(entityID);
             boolean cont=true;
             for(String key : requiredEntityKeys) {
                 if(!entitySection.contains(key)) {
-                    plugin.getLogger().log(Level.SEVERE,"Could not load entity: " + entityKey +"."+key+" @ "+getLevelRequirement());
+                    BossPVE.getInstance().getLogger().log(Level.SEVERE,"Could not load entity: " + entityKey +"."+key+" @ "+getLevelRequirement());
                     cont=false;
                 }
             }
@@ -184,11 +174,11 @@ public class Stage extends Timer {
             StageEntity stageEntity = new StageEntity(
                     this,
                     entityBase,
-                    UtilLocation.toLocation(plugin,entitySection.getString("pos")),
+                    UtilLocation.toLocation(entitySection.getString("pos")),
                     entitySection.getInt("interval")
             );
             if(!isInside(stageEntity.getSpawnLocation())) {
-                plugin.getLogger().log(Level.WARNING, "Could not load entity: "+entityID + " outside of stage " + " @ " + getLevelRequirement());
+                BossPVE.getInstance().getLogger().log(Level.WARNING, "Could not load entity: "+entityID + " outside of stage " + " @ " + getLevelRequirement());
                 result=false;
                 continue;
             }
@@ -196,7 +186,7 @@ public class Stage extends Timer {
             result=true;
         }
         if(!result) {
-            plugin.getLogger().log(Level.SEVERE, "Could not find any entities @ " +getLevelRequirement() + ", stage will not be loaded.");
+            BossPVE.getInstance().getLogger().log(Level.SEVERE, "Could not find any entities @ " +getLevelRequirement() + ", stage will not be loaded.");
         }
         return result;
     }
@@ -211,13 +201,13 @@ public class Stage extends Timer {
 
     public Stage setEnabled(boolean bool) {
         entityList.forEach(stageEntity -> stageEntity.setEnabled(bool));
-        if(plugin.getTimerManager().containsTimer(this)==bool) {
+        if(BossPVE.getInstance().getTimerManager().containsTimer(this)==bool) {
             return this;
         }
         if(bool) {
-            plugin.getTimerManager().addTimer(this);
+            BossPVE.getInstance().getTimerManager().addTimer(this);
         } else {
-            plugin.getTimerManager().removeTimer(this);
+            BossPVE.getInstance().getTimerManager().removeTimer(this);
         }
         return this;
     }
@@ -264,7 +254,7 @@ public class Stage extends Timer {
     }
 
     public boolean isAllowed(Player player) {
-        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+        UtilUserData uud = BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         return uud.getLevel()>=getLevelRequirement();
     }
 
@@ -286,6 +276,10 @@ public class Stage extends Timer {
 
     public HashSet<Entity> getSpawned() {
         return spawnedEntities;
+    }
+
+    public boolean isValid() {
+        return valid;
     }
 
 }

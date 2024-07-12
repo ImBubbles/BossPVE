@@ -14,22 +14,20 @@ public class EntityManager {
 
     private HashSet<Supplier<IEntity>> entities;
     private HashSet<IEntity> bases;
-    private BossPVE plugin;
 
-    public EntityManager(BossPVE plugin) {
-        this.plugin=plugin;
+    public EntityManager() {
         this.entities=new HashSet<>();
         registerEntities(
-                () -> new Ogre(plugin),
-                () -> new Hellbringer(plugin),
-                () -> new Ferrum(plugin),
-                () -> new Goblin(plugin),
-                () -> new Simpleton(plugin),
-                () -> new AngryBee(plugin),
-                () -> new Ninja(plugin),
-                () -> new Volcono(plugin),
-                () -> new Protector(plugin),
-                () -> new Vampire(plugin)
+                Ogre::new,
+                Hellbringer::new,
+                Ferrum::new,
+                Goblin::new,
+                Simpleton::new,
+                AngryBee::new,
+                Ninja::new,
+                Volcono::new,
+                Protector::new,
+                Vampire::new
         );
     }
 
@@ -38,7 +36,7 @@ public class EntityManager {
     }
 
     public void onEvent(Event event) {
-        getEntities().forEach(iEntity -> iEntity.onEvent(plugin,event));
+        getEntities().forEach(iEntity -> iEntity.onEvent(event));
     }
 
     public HashSet<IEntity> getEntities() {

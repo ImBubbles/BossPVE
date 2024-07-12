@@ -29,13 +29,11 @@ import java.util.stream.Stream;
 
 public abstract class Item implements IItem {
 
-    public BossPVE plugin;
     private String nbtIdentifier;
     private net.minecraft.world.item.ItemStack nmsStack;
 
-    public Item(BossPVE plugin, Material material, String nbtIdentifier) {
+    public Item(Material material, String nbtIdentifier) {
         //System.out.println("Item Init");
-        this.plugin=plugin;
         ItemStack itemStack=new ItemStack(material);
         itemStack.setAmount(1);
         //System.out.println("itemstack made");
@@ -51,7 +49,7 @@ public abstract class Item implements IItem {
 
         PersistentDataContainer pdc = customMeta.getPersistentDataContainer();
 
-        NamespacedKey key = new NamespacedKey(plugin, "identifier");
+        NamespacedKey key = new NamespacedKey(BossPVE.getInstance(), "identifier");
         pdc.set(key, PersistentDataType.STRING, nbtIdentifier);
 
         itemStack.setItemMeta(customMeta);
@@ -78,7 +76,7 @@ public abstract class Item implements IItem {
 
         ItemMeta customMeta = itemStack.getItemMeta();
         PersistentDataContainer pdc = customMeta.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "uuid");
+        NamespacedKey key = new NamespacedKey(BossPVE.getInstance(), "uuid");
         pdc.set(key, PersistentDataType.STRING, uuid.toString());
 
         itemStack.setItemMeta(customMeta);
@@ -139,7 +137,7 @@ public abstract class Item implements IItem {
         if(getLevelRequirement()<=0) {
             return true;
         }
-        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+        UtilUserData uud = BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         return uud.getLevel()>=getLevelRequirement();
     }
 
@@ -153,7 +151,7 @@ public abstract class Item implements IItem {
 
         ItemMeta customMeta = itemStack.getItemMeta();
         PersistentDataContainer pdc = customMeta.getPersistentDataContainer();
-        NamespacedKey key = new NamespacedKey(plugin, "identifier");
+        NamespacedKey key = new NamespacedKey(BossPVE.getInstance(), "identifier");
         if(!pdc.has(key)) {
             return false;
         }

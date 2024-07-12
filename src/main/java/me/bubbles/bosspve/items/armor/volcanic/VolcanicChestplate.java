@@ -16,14 +16,14 @@ import java.util.HashSet;
 
 public class VolcanicChestplate extends Armor {
 
-    public VolcanicChestplate(BossPVE plugin) {
-        super(plugin, Material.LEATHER_CHESTPLATE, "volcanicChestplate");
+    public VolcanicChestplate() {
+        super(Material.LEATHER_CHESTPLATE, "volcanicChestplate");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&6&lVolcanic Chestplate"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -37,7 +37,8 @@ public class VolcanicChestplate extends Armor {
     @Override
     public HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> getFlags() {
         HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 5D, false));
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 2D, false));
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.HEALTH_ADD, 5D, false));
         result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 2D, false));
         return result;
     }

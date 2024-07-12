@@ -6,28 +6,24 @@ import me.bubbles.bosspve.items.manager.bases.armor.ArmorSet;
 
 public class OgreSet extends ArmorSet {
 
-    public OgreSet(BossPVE plugin) {
-        super(plugin);
-    }
-
     @Override
     public Armor getBoots() {
-        return new OgreBoots(plugin);
+        return new OgreBoots();
     }
 
     @Override
     public Armor getPants() {
-        return new OgrePants(plugin);
+        return new OgrePants();
     }
 
     @Override
     public Armor getChestplate() {
-        return new OgreChestplate(plugin);
+        return new OgreChestplate();
     }
 
     @Override
     public Armor getHelmet() {
-        return new OgreHelmet(plugin);
+        return new OgreHelmet();
     }
 
 }

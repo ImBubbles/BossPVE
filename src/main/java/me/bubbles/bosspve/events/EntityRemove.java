@@ -11,8 +11,8 @@ import org.bukkit.event.entity.EntityRemoveEvent;
 
 public class EntityRemove extends Event {
 
-    public EntityRemove(BossPVE plugin) {
-        super(plugin, EntityRemoveEvent.class);
+    public EntityRemove() {
+        super(EntityRemoveEvent.class);
     }
 
     @Override
@@ -42,11 +42,11 @@ public class EntityRemove extends Event {
         if(!(entity instanceof LivingEntity)) {
             return;
         }
-        GameEntity gameEntity = plugin.getGameManager().getGameEntity(entity.getUniqueId());
+        GameEntity gameEntity = BossPVE.getInstance().getGameManager().getGameEntity(entity.getUniqueId());
         if(gameEntity!=null) {
-            plugin.getGameManager().delete(gameEntity);
+            BossPVE.getInstance().getGameManager().delete(gameEntity);
         }
-        Stage stage = plugin.getStageManager().getStage(entity.getLocation());
+        Stage stage = BossPVE.getInstance().getStageManager().getStage(entity.getLocation());
         if(stage!=null) {
             stage.onKill(((CraftEntity) entity).getHandle());
         }

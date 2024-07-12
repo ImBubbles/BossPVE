@@ -22,12 +22,6 @@ import java.util.HashSet;
 
 public class UtilCalculator {
 
-    private static BossPVE plugin;
-
-    public UtilCalculator(BossPVE plugin) {
-        this.plugin=plugin;
-    }
-
     public static double getMaxHealth(Player player) {
         int base = 10;
         double additive=getFlagSum(player, ItemFlag.HEALTH_ADD);
@@ -40,13 +34,25 @@ public class UtilCalculator {
         double additive=getFlagSum(player, ItemFlag.DAMAGE_ADD);
         double multiplier=getFlagProduct(player, ItemFlag.DAMAGE_MULT);
         double result = additive*multiplier;
-        return result==0 ? base : result;
+        //result = result==0 ? base : result;
+        result = Math.max(result, base);
+        return result;
     }
 
     public static double getProtection(Player player) {
+        //double base = 0.2D;
         double additive=getFlagSum(player, ItemFlag.PROT_ADD);
         double multiplier=getFlagProduct(player, ItemFlag.PROT_MULT, 1);
         return additive*multiplier;
+    }
+
+    public static double getSpeed(Player player) {
+        //double base = 0.2D;
+        double additive=getFlagSum(player, ItemFlag.SPEED_ADD, 0.2F);
+        double multiplier=getFlagProduct(player, ItemFlag.SPEED_MULT, 1);
+        return additive*multiplier;
+        //result = Math.max(result, base);
+        //return base+(additive*multiplier);
     }
 
     public static double getMoney(Player player, IEntity iEntity) {
@@ -55,7 +61,7 @@ public class UtilCalculator {
             additive+=iEntity.getUtilEntity().getMoney();
         }
         double multiplier=getFlagProduct(player, ItemFlag.MONEY_MULT, 1);
-        Stage stage = plugin.getStageManager().getStage(player.getLocation());
+        Stage stage = BossPVE.getInstance().getStageManager().getStage(player.getLocation());
         if(stage!=null) {
             if(stage.isAllowed(player)) {
                 multiplier*=stage.getMoneyMultiplier();
@@ -72,7 +78,7 @@ public class UtilCalculator {
             additive+=iEntity.getUtilEntity().getXp();
         }
         double multiplier=getFlagProduct(player, ItemFlag.XP_MULT, 1);
-        Stage stage = plugin.getStageManager().getStage(player.getLocation());
+        Stage stage = BossPVE.getInstance().getStageManager().getStage(player.getLocation());
         if(stage!=null) {
             if(stage.isAllowed(player)) {
                 multiplier*=stage.getXpMultiplier();
@@ -156,7 +162,7 @@ public class UtilCalculator {
             if(itemStack==null) {
                 continue;
             }
-            UtilItemStack uis = new UtilItemStack(plugin, itemStack);
+            UtilItemStack uis = new UtilItemStack(itemStack);
             for(Flag<ItemFlag, Double> flag : uis.getFlags()) {
                 if(flag.isPassive()) {
                     flags.add(flag);
@@ -167,7 +173,7 @@ public class UtilCalculator {
         // IN HANDS
         ItemStack mainHandStack = player.getInventory().getItemInMainHand();
         if(mainHandStack!=null) {
-            UtilItemStack mainHand = new UtilItemStack(plugin, player.getInventory().getItemInMainHand());
+            UtilItemStack mainHand = new UtilItemStack(player.getInventory().getItemInMainHand());
             for(Flag<ItemFlag, Double> flag : mainHand.getFlags()) {
                 if(!flag.isPassive()) {
                     flags.add(flag);
@@ -191,7 +197,7 @@ public class UtilCalculator {
             if(itemStack==null) {
                 continue;
             }
-            UtilItemStack armorPiece = new UtilItemStack(plugin, itemStack);
+            UtilItemStack armorPiece = new UtilItemStack(itemStack);
             for(Flag<ItemFlag, Double> flag : armorPiece.getFlags()) {
                 if(!flag.isPassive()) {
                     flags.add(flag);

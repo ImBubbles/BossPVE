@@ -2,6 +2,7 @@ package me.bubbles.bosspve.commands.base;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
+import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.utility.UtilUserData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -9,8 +10,8 @@ import org.bukkit.command.CommandSender;
 
 public class GiveXpArg extends Argument {
 
-    public GiveXpArg(BossPVE plugin, int index) {
-        super(plugin, "givexp", "givexp <player> <amount>", index);
+    public GiveXpArg(int index) {
+        super("givexp", "givexp <player> <amount>", index);
         setPermission("admin");
     }
 
@@ -36,10 +37,12 @@ public class GiveXpArg extends Argument {
             utilSender.sendMessage(getArgsMessage());
             return;
         }
-        UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
-        uud.setXp(uud.getXp()+xp);
+        /*UtilUserData uud = plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+        uud.setXp(uud.getXp()+xp);*/
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId());
+        gamePlayer.setXp(gamePlayer.getCache().getXp()+xp);
         //UtilUserData.save(plugin, uud);
-        utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s%primary% xp is now %secondary%"+uud.getXp()+"%primary%.");
+        utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s%primary% xp is now %secondary%"+gamePlayer.getCache().getXp()+"%primary%.");
     }
 
 }

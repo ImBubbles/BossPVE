@@ -4,8 +4,9 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
 import me.bubbles.bosspve.utility.UtilEntity;
-import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -23,6 +24,7 @@ import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,17 +33,14 @@ import java.util.List;
 public class Ninja extends Skeleton implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&8&lNinja");
-
-    private BossPVE plugin;
     private UtilEntity utilEntity;
 
-    public Ninja(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
+    public Ninja() {
+        this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Ninja(BossPVE plugin, Level level, Location location) {
+    public Ninja(Level level, Location location) {
         super(EntityType.SKELETON, level);
-        this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
@@ -70,53 +69,34 @@ public class Ninja extends Skeleton implements IEntity {
         ));
         setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.SHEARS)));
         setItemInHand(InteractionHand.OFF_HAND,CraftItemStack.asNMSCopy(new ItemStack(Material.SHEARS)));
-        setItemSlot(EquipmentSlot.FEET, plugin.getItemManager().getItemByName("ninjaBoots").getNMSStack());
-        setItemSlot(EquipmentSlot.LEGS, plugin.getItemManager().getItemByName("ninjaPants").getNMSStack());
-        setItemSlot(EquipmentSlot.CHEST, plugin.getItemManager().getItemByName("ninjaChestplate").getNMSStack());
-        setItemSlot(EquipmentSlot.HEAD, plugin.getItemManager().getItemByName("ninjaHelmet").getNMSStack());
-        if(getDrops()!=null) {
+        setItemSlot(EquipmentSlot.FEET, BossPVE.getInstance().getItemManager().getItemByName("ninjaBoots").getNMSStack());
+        setItemSlot(EquipmentSlot.LEGS, BossPVE.getInstance().getItemManager().getItemByName("ninjaPants").getNMSStack());
+        setItemSlot(EquipmentSlot.CHEST, BossPVE.getInstance().getItemManager().getItemByName("ninjaChestplate").getNMSStack());
+        setItemSlot(EquipmentSlot.HEAD, BossPVE.getInstance().getItemManager().getItemByName("ninjaHelmet").getNMSStack());
+        if(rollDrops()!=null) {
             drops.clear();
-            drops.addAll(getDrops());
+            drops.addAll(rollDrops());
         }
         addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Ninja(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Ninja(((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
 
     @Override
-    public List<ItemStack> getDrops() {
-        List<ItemStack> result=new ArrayList<>();
-        // ENCHANTS
-        if(UtilNumber.rollTheDice(1,100,2)) {
-            result.add(plugin.getItemManager().getItemByName("bankerEnch").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,100,2)) {
-            result.add(plugin.getItemManager().getItemByName("grinderEnch").nmsAsItemStack());
-        }
-        /*if(UtilNumber.rollTheDice(1,1000,2)) {
-            result.add(plugin.getItemManager().getItemByName("nukerEnch").nmsAsItemStack());
-        }*/
-        // NINJA SET
-        if(UtilNumber.rollTheDice(1,800,1)) {
-            result.add(plugin.getItemManager().getItemByName("ninjaDagger").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,400,1)) {
-            result.add(plugin.getItemManager().getItemByName("ninjaHelmet").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,500,1)) {
-            result.add(plugin.getItemManager().getItemByName("ninjaChestplate").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,450,1)) {
-            result.add(plugin.getItemManager().getItemByName("ninjaPants").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,400,1)) {
-            result.add(plugin.getItemManager().getItemByName("ninjaBoots").nmsAsItemStack());
-        }
+    public List<Drop> getDrops() {
+        List<Drop> result=new ArrayList<>();
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("bankerEnch")).getAtLevel(1), 1, 100, 2));
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("grinderEnch")).getAtLevel(1), 1, 100, 2));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("ninjaDagger").nmsAsItemStack(), 1, 800, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("ninjaHelmet").nmsAsItemStack(), 1, 400, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("ninjaChestplate").nmsAsItemStack(), 1, 500, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("ninjaPants").nmsAsItemStack(), 1, 450, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("ninjaBoots").nmsAsItemStack(), 1, 400, 1));
         return result;
     }
 
@@ -128,6 +108,11 @@ public class Ninja extends Skeleton implements IEntity {
         result.add(new Flag<>(EntityFlag.XP, 12D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 45D, false));
         return result;
+    }
+
+    @Override
+    public @NotNull Material getShowMaterial() {
+        return Material.SHEARS;
     }
 
     @Override

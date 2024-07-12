@@ -7,15 +7,10 @@ import java.util.HashSet;
 public class ConfigManager {
 
     private HashSet<Config> configList = new HashSet<>();
-    private BossPVE plugin;
-
-    public ConfigManager(BossPVE plugin) {
-        this.plugin=plugin;
-    }
 
     public void addConfig(String... names) {
         for(String name : names) {
-            configList.add(new Config(plugin, name));
+            configList.add(new Config(name));
         }
     }
 

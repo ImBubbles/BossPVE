@@ -16,14 +16,14 @@ import java.util.HashSet;
 
 public class VampireChestplate extends Armor {
 
-    public VampireChestplate(BossPVE plugin) {
-        super(plugin, Material.LEATHER_CHESTPLATE, "vampireChestplate");
+    public VampireChestplate() {
+        super(Material.LEATHER_CHESTPLATE, "vampireChestplate");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&4&lVampire Chesplate"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -37,7 +37,8 @@ public class VampireChestplate extends Armor {
     @Override
     public HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> getFlags() {
         HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 9D, false));
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 5D, false));
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.HEALTH_ADD, 9D, false));
         result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 10D, false));
         return result;
     }

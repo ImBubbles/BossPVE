@@ -20,15 +20,15 @@ public class VampireEye extends Item {
 
     private ItemManager itemManager;
 
-    public VampireEye(BossPVE plugin, ItemManager itemManager) {
-        super(plugin, Material.FERMENTED_SPIDER_EYE, "vampireEye");
+    public VampireEye(ItemManager itemManager) {
+        super(Material.FERMENTED_SPIDER_EYE, "vampireEye");
         this.itemManager=itemManager;
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&4&lVampire Eye"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -38,7 +38,7 @@ public class VampireEye extends Item {
 
     @Override
     public ShapedRecipe getRecipe() {
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin,getNBTIdentifier()),nmsAsItemStack());
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(BossPVE.getInstance(), getNBTIdentifier()),nmsAsItemStack());
         recipe.shape(
                 "FFF",
                 "FFF",

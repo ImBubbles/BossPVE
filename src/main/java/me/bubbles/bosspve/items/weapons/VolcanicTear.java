@@ -14,14 +14,14 @@ import java.util.HashSet;
 
 public class VolcanicTear extends Item {
 
-    public VolcanicTear(BossPVE plugin) {
-        super(plugin, Material.MAGMA_CREAM, "volcanicTear");
+    public VolcanicTear() {
+        super(Material.MAGMA_CREAM, "volcanicTear");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&6&lVolcanic Tear"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

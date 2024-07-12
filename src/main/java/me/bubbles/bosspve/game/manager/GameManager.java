@@ -18,10 +18,8 @@ public class GameManager {
 
     private HashSet<GamePlayer> gamePlayers;
     private HashSet<GameEntity> gameEntities;
-    private BossPVE plugin;
 
-    public GameManager(BossPVE plugin) {
-        this.plugin=plugin;
+    public GameManager() {
         gamePlayers=new HashSet<>();
         gameEntities=new HashSet<>();
     }
@@ -35,7 +33,7 @@ public class GameManager {
             }
         }
         if(result==null) {
-            GamePlayer gamePlayer = new GamePlayer(plugin, player);
+            GamePlayer gamePlayer = new GamePlayer(player);
             register(gamePlayer);
             result=gamePlayer;
         }
@@ -85,7 +83,7 @@ public class GameManager {
     public void delete(GameEntity gameEntity) {
         gameEntities.remove(gameEntity);
         CraftEntity entity = gameEntity.getEntity().getBukkitEntity();
-        Stage stage = plugin.getStageManager().getStage(entity.getLocation());
+        Stage stage = BossPVE.getInstance().getStageManager().getStage(entity.getLocation());
         if(stage!=null) {
             stage.onKill(entity.getHandle());
         }

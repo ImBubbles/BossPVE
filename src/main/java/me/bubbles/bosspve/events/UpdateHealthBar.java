@@ -8,8 +8,8 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 public class UpdateHealthBar extends Event {
 
-    public UpdateHealthBar(BossPVE plugin) {
-        super(plugin, EntityRegainHealthEvent.class);
+    public UpdateHealthBar() {
+        super(EntityRegainHealthEvent.class);
     }
 
     @Override
@@ -17,7 +17,7 @@ public class UpdateHealthBar extends Event {
         //System.out.println("heal event");
         EntityRegainHealthEvent e = (EntityRegainHealthEvent) event;
         if(!(e.getEntity() instanceof Player)) {
-            e.setCancelled(true);
+            //e.setCancelled(true);
             return;
         }
         //System.out.println("is player");
@@ -25,18 +25,16 @@ public class UpdateHealthBar extends Event {
         /*if(!e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.REGEN)) {
             return;
         }*/
-        if(!e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.REGEN)) {
+        if(!e.getRegainReason().equals(EntityRegainHealthEvent.RegainReason.SATIATED)) {
             return;
         }
         e.setCancelled(true);
-        //System.out.println("cancelled");
         Player player = (Player) e.getEntity();
-        GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
         if(gamePlayer.getHealth()==gamePlayer.getMaxHealth()) {
-            //System.out.println("already nax health");
             return;
         }
-        gamePlayer.healPercent(0.3D);
+        gamePlayer.healPercent(0.2D);
     }
 
 }

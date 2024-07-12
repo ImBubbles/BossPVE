@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 
 public class SetSpawningArg extends Argument {
 
-    public SetSpawningArg(BossPVE plugin, int index) {
-        super(plugin, "spawning", "spawning <level> <true/false>", index);
+    public SetSpawningArg(int index) {
+        super("spawning", "spawning <level> <true/false>", index);
     }
 
     @Override

@@ -14,14 +14,14 @@ import java.util.HashSet;
 
 public class BeeStinger extends Item {
 
-    public BeeStinger(BossPVE plugin) {
-        super(plugin, Material.GOLDEN_SWORD, "beeStinger");
+    public BeeStinger() {
+        super(Material.GOLDEN_SWORD, "beeStinger");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&e&lBee Stinger"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

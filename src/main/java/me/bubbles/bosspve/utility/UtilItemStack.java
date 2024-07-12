@@ -7,6 +7,7 @@ import me.bubbles.bosspve.items.manager.ItemManager;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.utility.string.UtilString;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_21_R1.enchantments.CraftEnchantment;
@@ -14,6 +15,7 @@ import org.bukkit.craftbukkit.v1_21_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -25,16 +27,13 @@ public class UtilItemStack {
 
     private ItemStack itemStack;
     private Item item;
-    private BossPVE plugin;
 
-    public UtilItemStack(BossPVE plugin, ItemStack itemStack) {
-        this.plugin=plugin;
+    public UtilItemStack(ItemStack itemStack) {
         this.itemStack=itemStack;
-        this.item=plugin.getItemManager().getItemFromStack(itemStack);
+        this.item=BossPVE.getInstance().getItemManager().getItemFromStack(itemStack);
     }
 
-    public UtilItemStack(BossPVE plugin, ItemStack itemStack, Item item) {
-        this.plugin=plugin;
+    public UtilItemStack(ItemStack itemStack, Item item) {
         this.itemStack=itemStack;
         this.item=item;
     }
@@ -48,7 +47,7 @@ public class UtilItemStack {
         //Item item = plugin.getItemManager().getItemFromStack(itemStack);
         UtilUserData uud=null;
         if(player!=null) {
-            uud=plugin.getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+            uud=BossPVE.getInstance().getGameManager().getGamePlayer(player.getUniqueId()).getCache();
         }
         int enchantsAmt = itemStack.getEnchantments().size();
         if(item!=null) {
@@ -58,7 +57,7 @@ public class UtilItemStack {
         }
         for(Enchantment bukkitEnchantment : itemStack.getEnchantments().keySet()) {
             net.minecraft.world.item.enchantment.Enchantment nmsEnchant = CraftEnchantment.bukkitToMinecraft(bukkitEnchantment);
-            Enchant enchant = plugin.getItemManager().getEnchantManager().getEnchant(nmsEnchant.description().getString());
+            Enchant enchant = BossPVE.getInstance().getItemManager().getEnchantManager().getEnchant(nmsEnchant.description().getString());
             if(enchant!=null) {
                 if(uud!=null) {
                     if(!(uud.getLevel()>=enchant.getLevelRequirement())) {
@@ -135,7 +134,7 @@ public class UtilItemStack {
                 money+=(moneyMult>1 ? " +" : " -");
                 money+="(%"+Math.abs((int) ((moneyMult*100)-100))+")";
             }
-            if(xpAdd!=0||xpMult!=1) {
+            if(moneyAdd!=0||moneyMult!=1) {
                 lore.add(UtilString.colorFillPlaceholders(money));
             }
 
@@ -225,7 +224,7 @@ public class UtilItemStack {
         }
         receiverMeta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
         //receiver.setItemMeta(receiverMeta);
-        UtilItemStack utilItemStack = new UtilItemStack(plugin, receiver, item);
+        UtilItemStack utilItemStack = new UtilItemStack(receiver, item);
         receiverMeta.setLore(utilItemStack.getUpdatedLore());
         receiver.setItemMeta(receiverMeta);
         return receiver;
@@ -243,7 +242,7 @@ public class UtilItemStack {
         itemStack.getItemMeta().getEnchants().keySet()
                 .forEach(enchantment -> {
                     net.minecraft.world.item.enchantment.Enchantment nmsEnchant = CraftEnchantment.bukkitToMinecraft(enchantment);
-                    Enchant enchant = plugin.getItemManager().getEnchantManager().getEnchant(nmsEnchant.description().getString());
+                    Enchant enchant = BossPVE.getInstance().getItemManager().getEnchantManager().getEnchant(nmsEnchant.description().getString());
                     if(enchant!=null) {
                         result.add(enchant);
                     }
@@ -274,6 +273,29 @@ public class UtilItemStack {
             return -1;
         }
         return itemStack.getItemMeta().getEnchantLevel(enchant);
+    }
+
+    public static int giveItem(Player player, ItemStack itemStack) {
+        PlayerInventory inventory = player.getInventory();
+        int result=0;
+        if(inventory.firstEmpty()!=-1) {
+            if(inventory.getItem(inventory.getHeldItemSlot())==null) {
+                inventory.setItem(inventory.getHeldItemSlot(), itemStack);
+                result=3;
+            } else {
+                inventory.setItem(inventory.firstEmpty(), itemStack);
+                result=2;
+            }
+            player.getInventory().setContents(inventory.getContents());
+            return result;
+        } else {
+            org.bukkit.entity.Item item = player.getWorld().dropItem(player.getLocation(), itemStack);
+            for(Player otherPlayer : Bukkit.getOnlinePlayers()) {
+                otherPlayer.hideEntity(BossPVE.getInstance(), item);
+            }
+            result=1;
+        }
+        return result;
     }
 
 }

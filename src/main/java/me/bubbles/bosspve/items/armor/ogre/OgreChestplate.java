@@ -16,14 +16,14 @@ import java.util.HashSet;
 
 public class OgreChestplate extends Armor {
 
-    public OgreChestplate(BossPVE plugin) {
-        super(plugin, Material.LEATHER_CHESTPLATE, "ogreChestplate");
+    public OgreChestplate() {
+        super(Material.LEATHER_CHESTPLATE, "ogreChestplate");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
                 "&3&lOgre's Chestplate"
         ));
-        itemMeta.setLore(new UtilItemStack(plugin, itemStack, this).getUpdatedLore());
+        itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
         itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -37,7 +37,8 @@ public class OgreChestplate extends Armor {
     @Override
     public HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> getFlags() {
         HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 2D, false));
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.HEALTH_ADD, 2D, false));
+        result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.PROT_ADD, 1D, false));
         result.add(new Flag<me.bubbles.bosspve.flags.ItemFlag, Double>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 1D, false));
         return result;
     }

@@ -13,21 +13,18 @@ import org.bukkit.entity.Player;
 
 public class UpdateXP extends Timer {
 
-    private BossPVE plugin;
-
-    public UpdateXP(BossPVE plugin) {
-        super(plugin,40); // update every 2 seconds
-        this.plugin=plugin;
+    public UpdateXP() {
+        super(40); // update every 2 seconds
     }
 
     @Override
     public void onComplete() {
         for(Player player : Bukkit.getOnlinePlayers()) {
-            GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+            GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
             int xp = gamePlayer.getCache().getXp();
             int level = UtilNumber.xpToLevel(xp);
             if(player.getLevel()<level) {
-                Stage stage = plugin.getStageManager().getStage(level);
+                Stage stage = BossPVE.getInstance().getStageManager().getStage(level);
                 if(stage!=null) {
                     if((Boolean) Settings.NEXTSTAGE_MESSAGES.getOption(gamePlayer.getCache().getOrDefault(Settings.NEXTSTAGE_MESSAGES))) {
                         player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);

@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.ticker;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.utility.UtilTime;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -10,10 +11,10 @@ public class PlayerTimerManager extends Timer {
     private HashMap<Player, Timer> timers;
     private long lastClear;
 
-    public PlayerTimerManager(BossPVE plugin) {
-        super(plugin,3600*20);
+    public PlayerTimerManager() {
+        super(3600*20);
         timers=new HashMap<>();
-        lastClear=plugin.getEpochTimestamp();
+        lastClear= UtilTime.getEpochTimestamp();
     }
 
     @Override
@@ -24,10 +25,10 @@ public class PlayerTimerManager extends Timer {
 
     @Override
     public void onComplete() {
-        if(lastClear<=plugin.getEpochTimestamp()-3600) {
+        if(lastClear<=UtilTime.getEpochTimestamp()-3600) {
             HashMap<Player, Timer> copy = new HashMap<>(timers);
             copy.forEach(((player, timer) -> {
-                if(timer.getLastCall()<=plugin.getEpochTimestamp()-1800) {
+                if(timer.getLastCall()<=UtilTime.getEpochTimestamp()-1800) {
                     removeTimer(player);
                 }
             }));

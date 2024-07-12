@@ -10,10 +10,8 @@ import org.bukkit.entity.Player;
 public class UtilSender {
 
     private CommandSender sender;
-    private BossPVE plugin;
 
-    public UtilSender(BossPVE plugin, CommandSender sender) {
-        this.plugin=plugin;
+    public UtilSender(CommandSender sender) {
         this.sender=sender;
     }
 
@@ -51,7 +49,7 @@ public class UtilSender {
         if(!isPlayer()) {
             return null;
         }
-        return plugin.getGameManager().getGamePlayer(getPlayer());
+        return BossPVE.getInstance().getGameManager().getGamePlayer(getPlayer());
     }
 
 }

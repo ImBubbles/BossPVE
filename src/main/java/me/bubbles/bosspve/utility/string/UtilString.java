@@ -7,17 +7,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 public class UtilString {
     private static final int CENTER_PX = 154;
-    private static BossPVE PLUGIN;
-    private static boolean initialized = false;
-
-    public UtilString(BossPVE plugin) {
-        if (initialized) throw new IllegalStateException("Already initialized");
-        PLUGIN=plugin;
-        initialized=true;
-    }
 
     public static String colorFillPlaceholders(String message) {
-        FileConfiguration config = PLUGIN.getConfigManager().getConfig("config.yml").getFileConfiguration();
+        FileConfiguration config = BossPVE.getInstance().getConfigManager().getConfig("config.yml").getFileConfiguration();
         ConfigurationSection placeholders = config.getConfigurationSection("placeholders");
         for(String string : placeholders.getKeys(false)) {
             String regex = "%"+string+"%";

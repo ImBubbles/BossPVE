@@ -2,8 +2,10 @@ package me.bubbles.bosspve.utility;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.database.databases.SettingsDB;
+import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.settings.Setting;
 import me.bubbles.bosspve.settings.Settings;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,11 +57,27 @@ public class UtilUserData {
         return UtilNumber.xpToLevel(xp);
     }
 
-    public static void save(BossPVE plugin, UtilUserData uud) {
+    public static void save(UtilUserData uud) {
+        Bukkit.getScheduler().runTaskAsynchronously(BossPVE.getInstance(), () -> {
+            UtilDatabase.getXpDB().setRelation(uud.getUUID(), uud.getXp());
+            for(String str : uud.settings.keySet()) {
+                UtilDatabase.SettingsDB().setRelation(uud.getUUID(), str, uud.settings.get(str));
+            }
+        });
+        GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(uud.getUUID());
+        if(gamePlayer!=null) {
+            gamePlayer.updateCache(uud);
+        }
+    }
+
+    public static void saveSync(UtilUserData uud) {
         UtilDatabase.getXpDB().setRelation(uud.getUUID(), uud.getXp());
-        plugin.getGameManager().getGamePlayer(uud.getUUID()).updateCache(uud);
         for(String str : uud.settings.keySet()) {
             UtilDatabase.SettingsDB().setRelation(uud.getUUID(), str, uud.settings.get(str));
+            GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(uud.getUUID());
+            if(gamePlayer!=null) {
+                gamePlayer.updateCache(uud);
+            }
         }
     }
 

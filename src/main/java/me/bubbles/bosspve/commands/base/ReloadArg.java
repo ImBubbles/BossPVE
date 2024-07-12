@@ -6,8 +6,8 @@ import org.bukkit.command.CommandSender;
 
 public class ReloadArg extends Argument {
 
-    public ReloadArg(BossPVE plugin, int index) {
-        super(plugin,"reload",index);
+    public ReloadArg(int index) {
+        super("reload",index);
         setPermission("reload");
     }
 
@@ -18,8 +18,7 @@ public class ReloadArg extends Argument {
             return;
         }
         utilSender.sendMessage("%prefix% %primary%Config reloaded.");
-        plugin.saveDefaultConfig();
-        plugin.reload();
+        BossPVE.getInstance().reload();
     }
 
 }

@@ -12,10 +12,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 
 public class BeeSet extends ArmorSet {
 
-    public BeeSet(BossPVE plugin) {
-        super(plugin);
-    }
-
     @Override
     public void onEvent(Event event) {
         if(event instanceof EntityDeathEvent) {
@@ -30,7 +26,7 @@ public class BeeSet extends ArmorSet {
             if(!UtilNumber.rollTheDice(1,100,1)) {
                 return;
             }
-            GamePlayer gamePlayer = plugin.getGameManager().getGamePlayer(player);
+            GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
             gamePlayer.give(100, 0, null, false);
             PreparedMessages.other(gamePlayer, "%prefix% %primary%You received %secondary%100 xp %primary%from your armor!");
         }
@@ -38,22 +34,22 @@ public class BeeSet extends ArmorSet {
 
     @Override
     public Armor getBoots() {
-        return new BeeBoots(plugin);
+        return new BeeBoots();
     }
 
     @Override
     public Armor getPants() {
-        return new BeePants(plugin);
+        return new BeePants();
     }
 
     @Override
     public Armor getChestplate() {
-        return new BeeChestplate(plugin);
+        return new BeeChestplate();
     }
 
     @Override
     public Armor getHelmet() {
-        return new BeeHelmet(plugin);
+        return new BeeHelmet();
     }
 
 }

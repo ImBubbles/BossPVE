@@ -6,11 +6,13 @@ import me.bubbles.bosspve.events.presets.GuiClickCommand;
 import me.bubbles.bosspve.events.presets.GuiClickIndex;
 import me.bubbles.bosspve.events.presets.GuiClickRunnable;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
+import me.bubbles.bosspve.utility.UtilItemStack;
 import me.bubbles.bosspve.utility.gui.command.ClickGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,8 +22,8 @@ import java.util.List;
 
 public class ItemsArg extends Argument {
 
-    public ItemsArg(BossPVE plugin, int index) {
-        super(plugin, "items", "items", index);
+    public ItemsArg(int index) {
+        super("items", "items", index);
         setPermission("items");
         setAlias("items");
     }
@@ -46,13 +48,13 @@ public class ItemsArg extends Argument {
         }
 
         utilSender.getPlayer().closeInventory();
-        utilSender.getPlayer().openInventory(generateGUI(page));
+        utilSender.getPlayer().openInventory(generateGUI(utilSender.getPlayer(), page));
 
     }
 
-    private Inventory generateGUI(int pageNum) {
+    private Inventory generateGUI(Player player, int pageNum) {
 
-        ClickGUI<Item> gui = new ClickGUI<Item>(plugin, utilSender.getPlayer(), 6, Item.class, noEnchants(), pageNum) {
+        ClickGUI<Item> gui = new ClickGUI<Item>(player, 6, Item.class, noEnchants(), pageNum) {
             @Override
             public ItemStack getItemStack(Item object) {
                 return object.nmsAsItemStack();
@@ -62,13 +64,14 @@ public class ItemsArg extends Argument {
             public GuiClickIndex getGuiClick(Item object, int index) {
 
                 Runnable runnable = () -> {
-                    if(!utilSender.hasPermission("bosspve.admin")) {
+                    if(!player.hasPermission("bosspve.admin")) {
                         return;
                     }
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bpve giveitem "+utilSender.getPlayer().getName()+" "+object.getNBTIdentifier());
+                    UtilItemStack.giveItem(player, object.nmsAsItemStack());
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "bpve giveitem "+utilSender.getPlayer().getName()+" "+object.getNBTIdentifier());
                 };
 
-                return new GuiClickRunnable(plugin, inventory, index, runnable);
+                return new GuiClickRunnable(inventory, index, runnable);
                 //return new GuiClickIndex(plugin, inventory, index, false);
             }
 
@@ -96,12 +99,12 @@ public class ItemsArg extends Argument {
 
             @Override
             public GuiClickIndex getBackClick(int index) {
-                return new GuiClickCommand(plugin, inventory, index, "items "+(page-1), utilSender.getPlayer());
+                return new GuiClickCommand(inventory, index, "items "+(page-1), player);
             }
 
             @Override
             public GuiClickIndex getForwardClick(int index) {
-                return new GuiClickCommand(plugin, inventory, index, "items "+(page+1), utilSender.getPlayer());
+                return new GuiClickCommand(inventory, index, "items "+(page+1), player);
             }
 
             @Override
@@ -124,7 +127,7 @@ public class ItemsArg extends Argument {
     }
 
     private Item[] noEnchants() {
-        List<Item> items = new ArrayList<>(plugin.getItemManager().getItems());
+        List<Item> items = new ArrayList<>(BossPVE.getInstance().getItemManager().getItems());
         return items.stream().filter(item -> {
             return (!(item.getType().equals(Item.Type.ENCHANT)));
         }).toArray(Item[]::new);

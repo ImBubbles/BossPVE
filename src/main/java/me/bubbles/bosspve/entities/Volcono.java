@@ -5,7 +5,7 @@ import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.utility.UtilEntity;
-import me.bubbles.bosspve.utility.UtilNumber;
+import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -18,9 +18,10 @@ import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,16 +30,14 @@ import java.util.List;
 public class Volcono extends MagmaCube implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&6&lVolcono");
-    private BossPVE plugin;
     private UtilEntity utilEntity;
 
-    public Volcono(BossPVE plugin) {
-        this(plugin, ((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
+    public Volcono() {
+        this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public Volcono(BossPVE plugin, Level level, Location location) {
+    public Volcono(Level level, Location location) {
         super(EntityType.MAGMA_CUBE, level);
-        this.plugin=plugin;
         this.utilEntity=new UtilEntity(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
@@ -57,16 +56,16 @@ public class Volcono extends MagmaCube implements IEntity {
         goalSelector.addGoal(4, new RandomLookAroundGoal(
                 this
         ));
-        if(getDrops()!=null) {
+        if(rollDrops()!=null) {
             drops.clear();
-            drops.addAll(getDrops());
+            drops.addAll(rollDrops());
         }
         addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Volcono(plugin, ((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Volcono(((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
@@ -77,23 +76,13 @@ public class Volcono extends MagmaCube implements IEntity {
     }
 
     @Override
-    public List<ItemStack> getDrops() {
-        List<ItemStack> result=new ArrayList<>();
-        if(UtilNumber.rollTheDice(1,600,1)) {
-            result.add(plugin.getItemManager().getItemByName("volcanictear").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,300,1)) {
-            result.add(plugin.getItemManager().getItemByName("volcanicHelmet").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,400,1)) {
-            result.add(plugin.getItemManager().getItemByName("volcanicChestplate").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,350,1)) {
-            result.add(plugin.getItemManager().getItemByName("volcanicPants").nmsAsItemStack());
-        }
-        if(UtilNumber.rollTheDice(1,300,1)) {
-            result.add(plugin.getItemManager().getItemByName("volcanicBoots").nmsAsItemStack());
-        }
+    public List<Drop> getDrops() {
+        List<Drop> result=new ArrayList<>();
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("volcanictear").nmsAsItemStack(), 1, 600, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("volcanicHelmet").nmsAsItemStack(), 1, 300, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("volcanicChestplate").nmsAsItemStack(), 1, 400, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("volcanicPants").nmsAsItemStack(), 1, 350, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("volcanicBoots").nmsAsItemStack(), 1, 300, 1));
         return result;
     }
 
@@ -110,6 +99,11 @@ public class Volcono extends MagmaCube implements IEntity {
         result.add(new Flag<>(EntityFlag.XP, 10D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 35D, false));
         return result;
+    }
+
+    @Override
+    public @NotNull Material getShowMaterial() {
+        return Material.MAGMA_CREAM;
     }
 
     @Override

@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 
 public class LevelArg extends Argument {
 
-    public LevelArg(BossPVE plugin, int index) {
-        super(plugin, "level", "level <player>", index);
+    public LevelArg(int index) {
+        super("level", "level <player>", index);
         setPermission("level");
         setAlias("level");
     }
@@ -30,7 +30,7 @@ public class LevelArg extends Argument {
             }
         }
         if(args.length==relativeIndex) { // no args
-            UtilUserData uud = plugin.getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache();
+            UtilUserData uud = BossPVE.getInstance().getGameManager().getGamePlayer(utilSender.getPlayer().getUniqueId()).getCache();
             utilSender.sendMessage("%prefix% %primary%Your level is %secondary%"+uud.getLevel()+"%primary%.");
             return;
         }
@@ -46,7 +46,7 @@ public class LevelArg extends Argument {
         Player onlinePlayer = player.getPlayer();
         UtilUserData uud;
         if(onlinePlayer!=null) {
-            uud=plugin.getGameManager().getGamePlayer(onlinePlayer).getCache();
+            uud=BossPVE.getInstance().getGameManager().getGamePlayer(onlinePlayer).getCache();
         } else {
             uud=UtilUserData.getUtilUserData(player.getUniqueId());
         }

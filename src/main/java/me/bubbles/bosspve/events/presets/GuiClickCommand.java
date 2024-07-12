@@ -11,8 +11,8 @@ public class GuiClickCommand extends GuiClickIndex {
     private String command;
     private CommandSender commandSender;
 
-    public GuiClickCommand(BossPVE plugin, Inventory inventory, int index, String command, CommandSender commandSender) {
-        super(plugin, inventory, index, false);
+    public GuiClickCommand(Inventory inventory, int index, String command, CommandSender commandSender) {
+        super(inventory, index, false);
         this.command=command;
         this.commandSender=commandSender;
     }

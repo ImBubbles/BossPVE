@@ -12,8 +12,8 @@ import java.util.HashSet;
 
 public class Resistance extends Enchant {
 
-    public Resistance(BossPVE plugin) {
-        super(plugin, "Resistance", Material.CONDUIT, 15);
+    public Resistance() {
+        super("Resistance", Material.CONDUIT, 15);
         getEnchantItem().setDisplayName("&4Resistance");
         allowedTypes.addAll(
                 Arrays.asList(

@@ -15,7 +15,6 @@ import java.util.logging.Level;
 
 public class Command implements CommandExecutor, TabCompleter {
 
-    public BossPVE plugin;
     public String no_perms;
     private String command;
     private String permission;
@@ -23,13 +22,12 @@ public class Command implements CommandExecutor, TabCompleter {
     public UtilSender utilSender;
     public final int index=0;
 
-    public Command(BossPVE plugin, String command) {
+    public Command(String command) {
         this.command=command;
-        this.plugin=plugin;
     }
 
     public void run(CommandSender sender, String[] args) {
-        this.utilSender=new UtilSender(plugin,sender);
+        this.utilSender=new UtilSender(sender);
         if(getArguments().isEmpty()) {
             return;
         }
@@ -46,7 +44,7 @@ public class Command implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        this.utilSender=new UtilSender(plugin,sender);
+        this.utilSender=new UtilSender(sender);
         run(sender,args); // this is so I can use super statements for run
         return true;
     }
@@ -71,9 +69,9 @@ public class Command implements CommandExecutor, TabCompleter {
     }
 
     public void setPermission(String permission) {
-        String node = plugin.getName().toLowerCase() + "." + permission;
+        String node = BossPVE.getInstance().getName().toLowerCase() + "." + permission;
         this.permission=node;
-        this.no_perms=plugin.getConfigManager().getConfig("config.yml").getFileConfiguration().getString("placeholders.no_perms").replace("%node%",node);
+        this.no_perms=BossPVE.getInstance().getConfigManager().getConfig("config.yml").getFileConfiguration().getString("placeholders.no_perms").replace("%node%",node);
     }
 
     public String getArgsMessage() {
