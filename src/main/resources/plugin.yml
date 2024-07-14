@@ -50,3 +50,7 @@ commands:
     usage: /<command>
     description: Vote for the server
     aliases: [ votifier, like ]
+  mapcreator:
+    usage: /<command>
+    description: Create stages
+    aliases: [ creator ]

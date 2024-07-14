@@ -1,6 +1,8 @@
 package me.bubbles.bosspve;
 
+import com.fastasyncworldedit.core.Fawe;
 import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.sk89q.worldedit.WorldEdit;
 import me.bubbles.bosspve.commands.manager.CommandManager;
 import me.bubbles.bosspve.configs.ConfigManager;
 import me.bubbles.bosspve.entities.manager.EntityManager;
@@ -80,6 +82,12 @@ public final class BossPVE extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        if(!setupFAWE()) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        Fawe.instance()
 
         timerManager=new TimerManager();
         itemManager=new ItemManager();
@@ -157,7 +165,7 @@ public final class BossPVE extends JavaPlugin {
             return false;
         }
         economy = rsp.getProvider();
-        return economy != null;
+        return true;
     }
 
     // Worlds
@@ -177,6 +185,15 @@ public final class BossPVE extends JavaPlugin {
             return true;
         }
         return false;
+    }
+
+    // FAWE
+    private boolean setupFAWE() {
+        if((Fawe) getServer().getPluginManager().getPlugin("FastAsyncWorldEdit")==null) {
+            getLogger().log(Level.SEVERE, "No FAWE");
+            return false;
+        }
+        return true;
     }
 
     // GETTERS

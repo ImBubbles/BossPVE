@@ -1,9 +1,10 @@
-package me.bubbles.bosspve.commands.base;
+package me.bubbles.bosspve.commands.base.mapcreator;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.stages.Stage;
+import me.bubbles.bosspve.utility.location.MapCreator;
 import me.bubbles.bosspve.utility.location.UtilLocation;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -18,8 +19,8 @@ public class AddSpawnArg extends Argument {
     }
 
     @Override
-    public void run(CommandSender sender, String[] args, boolean alias) {
-        super.run(sender, args, alias);
+    public void run(CommandSender commandSender, String[] args, boolean alias) {
+        super.run(commandSender, args, alias);
         if(!permissionCheck()) {
             return;
         }
@@ -54,7 +55,7 @@ public class AddSpawnArg extends Argument {
             utilSender.sendMessage("%primary% %primary%Number must be greater than 0!");
             return;
         }
-        ConfigurationSection entities = stage.getConfigurationSection().getConfigurationSection("entities");
+        /*ConfigurationSection entities = stage.getConfigurationSection().getConfigurationSection("entities");
         if(entities==null) {
             entities = stage.getConfigurationSection().createSection("entities");
         }
@@ -62,8 +63,10 @@ public class AddSpawnArg extends Argument {
         ConfigurationSection newEntry = entities.createSection(String.valueOf(newKey));
         newEntry.set("entity", args[relativeIndex]);
         newEntry.set("pos",UtilLocation.asLocationString(player.getLocation()));
-        newEntry.set("interval",interval);
-        BossPVE.getInstance().getConfigManager().getConfig("stages.yml").save();
+        newEntry.set("interval",interval);*/
+        MapCreator.addEntity(MapCreator.getStage(stage), iEntity, player.getLocation(), interval);
+        //BossPVE.getInstance().getConfigManager().getConfig("stages.yml").save();
+        MapCreator.save();
         utilSender.sendMessage("%prefix% %primary%Entry added, reload to take effect.");
     }
 

@@ -55,4 +55,14 @@ public class UtilNumber {
         return new DecimalFormat("#,###").format(number);
     }
 
+    public static Double toNumber(String string) {
+        Double result;
+        try {
+            result=new Double(Double.parseDouble(string));
+        } catch(NumberFormatException e) {
+            result=null;
+        }
+        return result;
+    }
+
 }

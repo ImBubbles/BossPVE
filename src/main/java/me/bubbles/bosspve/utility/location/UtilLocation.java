@@ -1,56 +1,14 @@
 package me.bubbles.bosspve.utility.location;
 
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.session.SessionManager;
 import me.bubbles.bosspve.BossPVE;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 public class UtilLocation {
-
-    private double x;
-    private double y;
-    private double z;
-    private float yaw;
-    private float pitch;
-    private boolean angle;
-
-    public UtilLocation(double x, double y, double z) {
-        this.x=x;
-        this.y=y;
-        this.z=z;
-        this.angle=false;
-    }
-
-    public UtilLocation(double x, double y, double z, float yaw, float pitch) {
-        this.x=x;
-        this.y=y;
-        this.z=z;
-        this.yaw=yaw;
-        this.pitch=pitch;
-        this.angle=true;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public double getZ() {
-        return z;
-    }
-
-    public boolean hasAngle() {
-        return this.angle;
-    }
-
-    public float getYaw() {
-        return yaw;
-    }
-
-    public float getPitch() {
-        return pitch;
-    }
 
     public static Location toLocation(String value) {
         String[] values = value.split(",");

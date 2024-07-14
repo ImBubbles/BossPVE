@@ -139,6 +139,7 @@ public class GamePlayer extends GameBase {
     @Override
     public void setMaxHealth(double maxHealth) {
         super.setMaxHealth(maxHealth);
+        setHealth(UtilNumber.clampBorder(maxHealth, 0, health));
         updateHealthBar();
     }
 
