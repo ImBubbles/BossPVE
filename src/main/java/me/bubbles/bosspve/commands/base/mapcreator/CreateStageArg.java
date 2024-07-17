@@ -47,6 +47,10 @@ public class CreateStageArg extends Argument {
             return;
         }*/
         LocalSession localSession = UtilWorldEdit.getLocalSession(utilSender.getPlayer());
+        if(localSession==null) {
+            utilSender.sendMessage("%prefix% %primary%Session not found.");
+            return;
+        }
         Region region = localSession.getSelection();
         if(region==null) {
             utilSender.sendMessage("%prefix% %primary%No region selected.");
@@ -67,9 +71,13 @@ public class CreateStageArg extends Argument {
             utilSender.sendMessage("%prefix% %primary%Stage is overlapping another stage!");
             return;
         }
+        if(stageManager.getStage(stageNumber.intValue())!=null) {
+            utilSender.sendMessage("%prefix% %primary%Stage already exists");
+            return;
+        }
         Player player = utilSender.getPlayer();
-
+        utilSender.sendMessage("%prefix% %primary%Stage created, reload to take effect.");
         MapCreator.createStage(stageNumber.intValue(), player.getLocation(), min, max, 1D, 1D, 24000, 50);
-
+        MapCreator.save();
     }
 }

@@ -62,10 +62,6 @@ public class MapCreator {
 
         setMaxEntities(section, maxEntities);
 
-        // MAKE REGION
-
-        // TODO: Regionfy plugin
-
         return true;
     }
 
@@ -74,11 +70,11 @@ public class MapCreator {
     }
 
     public static void setPos1(ConfigurationSection section, Location pos1) {
-        section.set("pos1", pos1);
+        section.set("pos1", UtilLocation.asLocationString(pos1));
     }
 
     public static void setPos2(ConfigurationSection section, Location pos2) {
-        section.set("pos2", pos2);
+        section.set("pos2", UtilLocation.asLocationString(pos2));
     }
 
     public static void setXpMultiplier(ConfigurationSection section, double xpMultiplier) {

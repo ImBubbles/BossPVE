@@ -104,7 +104,7 @@ public class Hellbringer extends Vindicator implements IEntity {
         result.add(new Flag<>(EntityFlag.MAX_HEALTH, 10D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 10D, false));
         result.add(new Flag<>(EntityFlag.XP, 4D, false));
-        result.add(new Flag<>(EntityFlag.DAMAGE, 6D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 10D, false));
         return result;
     }
 

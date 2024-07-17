@@ -44,6 +44,7 @@ public class SetMaxArg extends Argument {
         }
 
         MapCreator.setMaxEntities(MapCreator.getStage(stage), maxEntities.intValue());
+        MapCreator.save();
         utilSender.sendMessage("%prefix% %primary%Max entities set.");
 
     }

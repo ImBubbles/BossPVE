@@ -65,8 +65,8 @@ public class AddSpawnArg extends Argument {
         newEntry.set("pos",UtilLocation.asLocationString(player.getLocation()));
         newEntry.set("interval",interval);*/
         MapCreator.addEntity(MapCreator.getStage(stage), iEntity, player.getLocation(), interval);
-        //BossPVE.getInstance().getConfigManager().getConfig("stages.yml").save();
         MapCreator.save();
+        //BossPVE.getInstance().getConfigManager().getConfig("stages.yml").save();
         utilSender.sendMessage("%prefix% %primary%Entry added, reload to take effect.");
     }
 

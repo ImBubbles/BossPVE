@@ -54,6 +54,7 @@ public class Argument implements CommandExecutor {
     // ON ALIAS
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        this.utilSender=new UtilSender(sender);
         run(sender,args,true);
         return true;
     }

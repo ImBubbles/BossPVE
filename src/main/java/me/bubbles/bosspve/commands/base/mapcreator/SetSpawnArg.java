@@ -41,6 +41,7 @@ public class SetSpawnArg extends Argument {
         }
 
         MapCreator.setSpawn(MapCreator.getStage(stage), player.getLocation());
+        MapCreator.save();
         utilSender.sendMessage("%prefix% %primary%Spawn set.");
 
     }

@@ -2,6 +2,10 @@ package me.bubbles.bosspve.stages;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.configs.Config;
+import me.bubbles.regionfy.Regionfy;
+import me.bubbles.regionfy.regions.Region;
+import me.bubbles.regionfy.regions.flags.Presets;
+import me.bubbles.regionfy.utility.Adapter;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -13,8 +17,8 @@ import java.util.logging.Level;
 
 public class StageManager {
 
-    private HashSet<Stage> stageList;
-    private Config config;
+    private final HashSet<Stage> stageList;
+    private final Config config;
 
     public StageManager(Config config) {
         this.config=config;
@@ -31,6 +35,15 @@ public class StageManager {
             Stage stage = new Stage(config.getFileConfiguration().getConfigurationSection(stageKey));
             if(!stage.isValid()) {
                 BossPVE.getInstance().getLogger().log(Level.SEVERE, "Stage "+stage.getLevelRequirement()+" is not valid and will not be available");
+            } else {
+                Region region = Regionfy.getInstance().getRegionManager().registerRegion(
+                        new Region(stage.getSpawn().getWorld(),
+                                Adapter.locationToVector3D(stage.getPos1()),
+                                Adapter.locationToVector3D(stage.getPos2())
+                        )
+                );
+                region.loadPreset(Presets.STAGE);
+                stage.setRegion(region);
             }
             stageList.add(stage);
         }
@@ -65,9 +78,9 @@ public class StageManager {
         return stageList;
     }
 
-    public boolean inAStage(Player player) {
+    /*public boolean inAStage(Player player) {
         return getStage(player.getLocation())!=null;
-    }
+    }*/
 
     public Stage getHighestAllowedStage(Player player) {
         AtomicInteger ceiling= new AtomicInteger(0);

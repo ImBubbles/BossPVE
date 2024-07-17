@@ -3,6 +3,7 @@ package me.bubbles.bosspve;
 import com.fastasyncworldedit.core.Fawe;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.bubbles.bosspve.commands.manager.CommandManager;
 import me.bubbles.bosspve.configs.ConfigManager;
 import me.bubbles.bosspve.entities.manager.EntityManager;
@@ -14,7 +15,7 @@ import me.bubbles.bosspve.stages.StageManager;
 import me.bubbles.bosspve.ticker.Ticker;
 import me.bubbles.bosspve.ticker.TimerManager;
 import me.bubbles.bosspve.utility.*;
-import me.bubbles.bosspve.utility.string.UtilString;
+import me.bubbles.regionfy.Regionfy;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -86,8 +87,10 @@ public final class BossPVE extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-
-        Fawe.instance()
+        if(!setupRegionfy()) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         timerManager=new TimerManager();
         itemManager=new ItemManager();
@@ -149,6 +152,7 @@ public final class BossPVE extends JavaPlugin {
         if(stageManager!=null) {
             stageManager.getStages().forEach(stage -> stage.setEnabled(false));
             stageManager.getStages().forEach(Stage::killAll);
+            stageManager.getStages().forEach(stage -> Regionfy.getInstance().getRegionManager().deleteRegion(stage.getRegion()));
         }
         stageManager=new StageManager(configManager.getConfig("stages.yml"));
     }
@@ -189,8 +193,17 @@ public final class BossPVE extends JavaPlugin {
 
     // FAWE
     private boolean setupFAWE() {
-        if((Fawe) getServer().getPluginManager().getPlugin("FastAsyncWorldEdit")==null) {
+        if((WorldEditPlugin) getServer().getPluginManager().getPlugin("FastAsyncWorldEdit")==null) {
             getLogger().log(Level.SEVERE, "No FAWE");
+            return false;
+        }
+        return true;
+    }
+
+    // REGIONFY
+    private boolean setupRegionfy() {
+        if((Regionfy) getServer().getPluginManager().getPlugin("Regionfy")==null) {
+            getLogger().log(Level.SEVERE, "No Regionfy");
             return false;
         }
         return true;

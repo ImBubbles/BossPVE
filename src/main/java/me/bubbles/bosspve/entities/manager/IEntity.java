@@ -1,9 +1,8 @@
 package me.bubbles.bosspve.entities.manager;
 
-import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
-import me.bubbles.bosspve.utility.UtilCustomEvents;
+import me.bubbles.bosspve.utility.CustomEntityEventHandler;
 import me.bubbles.bosspve.utility.UtilEntity;
 import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.world.entity.Entity;
@@ -27,12 +26,14 @@ public interface IEntity {
     UtilEntity getUtilEntity();
     default void onEvent(Event event) {
         if(event instanceof EntityDeathEvent) {
-            UtilCustomEvents uce = new UtilCustomEvents(event);
-            uce.customEntityDeathEvent(this);
+            //CustomEntityEventHandler uce = new CustomEntityEventHandler(event);
+            //uce.entityDeathEvent(this);
+            CustomEntityEventHandler.entityDeathEvent(this, event);
         }
         if(event instanceof EntityDamageByEntityEvent) {
-            UtilCustomEvents uce = new UtilCustomEvents(event);
-            uce.customEntityDamageByEntityEvent(this);
+            /*CustomEntityEventHandler uce = new CustomEntityEventHandler(event);
+            uce.entityDamageByEntityEvent(this);*/
+            CustomEntityEventHandler.entityDamageByEntityEvent(this, event);
         }
     }
 

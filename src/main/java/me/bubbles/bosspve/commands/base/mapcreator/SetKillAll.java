@@ -44,6 +44,7 @@ public class SetKillAll extends Argument {
         }
 
         MapCreator.setKillAll(MapCreator.getStage(stage), killAll.intValue());
+        MapCreator.save();
         utilSender.sendMessage("%prefix% %primary%Kill all delay set.");
 
     }

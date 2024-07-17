@@ -1,9 +1,9 @@
 package me.bubbles.bosspve.flags;
 
 public class Flag<T extends Enum<T>, F> {
-    Enum<T> flag;
-    F value;
-    boolean passive;
+    private final Enum<T> flag;
+    private final F value;
+    private final boolean passive;
 
     public Flag(Enum<T> flag, F value, boolean passive) {
         this.flag=flag;

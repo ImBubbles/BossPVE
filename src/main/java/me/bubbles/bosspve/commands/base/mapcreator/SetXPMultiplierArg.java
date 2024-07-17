@@ -44,6 +44,7 @@ public class SetXPMultiplierArg extends Argument {
         }
 
         MapCreator.setXpMultiplier(MapCreator.getStage(stage), number.intValue());
+        MapCreator.save();
         utilSender.sendMessage("%prefix% %primary%Multiplier set.");
 
     }

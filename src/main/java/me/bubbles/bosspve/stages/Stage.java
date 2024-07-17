@@ -5,6 +5,7 @@ import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.ticker.Timer;
 import me.bubbles.bosspve.utility.location.UtilLocation;
 import me.bubbles.bosspve.utility.UtilUserData;
+import me.bubbles.regionfy.regions.Region;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,6 +32,7 @@ public class Stage extends Timer {
     private HashSet<Entity> spawnedEntities;
     private ConfigurationSection section;
     private boolean valid;
+    private Region region = null;
     private final List<String> requiredStageKeys =
             Arrays.asList(
                     "spawn",
@@ -212,6 +214,14 @@ public class Stage extends Timer {
         return this;
     }
 
+    public void setRegion(Region region) {
+        this.region = region;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
     public int getLevelRequirement() {
         return Integer.parseInt(section.getName());
     }
@@ -226,6 +236,14 @@ public class Stage extends Timer {
 
     public int getMaxEntities() {
         return maxEntities;
+    }
+
+    public Location getPos1() {
+        return pos1;
+    }
+
+    public Location getPos2() {
+        return pos2;
     }
 
     public boolean isInside(Location location) {

@@ -25,7 +25,11 @@ public class MapCreatorArg extends Argument {
         if(!permissionCheck()) {
             return;
         }
+        if(args.length==0) {
+            utilSender.sendMessage(getArgsMessage());
+        }
         super.run(sender, args, alias);
+        //
     }
 
 }

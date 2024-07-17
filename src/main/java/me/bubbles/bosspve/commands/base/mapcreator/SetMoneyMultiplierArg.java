@@ -44,6 +44,7 @@ public class SetMoneyMultiplierArg extends Argument {
         }
 
         MapCreator.setMoneyMultiplier(MapCreator.getStage(stage), number.intValue());
+        MapCreator.save();
         utilSender.sendMessage("%prefix% %primary%Multiplier set.");
 
     }

@@ -59,8 +59,4 @@ public abstract class Setting<T> implements ISetting<T> {
         return string.replace("-", "").replace(" ", "_").toUpperCase();
     }
 
-    public static Material getBooleanMaterial(boolean bool) {
-        return bool ? Material.LIME_STAINED_GLASS : Material.RED_STAINED_GLASS;
-    }
-
 }

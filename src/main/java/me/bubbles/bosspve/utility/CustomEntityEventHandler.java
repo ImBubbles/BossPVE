@@ -22,15 +22,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UtilCustomEvents {
+public class CustomEntityEventHandler {
 
-    private Event event;
-
-    public UtilCustomEvents(Event event) {
-        this.event=event;
-    }
-
-    public void customEntityDeathEvent(IEntity entity) { // player kills mob
+    public static void entityDeathEvent(IEntity entity, Event event) { // player kills mob
         if(!(event instanceof EntityDeathEvent)) {
             return;
         }
@@ -116,7 +110,7 @@ public class UtilCustomEvents {
         gamePlayer.give(xp, money, entity, true);
     }
 
-    public void customEntityDamageByEntityEvent(IEntity entity) { // mob v player
+    public static void entityDamageByEntityEvent(IEntity entity, Event event) { // mob v player
         if(!(event instanceof EntityDamageByEntityEvent)) {
             return;
         }
@@ -158,7 +152,7 @@ public class UtilCustomEvents {
         }
     }
 
-    public void customEntityDamageByEntityEvent() { // player v entity
+    public static void entityDamageByEntityEvent(Event event) { // player v entity
         if(!(event instanceof EntityDamageByEntityEvent)) {
             return;
         }
