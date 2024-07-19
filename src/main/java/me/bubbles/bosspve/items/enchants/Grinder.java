@@ -21,7 +21,7 @@ import java.util.Arrays;
 public class Grinder extends ProcEnchant {
 
     public Grinder() {
-        super("Grinder", Material.EMERALD, 20);
+        super("Grinder", Material.GOLD_INGOT, 20);
         getEnchantItem().setDisplayName("&e&lGrinder");
         allowedTypes.addAll(
                 Arrays.asList(

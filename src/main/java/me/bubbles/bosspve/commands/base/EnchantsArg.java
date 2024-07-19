@@ -251,8 +251,8 @@ public class EnchantsArg extends Argument {
             public GuiClickIndex getBackClick(int index) {
 
                 Runnable runnable = () -> {
-                    utilSender.getPlayer().closeInventory();
-                    utilSender.getPlayer().openInventory(levelGUI(player, page-1, enchant));
+                    player.closeInventory();
+                    player.openInventory(levelGUI(player, page-1, enchant));
                 };
 
                 return new GuiClickRunnable(inventory, index, runnable);
@@ -263,8 +263,8 @@ public class EnchantsArg extends Argument {
             public GuiClickIndex getForwardClick(int index) {
 
                 Runnable runnable = () -> {
-                    utilSender.getPlayer().closeInventory();
-                    utilSender.getPlayer().openInventory(levelGUI(player, page+1, enchant));
+                    player.closeInventory();
+                    player.openInventory(levelGUI(player, page+1, enchant));
                 };
 
                 return new GuiClickRunnable(inventory, index, runnable);

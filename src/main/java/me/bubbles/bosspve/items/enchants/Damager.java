@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class Damager extends Enchant {
 
     public Damager() {
-        super("Damager", Material.CONDUIT, 10);
+        super("Damager", Material.HEAVY_CORE, 10);
         getEnchantItem().setDisplayName("&cDamager");
         allowedTypes.addAll(
                 Arrays.asList(

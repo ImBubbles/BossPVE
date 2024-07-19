@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.items.manager;
 
 import me.bubbles.bosspve.items.armor.bee.BeeSet;
+import me.bubbles.bosspve.items.armor.cyclone.CycloneSet;
 import me.bubbles.bosspve.items.armor.ninja.NinjaSet;
 import me.bubbles.bosspve.items.armor.ogre.OgreSet;
 import me.bubbles.bosspve.items.armor.vampire.VampireSet;
@@ -10,6 +11,8 @@ import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.items.util.EnchantExtractor;
 import me.bubbles.bosspve.items.util.Extracted;
 import me.bubbles.bosspve.items.weapons.*;
+import me.bubbles.bosspve.items.weapons.cyclone.CycloneFragment;
+import me.bubbles.bosspve.items.weapons.cyclone.CycloneStick;
 import me.bubbles.bosspve.items.weapons.vampire.VampireEye;
 import me.bubbles.bosspve.items.weapons.vampire.VampireEyeFragment;
 import org.bukkit.Bukkit;
@@ -33,14 +36,16 @@ public class ItemManager {
         armorSets=new HashSet<>();
         registerItem(
                 new SkeletonSword(),
+                new BlackenedAxe(),
                 new VolcanicTear(),
                 new NinjaDagger(),
                 new BeeStinger(),
                 new VampireEyeFragment(),
                 new VampireEye(this),
+                new CycloneFragment(),
+                new CycloneStick(this),
                 new EnchantExtractor(),
-                new Extracted(),
-                new BlackenedAxe()
+                new Extracted()
         );
         // REGISTER ARMOR
         registerArmorSet(
@@ -48,7 +53,8 @@ public class ItemManager {
                 new VolcanicSet(),
                 new NinjaSet(),
                 new BeeSet(),
-                new VampireSet()
+                new VampireSet(),
+                new CycloneSet()
         );
     }
 

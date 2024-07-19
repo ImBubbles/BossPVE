@@ -3,7 +3,7 @@ package me.bubbles.bosspve.entities.manager;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.utility.CustomEntityEventHandler;
-import me.bubbles.bosspve.utility.UtilEntity;
+import me.bubbles.bosspve.utility.CustomEntityData;
 import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.world.entity.Entity;
 import org.bukkit.ChatColor;
@@ -23,7 +23,7 @@ import java.util.List;
 public interface IEntity {
 
     Entity spawn(Location location);
-    UtilEntity getUtilEntity();
+    CustomEntityData getCustomEntityData();
     default void onEvent(Event event) {
         if(event instanceof EntityDeathEvent) {
             //CustomEntityEventHandler uce = new CustomEntityEventHandler(event);

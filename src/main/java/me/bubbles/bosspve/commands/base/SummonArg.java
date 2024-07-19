@@ -27,7 +27,7 @@ public class SummonArg extends Argument {
             utilSender.sendMessage("%prefix% %primary%You must be in game to do this.");
             return;
         }
-        IEntity base = BossPVE.getInstance().getEntityManager().getEntityByName(args[relativeIndex]);
+        IEntity base = BossPVE.getInstance().getEntityManager().getEntityByIdentifier(args[relativeIndex]);
         if(base==null) {
             utilSender.sendMessage("%prefix% %primary%Entity %secondary%"+args[relativeIndex]+"%primary% does not exist.");
             return;
@@ -40,7 +40,7 @@ public class SummonArg extends Argument {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("%prefix% %primary%Entities:");
         for(IEntity entity : BossPVE.getInstance().getEntityManager().getEntities()) {
-            stringBuilder.append("\n").append("%primary%").append("- ").append("%secondary%").append(ChatColor.stripColor(entity.getUncoloredName()).replaceAll(" ","_"));
+            stringBuilder.append("\n").append("%primary%").append("- ").append("%secondary%").append(entity.getNBTIdentifier());
         }
         return stringBuilder.toString();
     }

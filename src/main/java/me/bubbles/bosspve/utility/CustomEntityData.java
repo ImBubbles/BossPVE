@@ -3,11 +3,10 @@ package me.bubbles.bosspve.utility;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
-import net.minecraft.world.entity.Entity;
 
 import java.util.HashMap;
 
-public class UtilEntity {
+public class CustomEntityData {
 
     private IEntity iEntity;
 
@@ -16,7 +15,7 @@ public class UtilEntity {
     private double money;
     private double maxHealth;
 
-    public UtilEntity(IEntity iEntity) {
+    public CustomEntityData(IEntity iEntity) {
         HashMap<EntityFlag, Double> numFlags = new HashMap<>();
         for(Flag<EntityFlag, Double> flag : iEntity.getFlags()) {
             if(flag.getValue() != null) {

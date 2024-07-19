@@ -5,7 +5,7 @@ import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
-import me.bubbles.bosspve.utility.UtilEntity;
+import me.bubbles.bosspve.utility.CustomEntityData;
 import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -31,7 +31,7 @@ public class Protector extends Ravager implements IEntity {
 
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&8&lProtector");
-    private UtilEntity utilEntity;
+    private CustomEntityData entityData;
 
     public Protector() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
@@ -39,7 +39,7 @@ public class Protector extends Ravager implements IEntity {
 
     public Protector(Level level, Location location) {
         super(EntityType.RAVAGER, level);
-        this.utilEntity=new UtilEntity(this);
+        this.entityData =new CustomEntityData(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
         } else {
@@ -48,8 +48,8 @@ public class Protector extends Ravager implements IEntity {
         }
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
-        setHealth((float) utilEntity.getMaxHealth());
+        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
+        setHealth((float) entityData.getMaxHealth());
         goalSelector.addGoal(0, new MeleeAttackGoal(
                 this, 1.0, false
         ));
@@ -94,8 +94,8 @@ public class Protector extends Ravager implements IEntity {
     }
 
     @Override
-    public UtilEntity getUtilEntity() {
-        return utilEntity;
+    public CustomEntityData getCustomEntityData() {
+        return entityData;
     }
 
     @Override

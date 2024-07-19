@@ -148,8 +148,10 @@ public abstract class Item implements IItem {
         if(!itemStack.hasItemMeta()) {
             return false;
         }
-
         ItemMeta customMeta = itemStack.getItemMeta();
+        if(customMeta==null) {
+            return false;
+        }
         PersistentDataContainer pdc = customMeta.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(BossPVE.getInstance(), "identifier");
         if(!pdc.has(key)) {

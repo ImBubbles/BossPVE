@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.level.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,17 +33,17 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class AngryBee extends Bee implements IEntity {
+public class Cyclone extends Breeze implements IEntity {
 
-    private final String customName = ChatColor.translateAlternateColorCodes('&',"&e&lAngry Bee");
+    private final String customName = ChatColor.translateAlternateColorCodes('&',"&f&lCyclone");
     private CustomEntityData entityData;
 
-    public AngryBee() {
+    public Cyclone() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
-    public AngryBee(Level level, Location location) {
-        super(EntityType.BEE, level);
+    public Cyclone(Level level, Location location) {
+        super(EntityType.BREEZE, level);
         this.entityData =new CustomEntityData(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
@@ -55,7 +56,7 @@ public class AngryBee extends Bee implements IEntity {
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
         getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
         setHealth((float) entityData.getMaxHealth());
-        setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
+        //setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
         goalSelector.addGoal(0, new MeleeAttackGoal(
                 this, 1, false
         ));
@@ -79,7 +80,7 @@ public class AngryBee extends Bee implements IEntity {
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new AngryBee(((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Cyclone(((CraftWorld) location.getWorld()).getHandle(), location);
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
@@ -92,28 +93,28 @@ public class AngryBee extends Bee implements IEntity {
     @Override
     public List<Drop> getDrops() {
         List<Drop> result=new ArrayList<>();
-        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("sharpEnch")).getAtLevel(1), 1, 800, 1));
-        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beeStinger").nmsAsItemStack(), 1, 900, 1));
-        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beeHelmet").nmsAsItemStack(), 1, 500, 1));
-        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beeChestplate").nmsAsItemStack(), 1, 700, 1));
-        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beePants").nmsAsItemStack(), 1, 650, 1));
-        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("beeBoots").nmsAsItemStack(), 1, 500, 1));
+        result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("soulfulEnch")).getAtLevel(1), 1, 800, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("cycloneFragment").nmsAsItemStack(), 1, 1000, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("cycloneHelmet").nmsAsItemStack(), 1, 700, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("cycloneChestplate").nmsAsItemStack(), 1, 900, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("cyclonePants").nmsAsItemStack(), 1, 800, 1));
+        result.add(new Drop(BossPVE.getInstance().getItemManager().getItemByName("cycloneBoots").nmsAsItemStack(), 1, 700, 1));
         return result;
     }
 
     @Override
     public HashSet<Flag<EntityFlag, Double>> getFlags() {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 50D, false));
-        result.add(new Flag<>(EntityFlag.MONEY, 17D, false));
-        result.add(new Flag<>(EntityFlag.XP, 13D, false));
-        result.add(new Flag<>(EntityFlag.DAMAGE, 40D, false));
+        result.add(new Flag<>(EntityFlag.MAX_HEALTH, 150D, false));
+        result.add(new Flag<>(EntityFlag.MONEY, 30D, false));
+        result.add(new Flag<>(EntityFlag.XP, 20D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 100D, false));
         return result;
     }
 
     @Override
     public @NotNull Material getShowMaterial() {
-        return Material.BEE_NEST;
+        return Material.BREEZE_ROD;
     }
 
     @Override
@@ -123,6 +124,6 @@ public class AngryBee extends Bee implements IEntity {
 
     @Override
     public String getNBTIdentifier() {
-        return "angrybee";
+        return "cyclone";
     }
 }

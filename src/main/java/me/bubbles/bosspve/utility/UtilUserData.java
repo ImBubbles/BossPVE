@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class UtilUserData {
 
-    private UUID uuid;
+    private final UUID uuid;
     private int xp;
     private HashMap<String, Integer> settings;
 

@@ -1,4 +1,4 @@
-package me.bubbles.bosspve.items.weapons.vampire;
+package me.bubbles.bosspve.items.weapons.cyclone;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.flags.Flag;
@@ -16,17 +16,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashSet;
 
-public class VampireEye extends Item {
+public class CycloneStick extends Item {
 
     private final ItemManager itemManager;
 
-    public VampireEye(ItemManager itemManager) {
-        super(Material.FERMENTED_SPIDER_EYE, "vampireEye");
+    public CycloneStick(ItemManager itemManager) {
+        super(Material.BREEZE_ROD, "cycloneStick");
         this.itemManager=itemManager;
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                "&4&lVampire Eye"
+                "&f&lCyclone Stick"
         ));
         itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
@@ -37,24 +37,24 @@ public class VampireEye extends Item {
     }
 
     @Override
-    public ShapedRecipe getRecipe() {
-        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(BossPVE.getInstance(), getNBTIdentifier()),nmsAsItemStack());
-        recipe.shape(
-                "FFF",
-                "FFF",
-                "FFF"
-        );
-        recipe.setIngredient('F', new RecipeChoice.ExactChoice(itemManager.getItemByName("vampireeyefragment").nmsAsItemStack()));
-        return recipe;
+    public HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> getFlags() {
+        HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> result = new HashSet<>();
+        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 100D, false));
+        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.MONEY_ADD, 15D, false));
+        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.XP_ADD, 15D, false));
+        return result;
     }
 
     @Override
-    public HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> getFlags() {
-        HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 70D, false));
-        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.MONEY_ADD, 10D, false));
-        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.XP_ADD, 10D, false));
-        return result;
+    public ShapedRecipe getRecipe() {
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(BossPVE.getInstance(), getNBTIdentifier()),nmsAsItemStack());
+        recipe.shape(
+                "  F",
+                " F ",
+                "F  "
+        );
+        recipe.setIngredient('F', new RecipeChoice.ExactChoice(itemManager.getItemByName("cycloneFragment").nmsAsItemStack()));
+        return recipe;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class VampireEye extends Item {
 
     @Override
     public String getDescription() {
-        return "From the eye of a vampire";
+        return "From the bones of a Cyclone";
     }
 
 }

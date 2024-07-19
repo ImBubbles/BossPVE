@@ -5,13 +5,12 @@ import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
 import me.bubbles.bosspve.items.manager.bases.enchants.EnchantItem;
-import me.bubbles.bosspve.utility.UtilEntity;
+import me.bubbles.bosspve.utility.CustomEntityData;
 import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.PanicGoal;
@@ -36,7 +35,7 @@ import java.util.List;
 public class Hellbringer extends Vindicator implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&c&lHellbringer");
-    private UtilEntity utilEntity;
+    private CustomEntityData entityData;
 
     public Hellbringer() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
@@ -44,7 +43,7 @@ public class Hellbringer extends Vindicator implements IEntity {
 
     public Hellbringer(Level level, Location location) {
         super(EntityType.VINDICATOR, level);
-        this.utilEntity=new UtilEntity(this);
+        this.entityData =new CustomEntityData(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
         } else {
@@ -53,8 +52,8 @@ public class Hellbringer extends Vindicator implements IEntity {
         }
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
-        setHealth((float) utilEntity.getMaxHealth());
+        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
+        setHealth((float) entityData.getMaxHealth());
         expToDrop=0;
         setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
         goalSelector.addGoal(0, new MeleeAttackGoal(
@@ -84,8 +83,8 @@ public class Hellbringer extends Vindicator implements IEntity {
     }
 
     @Override
-    public UtilEntity getUtilEntity() {
-        return utilEntity;
+    public CustomEntityData getCustomEntityData() {
+        return entityData;
     }
 
     @Override

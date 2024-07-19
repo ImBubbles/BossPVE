@@ -1,6 +1,5 @@
 package me.bubbles.bosspve.entities.manager;
 
-import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,7 +26,8 @@ public class EntityManager {
                 Ninja::new,
                 Volcono::new,
                 Protector::new,
-                Vampire::new
+                Vampire::new,
+                Cyclone::new
         );
     }
 
@@ -61,6 +61,15 @@ public class EntityManager {
     public IEntity getEntityByName(String name) {
         for(IEntity entity : getEntities()) {
             if(ChatColor.stripColor(entity.getUncoloredName()).replace(" ","_").equalsIgnoreCase(name)) {
+                return entity;
+            }
+        }
+        return null;
+    }
+
+    public IEntity getEntityByIdentifier(String id) {
+        for(IEntity entity : getEntities()) {
+            if(entity.getNBTIdentifier().equalsIgnoreCase(id)) {
                 return entity;
             }
         }

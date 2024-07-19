@@ -23,7 +23,8 @@ public class Vote extends Command {
                 "https://minecraft-mp.com/server/331983/vote/",
                 "https://minecraft-server-list.com/server/497273/vote/",
                 "https://www.planetminecraft.com/server/bubblesmc-6272457/vote/",
-                "https://minecraft-server.net/vote/BubblesMC/"
+                "https://minecraft-server.net/vote/BubblesMC/",
+                "https://minecraft-serverlist.com/server/1370"
         );
 
         StringBuilder result= new StringBuilder("&8[%secondary%&lVote&8]");

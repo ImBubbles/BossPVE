@@ -38,8 +38,8 @@ public class AddSpawnArg extends Argument {
             utilSender.sendMessage("%prefix% %primary%Must be inside a stage to do this!");
             return;
         }
-        IEntity iEntity = BossPVE.getInstance().getEntityManager().getEntityByName(args[relativeIndex]);
-        if(iEntity ==null) {
+        IEntity iEntity = BossPVE.getInstance().getEntityManager().getEntityByIdentifier(args[relativeIndex]);
+        if(iEntity==null) {
             utilSender.sendMessage(getEntitiesList());
             utilSender.sendMessage(getArgsMessage());
             return;
@@ -74,7 +74,7 @@ public class AddSpawnArg extends Argument {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("%prefix% %primary%Entities:");
         for(IEntity entity : BossPVE.getInstance().getEntityManager().getEntities()) {
-            stringBuilder.append("\n").append("%primary%").append("- ").append("%secondary%").append(ChatColor.stripColor(entity.getUncoloredName()).replaceAll(" ","_"));
+            stringBuilder.append("\n").append("%primary%").append("- ").append("%secondary%").append(entity.getNBTIdentifier());
         }
         return stringBuilder.toString();
     }

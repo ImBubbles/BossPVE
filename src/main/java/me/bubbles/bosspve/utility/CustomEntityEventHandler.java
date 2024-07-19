@@ -32,12 +32,6 @@ public class CustomEntityEventHandler {
         if(!entity.hasSameTagAs(e.getEntity())) {
             return;
         }
-        /*Stage stage = plugin.getStageManager().getStage(e.getEntity().getLocation());
-        if(stage!=null) {
-            stage.onKill(((CraftEntity) e.getEntity()).getHandle());
-        } else {
-            plugin.getLogger().log(Level.SEVERE, "STAGE NOT FOUND");
-        }*/
         if(e.getEntity().getKiller()==null) {
             e.getDrops().clear();
             return;
@@ -55,18 +49,14 @@ public class CustomEntityEventHandler {
         List<Item> dropped = new ArrayList<>();
         GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
         if(!drops.isEmpty()) {
-            //e.getDrops().addAll(drops);
             boolean telepathy = false;
             if(itemStack.hasItemMeta()) {
                 telepathy = uis.getCustomEnchants().contains(BossPVE.getInstance().getItemManager().getEnchantManager().getEnchant("telepathy"));
             }
             if(telepathy) {
-                //int i = 0;
-
-                for(int i=0; i<drops.size(); i++) {
-                    ItemStack drop = drops.get(i);
+                for (ItemStack drop : drops) {
                     PreparedMessages.itemDrop(gamePlayer, entity, drop);
-                    if(player.getInventory().firstEmpty()!=-1) {
+                    if (player.getInventory().firstEmpty() != -1) {
                         player.getInventory().addItem(drop);
                     } else {
                         Location location = e.getEntity().getLocation();
@@ -74,21 +64,6 @@ public class CustomEntityEventHandler {
                         dropped.add(item);
                     }
                 }
-
-                /*while((player.getInventory().firstEmpty()!=-1)&&((i+1)<drops.size())) {
-                    ItemStack drop = drops.get(i);
-                    PreparedMessages.itemDrop(gamePlayer, entity, drop);
-                    player.getInventory().addItem(drop);
-                    i++;
-                }
-                if((i+1)<drops.size()) {
-                    Location location = e.getEntity().getLocation();
-                    for(ItemStack drop : drops) {
-                        PreparedMessages.itemDrop(gamePlayer, entity, drop);
-                        Item item = location.getWorld().dropItem(location, drop);
-                        dropped.add(item);
-                    }
-                }*/
             } else {
                 Location location = e.getEntity().getLocation();
                 for(ItemStack drop : drops) {
@@ -124,14 +99,16 @@ public class CustomEntityEventHandler {
         if(!entity.hasSameTagAs(e.getDamager())) {
             return;
         }
-        double result = entity.getUtilEntity().getDamage();
+        double result = entity.getCustomEntityData().getDamage();
         Player player = ((Player) e.getEntity()).getPlayer();
         if(player==null) {
             return;
         }
         GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
         double protection = gamePlayer.getProtection();
-        result=UtilNumber.clampBorder(result, 0, (result/(protection*protection)));
+        //result=UtilNumber.clampBorder(result, 0, (result/(protection*protection)));
+        //result=UtilNumber.clampBorder(result, 0, (result/Math.sqrt(protection)));
+        result=UtilNumber.clampBorder(result, 0, (result/Math.sqrt(protection)));
         e.setDamage(0);
         if(!gamePlayer.damage(result)) {
             Stage stage = BossPVE.getInstance().getStageManager().getStage(player.getLocation());

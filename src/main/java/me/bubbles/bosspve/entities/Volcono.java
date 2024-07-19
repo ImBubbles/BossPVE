@@ -4,7 +4,7 @@ import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
-import me.bubbles.bosspve.utility.UtilEntity;
+import me.bubbles.bosspve.utility.CustomEntityData;
 import me.bubbles.bosspve.utility.chance.Drop;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -30,7 +30,7 @@ import java.util.List;
 public class Volcono extends MagmaCube implements IEntity {
 
     private final String customName = ChatColor.translateAlternateColorCodes('&',"&6&lVolcono");
-    private UtilEntity utilEntity;
+    private CustomEntityData entityData;
 
     public Volcono() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
@@ -38,7 +38,7 @@ public class Volcono extends MagmaCube implements IEntity {
 
     public Volcono(Level level, Location location) {
         super(EntityType.MAGMA_CUBE, level);
-        this.utilEntity=new UtilEntity(this);
+        this.entityData =new CustomEntityData(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
         } else {
@@ -47,9 +47,10 @@ public class Volcono extends MagmaCube implements IEntity {
         }
         setCustomNameVisible(true);
         setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(utilEntity.getMaxHealth());
-        setHealth((float) utilEntity.getMaxHealth());
+        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
+        setHealth((float) entityData.getMaxHealth());
         setSize(5,false);
+
         goalSelector.addGoal(0, new NearestAttackableTargetGoal<>(
                 this, Player.class, false
         ));
@@ -71,8 +72,8 @@ public class Volcono extends MagmaCube implements IEntity {
     }
 
     @Override
-    public UtilEntity getUtilEntity() {
-        return utilEntity;
+    public CustomEntityData getCustomEntityData() {
+        return entityData;
     }
 
     @Override
@@ -89,11 +90,6 @@ public class Volcono extends MagmaCube implements IEntity {
     @Override
     public HashSet<Flag<EntityFlag, Double>> getFlags() {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
-        /*result.add(new Flag<>(EntityFlag.MAX_HEALTH, 30D, false));
-        result.add(new Flag<>(EntityFlag.MONEY, 15D, false));
-        result.add(new Flag<>(EntityFlag.XP, 10D, false));
-        result.add(new Flag<>(EntityFlag.DAMAGE, 60D, false));*/
-
         result.add(new Flag<>(EntityFlag.MAX_HEALTH, 50D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 40D, false));
         result.add(new Flag<>(EntityFlag.XP, 10D, false));

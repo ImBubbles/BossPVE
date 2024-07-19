@@ -1,25 +1,29 @@
-package me.bubbles.bosspve.items.weapons;
+package me.bubbles.bosspve.items.weapons.cyclone;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.flags.Flag;
+import me.bubbles.bosspve.items.manager.ItemManager;
 import me.bubbles.bosspve.items.manager.bases.items.Item;
 import me.bubbles.bosspve.utility.UtilItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashSet;
 
-public class BlackenedAxe extends Item {
+public class CycloneFragment extends Item {
 
-    public BlackenedAxe() {
-        super(Material.NETHERITE_AXE, "blackenedAxe");
+    public CycloneFragment() {
+        super(Material.GHAST_TEAR, "cycloneFragment");
         ItemStack itemStack = nmsAsItemStack();
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',
-                "&8&lBlackened Axe"
+                "&fCyclone Fragment"
         ));
         itemMeta.setLore(new UtilItemStack(itemStack, this).getUpdatedLore());
         itemMeta.setUnbreakable(true);
@@ -30,22 +34,13 @@ public class BlackenedAxe extends Item {
     }
 
     @Override
-    public HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> getFlags() {
-        HashSet<Flag<me.bubbles.bosspve.flags.ItemFlag, Double>> result = new HashSet<>();
-        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.DAMAGE_ADD, 15D, false));
-        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.MONEY_ADD, 2D, false));
-        result.add(new Flag<>(me.bubbles.bosspve.flags.ItemFlag.XP_ADD, 2D, false));
-        return result;
-    }
-
-    @Override
     public Type getType() {
-        return Type.WEAPON;
+        return Type.MISC;
     }
 
     @Override
     public String getDescription() {
-        return "The ally of Hellbringers";
+        return "One of three";
     }
 
 }

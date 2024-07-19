@@ -13,7 +13,7 @@ import java.util.HashSet;
 public class Merchant extends Enchant {
 
     public Merchant() {
-        super("Merchant", Material.EMERALD, 20);
+        super("Merchant", Material.ARMADILLO_SCUTE, 20);
         getEnchantItem().setDisplayName("&eMerchant");
         allowedTypes.addAll(
                 Arrays.asList(

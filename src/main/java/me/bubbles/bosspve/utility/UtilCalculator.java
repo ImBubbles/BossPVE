@@ -7,7 +7,6 @@ import me.bubbles.bosspve.flags.ItemFlag;
 import me.bubbles.bosspve.stages.Stage;
 import me.bubbles.bosspve.utility.nms.FixedDamageSource;
 import net.minecraft.core.Holder;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_21_R1.damage.CraftDamageType;
@@ -58,7 +57,7 @@ public class UtilCalculator {
     public static double getMoney(Player player, IEntity iEntity) {
         double additive=getFlagSum(player, ItemFlag.MONEY_ADD);
         if(iEntity!=null) {
-            additive+=iEntity.getUtilEntity().getMoney();
+            additive+=iEntity.getCustomEntityData().getMoney();
         }
         double multiplier=getFlagProduct(player, ItemFlag.MONEY_MULT, 1);
         Stage stage = BossPVE.getInstance().getStageManager().getStage(player.getLocation());
@@ -75,7 +74,7 @@ public class UtilCalculator {
     public static double getXp(Player player, IEntity iEntity) {
         double additive=getFlagSum(player, ItemFlag.XP_ADD);
         if(iEntity!=null) {
-            additive+=iEntity.getUtilEntity().getXp();
+            additive+=iEntity.getCustomEntityData().getXp();
         }
         double multiplier=getFlagProduct(player, ItemFlag.XP_MULT, 1);
         Stage stage = BossPVE.getInstance().getStageManager().getStage(player.getLocation());
