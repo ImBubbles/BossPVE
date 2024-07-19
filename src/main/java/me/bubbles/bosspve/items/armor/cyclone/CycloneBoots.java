@@ -44,7 +44,7 @@ public class CycloneBoots extends Armor {
 
     @Override
     public String getDescription() {
-        return "Boots from a Vampire";
+        return "Boots from a Cyclone";
     }
 
 }

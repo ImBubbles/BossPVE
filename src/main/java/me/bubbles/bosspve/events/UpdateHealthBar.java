@@ -30,6 +30,7 @@ public class UpdateHealthBar extends Event {
         }
         e.setCancelled(true);
         Player player = (Player) e.getEntity();
+        //if(e.getRegainReason().equals(Re))
         GamePlayer gamePlayer = BossPVE.getInstance().getGameManager().getGamePlayer(player);
         if(gamePlayer.getHealth()==gamePlayer.getMaxHealth()) {
             return;
