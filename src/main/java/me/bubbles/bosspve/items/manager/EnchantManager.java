@@ -2,6 +2,7 @@ package me.bubbles.bosspve.items.manager;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.items.enchants.*;
+import me.bubbles.bosspve.items.manager.bases.enchants.CooldownEnchant;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
 import me.bubbles.bosspve.utility.UtilEnchant;
 import org.bukkit.NamespacedKey;
@@ -11,6 +12,7 @@ import org.bukkit.event.Event;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EnchantManager {
 
@@ -60,7 +62,8 @@ public class EnchantManager {
     }
 
     public void onTick() {
-        enchants.forEach(Enchant::onTick);
+        enchants.stream().filter(enchant -> enchant instanceof CooldownEnchant).forEach(enchant -> ((CooldownEnchant) enchant).onTick());
+        //enchants.forEach(Enchant::onTick);
     }
 
     public void onEvent(Event event) {

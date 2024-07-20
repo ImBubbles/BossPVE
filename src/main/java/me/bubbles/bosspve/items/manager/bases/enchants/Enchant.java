@@ -6,7 +6,6 @@ import me.bubbles.bosspve.ticker.PlayerTimerManager;
 import me.bubbles.bosspve.ticker.Timer;
 import me.bubbles.bosspve.utility.UtilEnchant;
 import me.bubbles.bosspve.utility.UtilUserData;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -20,24 +19,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class Enchant implements IEnchant {
-    private PlayerTimerManager timerManager;
+
     private String name;
-    private int maxLevel;
-    private int coolDown;
+    private final int maxLevel;
+    //private final int cooldown;
     private EnchantItem enchantItem;
-    private Material material;
+    private final Material material;
     public HashSet<Item.Type> allowedTypes;
-    private NamespacedKey namespacedKey;
+    private final NamespacedKey namespacedKey;
     private Enchantment enchantment;
 
     public Enchant(String name, Material material, int maxLevel) {
-        this(name, material, maxLevel,0);
-    }
-
-    public Enchant(String name, Material material, int maxLevel, int coolDown) {
         this.name=name;
-        this.coolDown=coolDown;
-        timerManager=new PlayerTimerManager();
         this.maxLevel=maxLevel;
         this.material=material;
         this.allowedTypes=new HashSet<>();
@@ -123,45 +116,6 @@ public abstract class Enchant implements IEnchant {
             return false;
         }
         return itemStack.getItemMeta().hasEnchant(CraftEnchantment.minecraftToBukkit(enchantment));
-    }
-
-    public boolean coolDowns() {
-        return coolDown!=0;
-    }
-
-    public boolean isOnCoolDown(Player player) {
-        if(!coolDowns()) {
-            return false;
-        }
-        if(!timerManager.contains(player)) {
-            timerManager.addTimer(player,new Timer(coolDown));
-            return false;
-        }
-        return timerManager.isTimerActive(player);
-    }
-
-    public void restartCoolDown(Player player) {
-        if(coolDown==0) {
-            return;
-        }
-        if(!timerManager.contains(player)) {
-            timerManager.addTimer(player, new Timer(coolDown));
-            return;
-        }
-        timerManager.restartTimer(player);
-    }
-
-    public int getCoolDown(Player player) {
-        if(timerManager.contains(player)) {
-            return timerManager.getTimer(player).getRemainingTicks();
-        }
-        return -1;
-    }
-
-    public void onTick() {
-        if(coolDowns()) {
-            timerManager.onTick();
-        }
     }
 
     public EnchantItem getEnchantItem() {
