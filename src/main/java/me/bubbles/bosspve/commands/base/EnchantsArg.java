@@ -85,7 +85,7 @@ public class EnchantsArg extends Argument {
                 }
 
                 HashSet<Flag<ItemFlag, Double>> flags = enchant.getFlags(1);
-                if(flags!=null) {
+                /*if(flags!=null) {
                     if(!flags.isEmpty()) {
                         lore.add(UtilString.colorFillPlaceholders(""));
                         lore.add(UtilString.colorFillPlaceholders("&7&lEffects: "));
@@ -93,11 +93,18 @@ public class EnchantsArg extends Argument {
                             lore.add(UtilString.colorFillPlaceholders("&7"+flag.getFlag().name()+": &9"+flag.getValue()));
                         }
                     }
-                }
+                }*/
 
                 if(enchant instanceof ProcEnchant) {
                     lore.add("");
                     lore.add(UtilString.colorFillPlaceholders("&e&oClick me to see chances"));
+                }
+
+                if(flags!=null) {
+                    if(flags.isEmpty()) {
+                        lore.add("");
+                        lore.add(UtilString.colorFillPlaceholders("&e&oClick me to see effects"));
+                    }
                 }
 
                 ItemMeta itemMeta = (itemStack.hasItemMeta()) ? itemStack.getItemMeta() : Bukkit.getItemFactory().getItemMeta(itemStack.getType());
@@ -194,13 +201,27 @@ public class EnchantsArg extends Argument {
                 ItemMeta itemMeta = result.getItemMeta();
                 itemMeta.setDisplayName(itemMeta.getDisplayName()+" "+object);
 
+                List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
                 if(enchant instanceof ProcEnchant) {
-                    List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
                     if(lore.isEmpty()) {
                         lore.add("");
                     }
                     lore.add(UtilString.colorFillPlaceholders("%primary%Chance: %secondary%"+roundNumber(((ProcEnchant) enchant).getActivation(object).getPercentChance())+"%"));
                     itemMeta.setLore(lore);
+                }
+
+                HashSet<Flag<ItemFlag, Double>> flags = enchant.getFlags(1);
+                if(flags!=null) {
+                    if(!flags.isEmpty()) {
+                        if(lore.isEmpty()) {
+                            lore.add("");
+                        }
+                        lore.add(UtilString.colorFillPlaceholders(""));
+                        lore.add(UtilString.colorFillPlaceholders("&7&lEffects: "));
+                        for (Flag<ItemFlag, Double> flag : flags) {
+                            lore.add(UtilString.colorFillPlaceholders("&7"+flag.getFlag().name()+": &9"+flag.getValue()));
+                        }
+                    }
                 }
 
                 result.setItemMeta(itemMeta);

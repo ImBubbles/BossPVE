@@ -68,10 +68,10 @@ public class Ferrum extends IronGolem implements IEntity {
         goalSelector.addGoal(4, new RandomLookAroundGoal(
                 this
         ));
-        if(rollDrops()!=null) {
+        /*if(rollDrops()!=null) {
             drops.clear();
             drops.addAll(rollDrops());
-        }
+        }*/
         addTag(getNBTIdentifier());
     }
 
@@ -101,7 +101,7 @@ public class Ferrum extends IronGolem implements IEntity {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
         result.add(new Flag<>(EntityFlag.MAX_HEALTH, 200D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 200D, false));
-        result.add(new Flag<>(EntityFlag.XP, 50D, false));
+        result.add(new Flag<>(EntityFlag.XP, 10D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 50D, false));
         return result;
     }

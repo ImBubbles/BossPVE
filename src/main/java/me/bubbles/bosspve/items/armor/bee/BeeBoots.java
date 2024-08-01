@@ -45,7 +45,7 @@ public class BeeBoots extends Armor {
 
     @Override
     public String getDescription() {
-        return "Boots from a Ninja";
+        return "Boots from a Bee";
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class CustomEntityData {
 
-    private IEntity iEntity;
+    //private IEntity iEntity;
 
     private double xp;
     private double damage;
@@ -22,7 +22,7 @@ public class CustomEntityData {
                 numFlags.put((EntityFlag) flag.getFlag(), flag.getValue());
             }
         }
-        this.iEntity=iEntity;
+        //this.iEntity=iEntity;
         this.xp=numFlags.getOrDefault(EntityFlag.XP, 1D);
         this.money=numFlags.getOrDefault(EntityFlag.MONEY, 1D);
         this.maxHealth=numFlags.getOrDefault(EntityFlag.MAX_HEALTH, 10D);

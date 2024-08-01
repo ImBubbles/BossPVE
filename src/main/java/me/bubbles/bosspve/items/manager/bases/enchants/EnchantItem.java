@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EnchantItem extends Item {
 
-    private Enchant enchant;
+    private final Enchant enchant;
 
     public EnchantItem(Material material, Enchant enchant, String nbtIdentifier) {
         super(material, nbtIdentifier.replace(" ", "").toLowerCase()+"Ench");

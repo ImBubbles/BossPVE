@@ -45,7 +45,7 @@ public class BeeChestplate extends Armor {
 
     @Override
     public String getDescription() {
-        return "Chestplate from a Ninja";
+        return "Chestplate from a Bee";
     }
 
 }

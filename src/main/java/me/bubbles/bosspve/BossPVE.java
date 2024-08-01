@@ -19,6 +19,7 @@ import me.bubbles.regionfy.Regionfy;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -123,6 +124,13 @@ public final class BossPVE extends JavaPlugin {
                     world.save();
                 }
             });
+        }
+    }
+
+    public void saveUserData() {
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            UtilUserData uud = getGameManager().getGamePlayer(player.getUniqueId()).getCache();
+            UtilUserData.saveSync(uud);
         }
     }
 

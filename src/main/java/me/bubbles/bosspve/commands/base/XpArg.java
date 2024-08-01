@@ -2,6 +2,7 @@ package me.bubbles.bosspve.commands.base;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
+import me.bubbles.bosspve.utility.UtilNumber;
 import me.bubbles.bosspve.utility.UtilUserData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -50,7 +51,7 @@ public class XpArg extends Argument {
         } else {
             uud=UtilUserData.getUtilUserData(player.getUniqueId());
         }
-        utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s %primary%xp is %secondary%"+uud.getXp()+"%primary%.");
+        utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s %primary%xp is %secondary%"+ UtilNumber.formatWhole(uud.getXp())+"%primary%.");
     }
 
 }

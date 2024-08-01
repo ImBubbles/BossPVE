@@ -277,6 +277,24 @@ public class UtilItemStack {
 
     public static int giveItem(Player player, ItemStack itemStack) {
         PlayerInventory inventory = player.getInventory();
+
+        /*// IF CAN STACK
+
+        ItemStack[] contents = inventory.getContents();
+        for(ItemStack slot : contents) {
+            if(!slot.equals(itemStack)) {
+                continue;
+            }
+            if(!(slot.getMaxStackSize()>(slot.getAmount()))) {
+                continue;
+            }
+            slot.setAmount(slot.getAmount()+1);
+            inventory.setContents(contents);
+            return 4;
+        }*/
+
+        // OTHER
+
         int result=0;
         if(inventory.firstEmpty()!=-1) {
             if(inventory.getItem(inventory.getHeldItemSlot())==null) {

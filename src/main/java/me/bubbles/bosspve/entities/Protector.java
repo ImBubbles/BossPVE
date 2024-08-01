@@ -83,7 +83,7 @@ public class Protector extends Ravager implements IEntity {
         HashSet<Flag<EntityFlag, Double>> result = new HashSet<>();
         result.add(new Flag<>(EntityFlag.MAX_HEALTH, 100D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 100D, false));
-        result.add(new Flag<>(EntityFlag.XP, 100D, false));
+        result.add(new Flag<>(EntityFlag.XP, 10D, false));
         result.add(new Flag<>(EntityFlag.DAMAGE, 30D, false));
         return result;
     }

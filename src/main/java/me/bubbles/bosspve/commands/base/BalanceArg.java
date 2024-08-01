@@ -2,6 +2,7 @@ package me.bubbles.bosspve.commands.base;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
+import me.bubbles.bosspve.utility.UtilNumber;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -40,7 +41,7 @@ public class BalanceArg extends Argument {
             utilSender.sendMessage("%prefix% %primary%Could not find player %secondary%"+args[relativeIndex]+"%primary%.");
             return;
         }
-        utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s %primary%balance is %secondary%$"+BossPVE.getInstance().getEconomy().getBalance(player)+"%primary%.");
+        utilSender.sendMessage("%prefix% %secondary%"+player.getName()+"'s %primary%balance is %secondary%$"+ UtilNumber.formatMoney(BossPVE.getInstance().getEconomy().getBalance(player))+"%primary%.");
     }
 
 }

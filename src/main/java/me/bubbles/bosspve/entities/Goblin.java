@@ -44,7 +44,7 @@ public class Goblin extends Piglin implements IEntity {
 
     public Goblin(Level level, Location location) {
         super(EntityType.PIGLIN, level);
-        this.entityData =new CustomEntityData(this);
+        this.entityData=new CustomEntityData(this);
         if(location!=null) {
             setPos(location.getX(),location.getY(),location.getZ());
         } else {
@@ -109,7 +109,7 @@ public class Goblin extends Piglin implements IEntity {
         result.add(new Flag<>(EntityFlag.MAX_HEALTH, 30D, false));
         result.add(new Flag<>(EntityFlag.MONEY, 15D, false));
         result.add(new Flag<>(EntityFlag.XP, 10D, false));
-        result.add(new Flag<>(EntityFlag.DAMAGE, 60D, false));
+        result.add(new Flag<>(EntityFlag.DAMAGE, 25D, false));
         return result;
     }
 
