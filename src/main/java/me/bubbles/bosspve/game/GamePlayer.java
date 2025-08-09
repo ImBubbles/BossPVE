@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.game;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.settings.Settings;
 import me.bubbles.bosspve.stages.Stage;
@@ -225,7 +226,7 @@ public class GamePlayer extends GameBase {
         return heal(result);
     }
 
-    public void give(double xp, double money, IEntity cause, boolean message) {
+    public void give(double xp, double money, EntityBase cause, boolean message) {
         if(xp!=0) {
             setXp((int) (cache.getXp()+xp));
         }

@@ -2,6 +2,7 @@ package me.bubbles.bosspve.commands.base;
 
 import me.bubbles.bosspve.BossPVE;
 import me.bubbles.bosspve.commands.manager.Argument;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -27,7 +28,7 @@ public class SummonArg extends Argument {
             utilSender.sendMessage("%prefix% %primary%You must be in game to do this.");
             return;
         }
-        IEntity base = BossPVE.getInstance().getEntityManager().getEntityByIdentifier(args[relativeIndex]);
+        EntityBase base = BossPVE.getInstance().getEntityManager().getEntityByIdentifier(args[relativeIndex]);
         if(base==null) {
             utilSender.sendMessage("%prefix% %primary%Entity %secondary%"+args[relativeIndex]+"%primary% does not exist.");
             return;

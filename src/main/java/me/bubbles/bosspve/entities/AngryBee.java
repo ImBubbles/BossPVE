@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.entities;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
@@ -32,61 +33,34 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class AngryBee extends Bee implements IEntity {
-
-    private final String customName = ChatColor.translateAlternateColorCodes('&',"&e&lAngry Bee");
-    private CustomEntityData entityData;
+public class AngryBee extends EntityBase<Bee> {
 
     public AngryBee() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
     public AngryBee(Level level, Location location) {
-        super(EntityType.BEE, level);
-        this.entityData =new CustomEntityData(this);
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        } else {
-            remove(RemovalReason.DISCARDED);
-            return;
-        }
-        setCustomNameVisible(true);
-        expToDrop=0;
-        setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
-        setHealth((float) entityData.getMaxHealth());
-        //setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
-        goalSelector.addGoal(0, new MeleeAttackGoal(
-                this, 1, false
+        super(EntityType.BEE, level, location);
+        casted().goalSelector.addGoal(0, new MeleeAttackGoal(
+                casted(), 1, false
         ));
-        goalSelector.addGoal(2, new PanicGoal(
-                this, 1.5D
+        casted().goalSelector.addGoal(2, new PanicGoal(
+                casted(), 1.5D
         ));
-        goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(
-                this, 0.6D
+        casted().goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(
+                casted(), 0.6D
         ));
-        goalSelector.addGoal(4, new RandomLookAroundGoal(
-                this
+        casted().goalSelector.addGoal(4, new RandomLookAroundGoal(
+                casted()
         ));
-        setAggressive(true);
-        if(rollDrops()!=null) {
-            drops.clear();
-            drops.addAll(rollDrops());
-        }
-        addTag(getNBTIdentifier());
+        casted().setAggressive(true);
     }
-
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new AngryBee(((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new AngryBee(((CraftWorld) location.getWorld()).getHandle(), location).casted();
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
-    }
-
-    @Override
-    public CustomEntityData getCustomEntityData() {
-        return entityData;
     }
 
     @Override
@@ -118,11 +92,12 @@ public class AngryBee extends Bee implements IEntity {
 
     @Override
     public String getShowName() {
-        return customName;
+        return "&e&lAngry Bee";
     }
 
     @Override
     public String getNBTIdentifier() {
         return "angrybee";
     }
+
 }

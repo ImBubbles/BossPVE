@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.stages;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.ticker.Timer;
 import me.bubbles.bosspve.utility.location.UtilLocation;
@@ -156,7 +157,7 @@ public class Stage extends Timer {
         boolean result=false;
         for(String entityID : entities.getKeys(false)) {
             String entityKey = entities.getConfigurationSection(entityID).getString("entity");
-            IEntity entityBase = BossPVE.getInstance().getEntityManager().getEntityByName(entityKey);
+            EntityBase entityBase = BossPVE.getInstance().getEntityManager().getEntityByName(entityKey);
             if(entityBase==null) {
                 BossPVE.getInstance().getLogger().log(Level.WARNING, "Could not load entity: "+entityKey+" @ "+getLevelRequirement());
                 continue;

@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 
 public class EntityManager {
 
-    private HashSet<Supplier<IEntity>> entities;
-    private HashSet<IEntity> bases;
+    private final HashSet<Supplier<EntityBase>> entities;
+    private HashSet<EntityBase> bases;
 
     public EntityManager() {
         this.entities=new HashSet<>();
@@ -31,7 +31,7 @@ public class EntityManager {
         );
     }
 
-    private void registerEntities(Supplier<IEntity>... entity) {
+    private void registerEntities(Supplier<EntityBase>... entity) {
         entities.addAll(Arrays.asList(entity));
     }
 
@@ -39,27 +39,27 @@ public class EntityManager {
         getEntities().forEach(iEntity -> iEntity.onEvent(event));
     }
 
-    public HashSet<IEntity> getEntities() {
+    public HashSet<EntityBase> getEntities() {
         if(bases!=null) {
             return bases;
         }
         if(!(Bukkit.getWorlds().size()>=0)) {
             return new HashSet<>();
         }
-        HashSet<IEntity> result = new HashSet<>();
-        for(Supplier<IEntity> iEntitySupplier : entities) {
+        HashSet<EntityBase> result = new HashSet<>();
+        for(Supplier<EntityBase> iEntitySupplier : entities) {
             result.add(iEntitySupplier.get());
         }
         this.bases=result;
         return result;
     }
 
-    public HashSet<Supplier<IEntity>> getSupplierEntities() {
+    public HashSet<Supplier<EntityBase>> getSupplierEntities() {
         return entities;
     }
 
-    public IEntity getEntityByName(String name) {
-        for(IEntity entity : getEntities()) {
+    public EntityBase getEntityByName(String name) {
+        for(EntityBase entity : getEntities()) {
             if(ChatColor.stripColor(entity.getUncoloredName()).replace(" ","_").equalsIgnoreCase(name)) {
                 return entity;
             }
@@ -67,8 +67,8 @@ public class EntityManager {
         return null;
     }
 
-    public IEntity getEntityByIdentifier(String id) {
-        for(IEntity entity : getEntities()) {
+    public EntityBase getEntityByIdentifier(String id) {
+        for(EntityBase entity : getEntities()) {
             if(entity.getNBTIdentifier().equalsIgnoreCase(id)) {
                 return entity;
             }

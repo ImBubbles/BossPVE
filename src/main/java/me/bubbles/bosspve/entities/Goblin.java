@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.entities;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
@@ -33,61 +34,35 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Goblin extends Piglin implements IEntity {
-
-    private final String customName = ChatColor.translateAlternateColorCodes('&',"&a&lGoblin");
-    private CustomEntityData entityData;
+public class Goblin extends EntityBase<Piglin> {
 
     public Goblin() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
     public Goblin(Level level, Location location) {
-        super(EntityType.PIGLIN, level);
-        this.entityData=new CustomEntityData(this);
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        } else {
-            remove(RemovalReason.DISCARDED);
-            return;
-        }
-        setCustomNameVisible(true);
-        setImmuneToZombification(true);
-        setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
-        setHealth((float) entityData.getMaxHealth());
-        expToDrop=0;
+        super(EntityType.PIGLIN, level, location);
         setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
-        goalSelector.addGoal(0, new MeleeAttackGoal(
-                this, 1, false
-        ));
-        goalSelector.addGoal(2, new PanicGoal(
-                this, 1.5D
-        ));
-        goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(
-                this, 0.6D
-        ));
-        goalSelector.addGoal(4, new RandomLookAroundGoal(
-                this
-        ));
-        if(rollDrops()!=null) {
-            drops.clear();
-            drops.addAll(rollDrops());
-        }
         setItemSlot(EquipmentSlot.FEET, CraftItemStack.asNMSCopy(new ItemStack(Material.GOLDEN_BOOTS)));
-        addTag(getNBTIdentifier());
+        casted().goalSelector.addGoal(0, new MeleeAttackGoal(
+                casted(), 1, false
+        ));
+        casted().goalSelector.addGoal(2, new PanicGoal(
+                casted(), 1.5D
+        ));
+        casted().goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(
+                casted(), 0.6D
+        ));
+        casted().goalSelector.addGoal(4, new RandomLookAroundGoal(
+                casted()
+        ));
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Goblin(((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Goblin(((CraftWorld) location.getWorld()).getHandle(), location).casted();
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
-    }
-
-    @Override
-    public CustomEntityData getCustomEntityData() {
-        return entityData;
     }
 
     @Override
@@ -120,7 +95,7 @@ public class Goblin extends Piglin implements IEntity {
 
     @Override
     public String getShowName() {
-        return customName;
+        return "&a&lGoblin";
     }
 
     @Override

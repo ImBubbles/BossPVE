@@ -1,5 +1,6 @@
 package me.bubbles.bosspve.utility.messages;
 
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.game.GamePlayer;
 import me.bubbles.bosspve.items.manager.bases.enchants.Enchant;
@@ -38,7 +39,7 @@ public class PreparedMessages {
         sendMessage(gamePlayer, MessageType.ENCHANT_PROC, "%prefix% %secondary%"+enchant.getName()+" %primary%has activated!");
     }
 
-    public static void itemDrop(GamePlayer gamePlayer, IEntity entity, ItemStack itemStack) {
+    public static void itemDrop(GamePlayer gamePlayer, EntityBase entity, ItemStack itemStack) {
         String name="an item.";
         if(itemStack!=null) {
             if(itemStack.hasItemMeta()) {
@@ -50,7 +51,7 @@ public class PreparedMessages {
         sendMessage(gamePlayer, MessageType.ITEM_DROP, "%prefix% %primary%A %secondary%"+entity.getUncoloredName()+"%primary% you killed dropped "+name+"%primary%.");
     }
 
-    public static void kill(GamePlayer gamePlayer, IEntity entity, int xp, double money) {
+    public static void kill(GamePlayer gamePlayer, EntityBase entity, int xp, double money) {
         boolean levelUp = false;
         UtilUserData uud = gamePlayer.getCache();
         int level=uud.getLevel();

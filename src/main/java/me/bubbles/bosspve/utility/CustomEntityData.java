@@ -1,5 +1,6 @@
 package me.bubbles.bosspve.utility;
 
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
@@ -15,9 +16,9 @@ public class CustomEntityData {
     private double money;
     private double maxHealth;
 
-    public CustomEntityData(IEntity iEntity) {
+    public CustomEntityData(EntityBase entityBase) {
         HashMap<EntityFlag, Double> numFlags = new HashMap<>();
-        for(Flag<EntityFlag, Double> flag : iEntity.getFlags()) {
+        for(Flag<EntityFlag, Double> flag : entityBase.getFlags()) {
             if(flag.getValue() != null) {
                 numFlags.put((EntityFlag) flag.getFlag(), flag.getValue());
             }

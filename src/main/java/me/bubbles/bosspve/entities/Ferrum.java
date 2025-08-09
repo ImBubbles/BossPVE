@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.entities;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
@@ -32,52 +33,32 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Ferrum extends IronGolem implements IEntity {
-
-    private final String customName = ChatColor.translateAlternateColorCodes('&',"&f&lFerrum");
-    private CustomEntityData entityData;
+public class Ferrum extends EntityBase<IronGolem> {
 
     public Ferrum() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
     public Ferrum(Level level, Location location) {
-        super(EntityType.IRON_GOLEM, level);
-        this.entityData =new CustomEntityData(this);
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        } else {
-            remove(RemovalReason.DISCARDED);
-            return;
-        }
-        setCustomNameVisible(true);
-        expToDrop=0;
-        setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
-        setHealth((float) entityData.getMaxHealth());
-        setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
-        goalSelector.addGoal(0, new MeleeAttackGoal(
-                this, 1, false
+        super(EntityType.IRON_GOLEM, level, location);
+        //setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
+        casted().goalSelector.addGoal(0, new MeleeAttackGoal(
+                casted(), 1, false
         ));
-        goalSelector.addGoal(2, new PanicGoal(
-                this, 1.5D
+        casted().goalSelector.addGoal(2, new PanicGoal(
+                casted(), 1.5D
         ));
-        goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(
-                this, 0.6D
+        casted().goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(
+                casted(), 0.6D
         ));
-        goalSelector.addGoal(4, new RandomLookAroundGoal(
-                this
+        casted().goalSelector.addGoal(4, new RandomLookAroundGoal(
+                casted()
         ));
-        /*if(rollDrops()!=null) {
-            drops.clear();
-            drops.addAll(rollDrops());
-        }*/
-        addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Ferrum(((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Ferrum(((CraftWorld) location.getWorld()).getHandle(), location).casted();
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
@@ -89,11 +70,6 @@ public class Ferrum extends IronGolem implements IEntity {
         result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("nukerEnch")).getAtLevel(1), 1, 250, 4));
         result.add(new Drop(((EnchantItem) BossPVE.getInstance().getItemManager().getItemByName("keyfinderEnch")).getAtLevel(3), 1, 300, 2));
         return result;
-    }
-
-    @Override
-    public CustomEntityData getCustomEntityData() {
-        return entityData;
     }
 
     @Override
@@ -113,7 +89,7 @@ public class Ferrum extends IronGolem implements IEntity {
 
     @Override
     public String getShowName() {
-        return customName;
+        return "&f&lFerrum";
     }
 
     @Override

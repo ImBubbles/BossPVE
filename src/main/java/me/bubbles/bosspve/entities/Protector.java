@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.entities;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
@@ -27,45 +28,25 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Protector extends Ravager implements IEntity {
-
-
-    private final String customName = ChatColor.translateAlternateColorCodes('&',"&8&lProtector");
-    private CustomEntityData entityData;
+public class Protector extends EntityBase<Ravager> {
 
     public Protector() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
     public Protector(Level level, Location location) {
-        super(EntityType.RAVAGER, level);
-        this.entityData =new CustomEntityData(this);
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        } else {
-            remove(RemovalReason.DISCARDED);
-            return;
-        }
-        setCustomNameVisible(true);
-        setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
-        setHealth((float) entityData.getMaxHealth());
-        goalSelector.addGoal(0, new MeleeAttackGoal(
-                this, 1.0, false
+        super(EntityType.RAVAGER, level, location);
+        casted().goalSelector.addGoal(0, new MeleeAttackGoal(
+                casted(), 1.0, false
         ));
-        goalSelector.addGoal(1, new RandomLookAroundGoal(
-                this
+        casted().goalSelector.addGoal(1, new RandomLookAroundGoal(
+                casted()
         ));
-        if(rollDrops()!=null) {
-            drops.clear();
-            drops.addAll(rollDrops());
-        }
-        addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Protector(((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Protector(((CraftWorld) location.getWorld()).getHandle(), location).casted();
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
     }
@@ -94,13 +75,8 @@ public class Protector extends Ravager implements IEntity {
     }
 
     @Override
-    public CustomEntityData getCustomEntityData() {
-        return entityData;
-    }
-
-    @Override
     public String getShowName() {
-        return customName;
+        return "&8&lProtector";
     }
 
     @Override

@@ -1,26 +1,27 @@
 package me.bubbles.bosspve.game;
 
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import net.minecraft.world.entity.Entity;
 
 public class GameEntity extends GameBase {
 
     private Entity entity;
-    private IEntity iEntity;
+    private EntityBase entityBase;
 
-    public GameEntity(IEntity iEntity, Entity entity) {
+    public GameEntity(EntityBase entityBase, Entity entity) {
         super(
-                iEntity.getCustomEntityData().getMaxHealth()
+                entityBase.getCustomEntityData().getMaxHealth()
         );
         this.entity=entity;
-        this.iEntity=iEntity;
+        this.entityBase=entityBase;
     }
 
     public Entity getEntity() {
         return entity;
     }
     public IEntity getiEntity() {
-        return iEntity;
+        return entityBase;
     }
 
 }

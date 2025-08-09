@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.stages;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.game.GameEntity;
 import me.bubbles.bosspve.ticker.Timer;
@@ -12,14 +13,14 @@ import java.util.logging.Level;
 public class StageEntity extends Timer {
 
     private Stage stage;
-    private IEntity iEntity;
+    private EntityBase entityBase;
     private Location location;
     private GameEntity gameEntity;
 
-    public StageEntity(Stage stage, IEntity iEntity, Location location, int ticks) {
+    public StageEntity(Stage stage, EntityBase entityBase, Location location, int ticks) {
         super(ticks);
         this.stage=stage;
-        this.iEntity=iEntity;
+        this.entityBase=entityBase;
         this.location=location;
     }
 
@@ -30,9 +31,9 @@ public class StageEntity extends Timer {
     @Override
     public void onComplete() {
         if(stage.allowSpawn()) {
-            Entity entity = iEntity.spawn(location);
+            Entity entity = entityBase.spawn(location);
             stage.spawnEntity(entity);
-            gameEntity=new GameEntity(iEntity, entity);
+            gameEntity=new GameEntity(entityBase, entity);
             BossPVE.getInstance().getGameManager().register(gameEntity);
         }
         restart();

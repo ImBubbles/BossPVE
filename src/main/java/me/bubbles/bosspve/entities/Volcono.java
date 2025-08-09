@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.entities;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
@@ -27,53 +28,28 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Volcono extends MagmaCube implements IEntity {
-
-    private final String customName = ChatColor.translateAlternateColorCodes('&',"&6&lVolcono");
-    private CustomEntityData entityData;
+public class Volcono extends EntityBase<MagmaCube> {
 
     public Volcono() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
     public Volcono(Level level, Location location) {
-        super(EntityType.MAGMA_CUBE, level);
-        this.entityData =new CustomEntityData(this);
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        } else {
-            remove(RemovalReason.DISCARDED);
-            return;
-        }
-        setCustomNameVisible(true);
-        setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
-        setHealth((float) entityData.getMaxHealth());
-        setSize(5,false);
-
-        goalSelector.addGoal(0, new NearestAttackableTargetGoal<>(
-                this, Player.class, false
+        super(EntityType.MAGMA_CUBE, level, location);
+        casted().setSize(5, false);
+        casted().goalSelector.addGoal(0, new NearestAttackableTargetGoal<>(
+                casted(), Player.class, false
         ));
-        goalSelector.addGoal(4, new RandomLookAroundGoal(
-                this
+        casted().goalSelector.addGoal(4, new RandomLookAroundGoal(
+                casted()
         ));
-        if(rollDrops()!=null) {
-            drops.clear();
-            drops.addAll(rollDrops());
-        }
-        addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Volcono(((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Volcono(((CraftWorld) location.getWorld()).getHandle(), location).casted();
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
-    }
-
-    @Override
-    public CustomEntityData getCustomEntityData() {
-        return entityData;
     }
 
     @Override
@@ -104,7 +80,7 @@ public class Volcono extends MagmaCube implements IEntity {
 
     @Override
     public String getShowName() {
-        return customName;
+        return "&6&lVolcono";
     }
 
     @Override

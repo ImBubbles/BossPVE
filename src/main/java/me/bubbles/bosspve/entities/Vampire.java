@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.entities;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
@@ -33,65 +34,40 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Vampire extends Stray implements IEntity {
-
-    private final String customName = ChatColor.translateAlternateColorCodes('&',"&4&lVampire");
-    private CustomEntityData entityData;
+public class Vampire extends EntityBase<Stray> {
 
     public Vampire() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
     public Vampire(Level level, Location location) {
-        super(EntityType.STRAY, level);
-        this.entityData =new CustomEntityData(this);
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        } else {
-            remove(RemovalReason.DISCARDED);
-            return;
-        }
-        setCustomNameVisible(true);
-        expToDrop=0;
-        setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
-        setHealth((float) entityData.getMaxHealth());
+        super(EntityType.STRAY, level, location);
         setItemInHand(InteractionHand.MAIN_HAND, CraftItemStack.asNMSCopy(new ItemStack(Material.IRON_AXE)));
-        goalSelector.addGoal(0, new MeleeAttackGoal(
-                this, 1, false
+        casted().goalSelector.addGoal(0, new MeleeAttackGoal(
+                casted(), 1, false
         ));
-        goalSelector.addGoal(2, new PanicGoal(
-                this, 1.5D
+        casted().goalSelector.addGoal(2, new PanicGoal(
+                casted(), 1.5D
         ));
-        goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(
-                this, 0.6D
+        casted().goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(
+                casted(), 0.6D
         ));
-        goalSelector.addGoal(4, new RandomLookAroundGoal(
-                this
+        casted().goalSelector.addGoal(4, new RandomLookAroundGoal(
+                casted()
         ));
         // AMOR
         setItemSlot(EquipmentSlot.FEET, BossPVE.getInstance().getItemManager().getItemByName("vampireBoots").getNMSStack());
         setItemSlot(EquipmentSlot.LEGS, BossPVE.getInstance().getItemManager().getItemByName("vampirePants").getNMSStack());
         setItemSlot(EquipmentSlot.CHEST, BossPVE.getInstance().getItemManager().getItemByName("vampireChestplate").getNMSStack());
         setItemSlot(EquipmentSlot.HEAD, BossPVE.getInstance().getItemManager().getItemByName("vampireHelmet").getNMSStack());
-        if(rollDrops()!=null) {
-            drops.clear();
-            drops.addAll(rollDrops());
-        }
-        addTag(getNBTIdentifier());
     }
 
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Vampire(((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Vampire(((CraftWorld) location.getWorld()).getHandle(), location).casted();
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
-    }
-
-    @Override
-    public CustomEntityData getCustomEntityData() {
-        return entityData;
     }
 
     @Override
@@ -123,7 +99,7 @@ public class Vampire extends Stray implements IEntity {
 
     @Override
     public String getShowName() {
-        return customName;
+        return "&4&lVampire";
     }
 
     @Override

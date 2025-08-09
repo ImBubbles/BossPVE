@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.utility;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.game.GameEntity;
 import me.bubbles.bosspve.game.GamePlayer;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class CustomEntityEventHandler {
 
-    public static void entityDeathEvent(IEntity entity, Event event) { // player kills mob
+    public static void entityDeathEvent(EntityBase entity, Event event) { // player kills mob
         if(!(event instanceof EntityDeathEvent)) {
             return;
         }
@@ -85,7 +86,7 @@ public class CustomEntityEventHandler {
         gamePlayer.give(xp, money, entity, true);
     }
 
-    public static void entityDamageByEntityEvent(IEntity entity, Event event) { // mob v player
+    public static void entityDamageByEntityEvent(EntityBase entity, Event event) { // mob v player
         if(!(event instanceof EntityDamageByEntityEvent)) {
             return;
         }

@@ -1,6 +1,7 @@
 package me.bubbles.bosspve.entities;
 
 import me.bubbles.bosspve.BossPVE;
+import me.bubbles.bosspve.entities.manager.EntityBase;
 import me.bubbles.bosspve.entities.manager.IEntity;
 import me.bubbles.bosspve.flags.EntityFlag;
 import me.bubbles.bosspve.flags.Flag;
@@ -29,63 +30,38 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class Ogre extends ZombieVillager implements IEntity {
-
-    private final String customName = ChatColor.translateAlternateColorCodes('&',"&2&lOgre");
-    private CustomEntityData entityData;
+public class Ogre extends EntityBase<ZombieVillager> {
 
     public Ogre() {
         this(((CraftWorld) Bukkit.getWorlds().get(0)).getHandle().getWorld().getHandle(), null);
     }
 
     public Ogre(Level level, Location location) {
-        super(EntityType.ZOMBIE_VILLAGER, level);
-        this.entityData =new CustomEntityData(this);
-        if(location!=null) {
-            setPos(location.getX(),location.getY(),location.getZ());
-        } else {
-            remove(RemovalReason.DISCARDED);
-            return;
-        }
-        setCustomNameVisible(true);
-        setCustomName(Component.literal(ChatColor.translateAlternateColorCodes('&',customName)));
-        getAttribute(Attributes.MAX_HEALTH).setBaseValue(entityData.getMaxHealth());
-        setHealth((float) entityData.getMaxHealth());
-        expToDrop=0;
-        goalSelector.addGoal(0, new MeleeAttackGoal(
-                this, 1, false
+        super(EntityType.ZOMBIE_VILLAGER, level, location);
+        casted().goalSelector.addGoal(0, new MeleeAttackGoal(
+                casted(), 1, false
         ));
-        goalSelector.addGoal(1, new PanicGoal(
-                this, 1.5D
+        casted().goalSelector.addGoal(1, new PanicGoal(
+                casted(), 1.5D
         ));
-        goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(
-                this, 0.6D
+        casted().goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(
+                casted(), 0.6D
         ));
-        goalSelector.addGoal(3, new RandomLookAroundGoal(
-                this
+        casted().goalSelector.addGoal(3, new RandomLookAroundGoal(
+                casted()
         ));
         // AMOR
         setItemSlot(EquipmentSlot.FEET, BossPVE.getInstance().getItemManager().getItemByName("ogreBoots").getNMSStack());
         setItemSlot(EquipmentSlot.LEGS, BossPVE.getInstance().getItemManager().getItemByName("ogrePants").getNMSStack());
         setItemSlot(EquipmentSlot.CHEST, BossPVE.getInstance().getItemManager().getItemByName("ogreChestplate").getNMSStack());
         setItemSlot(EquipmentSlot.HEAD, BossPVE.getInstance().getItemManager().getItemByName("ogreHelmet").getNMSStack());
-        if(rollDrops()!=null) {
-            drops.clear();
-            drops.addAll(rollDrops());
-        }
-        addTag(getNBTIdentifier());
     }
 
     @Override
     public Entity spawn(Location location) {
-        Entity entity = new Ogre(((CraftWorld) location.getWorld()).getHandle(), location);
+        Entity entity = new Ogre(((CraftWorld) location.getWorld()).getHandle(), location).casted();
         ((CraftWorld) location.getWorld()).addEntityToWorld(entity, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return entity;
-    }
-
-    @Override
-    public CustomEntityData getCustomEntityData() {
-        return entityData;
     }
 
     @Override
@@ -120,7 +96,7 @@ public class Ogre extends ZombieVillager implements IEntity {
 
     @Override
     public String getShowName() {
-        return customName;
+        return "&2&lOgre";
     }
 
 }
